@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gill's Advent Calendar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito+Sans:wght@400;700;800&family=Yeseva+One&display=swap">
+<style>
+/* Layout: a wall of 24 hand-wrapped boxes in a tight grid, with box 25 as one wide parcel underneath.
+   Each door opens a cream gift tag. One committed look: wrapping paper on deep spruce. */
+:root{
+  color-scheme: dark;
+  --night:#0f2a26; --spruce:#1a443b; --fir:#2f7a5f;
+  --cream:#f6ecd9; --kraft:#c9a26b; --berry:#b3263a; --gold:#e2b659; --ink:#1f1c17;
+  --muted:#6b6254; --sky:#3f7fa6; --plum:#7a3b6e;
+  --display:"Yeseva One", Georgia, "Times New Roman", serif;
+  --hand:"Caveat", "Bradley Hand", "Segoe Script", cursive;
+  --body:"Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+html,body{min-height:100%}
+body{margin:0;background:var(--night);color:var(--cream);font-family:var(--body);font-size:16px;line-height:1.5;
+  background-image:radial-gradient(ellipse at 50% -10%, var(--spruce), transparent 60%)}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding-block:20px 40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.star{background:none;border:0;color:var(--gold);font-size:2.2rem;line-height:1;cursor:default;padding:4px 12px;
+  text-shadow:0 0 18px color-mix(in srgb,var(--gold) 70%,transparent)}
+.eyebrow{margin:0;text-transform:uppercase;letter-spacing:.18em;font-size:.75rem;font-weight:800;color:var(--gold)}
+h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,3.4rem);line-height:1.05;text-wrap:balance}
+.sub{margin:0;max-width:34ch;color:color-mix(in srgb,var(--cream) 80%,transparent)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  background:var(--spruce);border-radius:14px;padding:10px 14px}
+.bar p{margin:0;min-width:0;flex:1 1 200px;font-weight:700}
+.bar small{display:block;font-weight:400;color:color-mix(in srgb,var(--cream) 70%,transparent)}
+.toggles{display:flex;gap:8px}
+.pill{font:inherit;font-weight:700;font-size:.85rem;border-radius:999px;border:2px solid var(--gold);background:transparent;
+  color:var(--gold);padding:6px 12px;cursor:pointer}
+.pill[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+#elf{background:var(--berry);border-radius:14px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+#elf p{margin:0;flex:1 1 220px;min-width:0}
+#elf .pill{border-color:var(--cream);color:var(--cream)}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (min-width:600px){.grid{grid-template-columns:repeat(6,1fr);gap:14px}}
+.box{position:relative;aspect-ratio:1;border:0;border-radius:10px;cursor:pointer;overflow:hidden;padding:0;
+  background-color:var(--paper);color:var(--ink);font-family:var(--display);
+  box-shadow:inset 0 -7px 0 color-mix(in srgb,var(--ink) 22%,transparent), 0 5px 12px color-mix(in srgb,var(--ink) 50%,transparent);
+  transition:transform .15s}
+.box:hover{transform:translateY(-2px)}
+.box::before,.box::after{content:"";position:absolute;background:var(--ribbon);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 18%,transparent)}
+.box::before{left:50%;top:0;bottom:0;width:16%;transform:translateX(-50%)}
+.box::after{top:50%;left:0;right:0;height:16%;transform:translateY(-50%)}
+.tag{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;width:54%;aspect-ratio:1;border-radius:50%;
+  background:var(--cream);display:grid;place-items:center;font-size:clamp(1.1rem,5.5vw,1.7rem);
+  box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 30%,transparent)}
+.p0{--paper:var(--berry);--ribbon:var(--gold);background-image:radial-gradient(circle,color-mix(in srgb,var(--cream) 60%,transparent) 14%,transparent 15%);background-size:14px 14px}
+.p1{--paper:var(--kraft);--ribbon:var(--berry);background-image:repeating-linear-gradient(45deg,transparent 0 8px,color-mix(in srgb,var(--cream) 50%,transparent) 8px 11px)}
+.p2{--paper:var(--fir);--ribbon:var(--cream);background-image:radial-gradient(circle,var(--gold) 12%,transparent 13%);background-size:18px 18px}
+.p3{--paper:var(--cream);--ribbon:var(--fir);background-image:repeating-linear-gradient(90deg,transparent 0 9px,var(--berry) 9px 13px)}
+.p4{--paper:var(--gold);--ribbon:var(--berry);background-image:linear-gradient(color-mix(in srgb,var(--berry) 28%,transparent) 50%,transparent 50%),linear-gradient(90deg,color-mix(in srgb,var(--berry) 28%,transparent) 50%,transparent 50%);background-size:16px 16px}
+.box.wide{grid-column:1/-1;aspect-ratio:auto;height:112px}
+.box.wide::before{width:44px}.box.wide::after{height:26px}
+.box.wide .tag{width:auto;height:74px;font-size:2rem}
+.box.ready{outline:3px solid var(--gold);outline-offset:2px;animation:glow 1.8s ease-in-out infinite}
+@keyframes glow{50%{outline-color:transparent;transform:scale(1.03)}}
+.box.open{background:var(--spruce);background-image:none;box-shadow:none;border:2px dashed var(--gold);color:var(--cream)}
+.box.open::before,.box.open::after{display:none}
+.peek{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(1.5rem,7vw,2.2rem)}
+.mini{position:absolute;left:7px;top:4px;font-size:.9rem;color:var(--gold)}
+.box.wiggle{animation:wiggle .4s}
+@keyframes wiggle{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+footer{text-align:center;font-family:var(--hand);font-size:1.4rem;color:var(--gold)}
+:focus-visible{outline:3px solid var(--cream);outline-offset:3px}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom, 0px));z-index:5;
+  background:var(--cream);color:var(--ink);font-weight:700;padding:10px 16px;border-radius:999px;max-width:calc(100% - 32px);text-align:center;
+  box-shadow:0 6px 20px color-mix(in srgb,var(--ink) 60%,transparent)}
+
+dialog{overflow-x:hidden;overscroll-behavior:contain;border:0;padding:0;border-radius:20px;background:var(--cream);color:var(--ink);color-scheme:light;
+  width:min(440px,calc(100% - 24px));max-height:calc(100% - 32px);overflow-y:auto;
+  box-shadow:0 20px 60px color-mix(in srgb,var(--ink) 70%,transparent)}
+dialog[open]{animation:pop .3s ease-out}
+@keyframes pop{from{transform:scale(.85) rotate(-3deg);opacity:0}}
+dialog::backdrop{background:color-mix(in srgb,var(--night) 82%,transparent)}
+.card{position:relative;padding:22px 18px 20px;display:flex;flex-direction:column;gap:12px;text-align:center}
+.card::before{content:"";align-self:center;width:18px;height:18px;border-radius:50%;background:var(--night);box-shadow:0 0 0 4px var(--kraft)}
+.x{position:absolute;right:10px;top:10px;font:inherit;font-weight:800;font-size:.85rem;background:none;border:0;color:var(--muted);padding:8px;cursor:pointer}
+.date{margin:0;font-family:var(--display);font-size:1.6rem;color:var(--berry)}
+.kicker{margin:0;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800;color:var(--fir)}
+.card h2{margin:0;font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.2;text-wrap:balance}
+.card p{margin:0}
+.how,.meta{color:var(--muted);font-size:.95rem}
+.note{font-family:var(--hand);font-size:1.55rem;line-height:1.25;color:var(--ink);transform:rotate(-1.5deg)}
+.punch{font-family:var(--hand);font-size:1.7rem;color:var(--berry)}
+.btn{font:inherit;font-weight:800;border:0;border-radius:999px;background:var(--berry);color:var(--cream);padding:11px 22px;cursor:pointer;align-self:center}
+.btn.ghost{background:transparent;color:var(--berry);box-shadow:inset 0 0 0 2px var(--berry)}
+.stage,.after{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.call{display:flex;gap:12px;align-items:center;text-align:left;background:var(--fir);color:var(--cream);border-radius:14px;padding:12px 14px}
+.call b{font-family:var(--display);font-weight:400;font-size:1.9rem;background:var(--cream);color:var(--ink);border-radius:50%;
+  width:54px;height:54px;flex:none;display:grid;place-items:center}
+.call p{min-width:0}
+.lost{background:color-mix(in srgb,var(--berry) 12%,var(--cream));border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+/* Naughty or Nice */
+.stakes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stakes span{border-radius:10px;padding:8px;font-weight:700;font-size:.9rem;min-width:0}
+.stakes .sn{background:var(--gold);color:var(--ink)}
+.stakes .sb{background:var(--berry);color:var(--cream)}
+.wheelbox{position:relative;flex:none;width:min(270px,78vw);height:min(270px,78vw);align-self:center;margin:16px 0 6px}
+.wheelclip{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;transform:translateZ(0);border:8px solid var(--ink);
+  box-shadow:0 0 0 4px var(--kraft),0 10px 24px color-mix(in srgb,var(--ink) 40%,transparent)}
+.wheel{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(var(--gold) 0 45deg,var(--berry) 45deg 90deg)}
+.wheel span{position:absolute;inset:0;display:flex;justify-content:center;padding-top:7%;font-size:1.6rem}
+.hub{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--cream);
+  box-shadow:0 0 0 5px var(--ink);display:grid;place-items:center;font-family:var(--display);font-size:1.8rem}
+.pointer{position:absolute;left:50%;top:-14px;margin-left:-13px;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;
+  border-top:30px solid var(--fir);z-index:2;transform-origin:50% 0}
+.pointer.tick{transform:rotate(-16deg)}
+.wheelbox.landed .hub{animation:pop .4s}
+.res{margin:0;font-family:var(--display);font-weight:400;font-size:2rem}
+.res.nice{color:var(--fir)}.res.naughty{color:var(--berry)}
+
+/* Games */
+.mem{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.memcard{aspect-ratio:1;border:0;border-radius:10px;background:var(--berry);font-size:1.7rem;cursor:pointer;padding:0;
+  background-image:radial-gradient(circle,color-mix(in srgb,var(--cream) 35%,transparent) 12%,transparent 13%);background-size:12px 12px}
+.memcard span{visibility:hidden}
+.memcard.up{background:color-mix(in srgb,var(--kraft) 35%,var(--cream));box-shadow:inset 0 0 0 2px var(--kraft)}
+.memcard.up span{visibility:visible}
+.memcard.done{box-shadow:inset 0 0 0 3px var(--fir)}
+.memcard.up{animation:flip .25s}
+@keyframes flip{from{transform:rotateY(90deg)}}
+.memcard.imp{background:var(--ink);box-shadow:none}
+.tbar{height:10px;border-radius:99px;background:color-mix(in srgb,var(--kraft) 35%,var(--cream));overflow:hidden}
+.tbar i{display:block;height:100%;width:100%;background:var(--fir)}
+.tbar.low i{background:var(--berry)}
+.cups{position:relative;height:130px}
+.cup{position:absolute;top:22px;width:28%;height:96px;border:0;border-radius:12px;font-size:2.3rem;cursor:pointer;padding:0;background-color:var(--berry);color:var(--cream);
+  font-family:var(--display);transition:left .35s ease-in-out,transform .2s;
+  background-image:repeating-linear-gradient(45deg,transparent 0 10px,color-mix(in srgb,var(--cream) 14%,transparent) 10px 14px)}
+.cup.lift{transform:translateY(-18px);background-color:var(--gold)}
+.odd{display:grid;gap:6px}
+.odd button{aspect-ratio:1;border:0;border-radius:8px;background:color-mix(in srgb,var(--kraft) 25%,var(--cream));font-size:clamp(1.1rem,6vw,1.7rem);padding:0;cursor:pointer}
+.slots,.tiles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.slot,.tile{width:32px;height:38px;border-radius:7px;display:grid;place-items:center;font-weight:800;font-size:1.1rem}
+.slot{box-shadow:inset 0 0 0 2px var(--kraft)}
+.tile{border:0;background:var(--fir);color:var(--cream);font-family:inherit;cursor:pointer}
+.tile:disabled{opacity:.25}
+.shake{animation:wiggle .4s}
+.arena{position:relative;height:270px;border-radius:14px;background:var(--spruce);overflow:hidden}
+.bauble{position:absolute;width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;padding:0;
+  box-shadow:inset -6px -6px 0 color-mix(in srgb,var(--ink) 25%,transparent), inset 6px 6px 0 color-mix(in srgb,var(--cream) 30%,transparent);animation:pop .2s}
+.bells{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bell{border:0;border-radius:14px;height:74px;font-size:2rem;cursor:pointer;opacity:.55;transition:opacity .1s,transform .1s}
+.bell.lit{opacity:1;transform:scale(1.05)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px;background:color-mix(in srgb,var(--kraft) 30%,var(--cream));color:var(--ink);cursor:pointer}
+.opt:disabled{opacity:.35;text-decoration:line-through}
+.opt.right{background:var(--fir);color:var(--cream);opacity:1;text-decoration:none}
+canvas.catch{width:100%;height:300px;border-radius:14px;background:var(--spruce);touch-action:none;display:block}
+.five{display:grid;gap:5px;justify-content:center}
+.frow{display:grid;grid-template-columns:repeat(5,40px);gap:5px}
+.fc{height:40px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:1.15rem;box-shadow:inset 0 0 0 2px var(--kraft)}
+.fc.g,.key.g{background:var(--fir);color:var(--cream);box-shadow:none}
+.fc.y,.key.y{background:var(--gold);color:var(--ink);box-shadow:none}
+.fc.n,.key.n{background:var(--muted);color:var(--cream);box-shadow:none}
+.kb{display:flex;flex-direction:column;gap:5px}
+.krow{display:flex;gap:4px;justify-content:center}
+.key{flex:1 1 0;min-width:0;max-width:38px;height:42px;border:0;border-radius:6px;font:inherit;font-weight:800;font-size:.9rem;padding:0;cursor:pointer;
+  background:color-mix(in srgb,var(--kraft) 40%,var(--cream));color:var(--ink)}
+.key.big{flex:1.6 1 0;max-width:60px}
+.code{font:inherit;font-family:var(--display);font-size:2rem;text-align:center;text-transform:uppercase;letter-spacing:.35em;padding:10px 0 10px .35em;width:100%;
+  border:3px dashed var(--kraft);border-radius:14px;background:color-mix(in srgb,var(--gold) 14%,var(--cream));color:var(--ink)}
+.code:focus{outline:none;border-color:var(--berry)}
+.code.good{border-style:solid;border-color:var(--fir);background:var(--fir);color:var(--cream)}
+.padlock{font-size:3rem;line-height:1}
+.scratch{position:relative;border-radius:16px;overflow:hidden}
+.scratch canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;transition:opacity .7s}
+.ticket{display:flex;flex-direction:column;gap:6px;padding:26px 18px;border:3px dashed var(--kraft);border-radius:16px;
+  background:radial-gradient(circle at 0 50%,var(--cream) 12px,transparent 13px),radial-gradient(circle at 100% 50%,var(--cream) 12px,transparent 13px),color-mix(in srgb,var(--gold) 28%,var(--cream))}
+.ticket .big{font-size:3rem;line-height:1.1}
+.ticket .when{font-weight:800;color:var(--berry)}
+.ticket .where{font-family:var(--hand);font-size:1.6rem;line-height:1.1}
+.gif{display:block;width:100%;border-radius:12px;box-shadow:0 0 0 4px var(--kraft)}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-14px;left:var(--x);width:8px;height:13px;animation:fall 1.7s var(--d) ease-in forwards}
+@keyframes fall{to{transform:translateY(620px) rotate(var(--r));opacity:.3}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="wrap">
+  <header>
+    <button class="star" id="star" type="button" aria-label="Star">★</button>
+    <p class="eyebrow">December 2026</p>
+    <h1>Gill's Advent Calendar</h1>
+    <p class="sub">25 boxes, 25 doors. Tap today's door first, then go and find the box.</p>
+  </header>
+  <div class="bar">
+    <p id="status"></p>
+    <div class="toggles">
+      <button class="pill" id="musicBtn" type="button" aria-pressed="true">Music</button>
+      <button class="pill" id="sfxBtn" type="button" aria-pressed="true">Sounds</button>
+      <button class="pill" id="resetBtn" type="button" hidden>Reset doors</button>
+    </div>
+  </div>
+  <div id="elf" hidden>
+    <p><strong>Elf mode.</strong> Every door is unlocked for testing and nothing is saved.</p>
+    <button class="pill" id="elfOff" type="button">Leave elf mode</button>
+  </div>
+  <main class="grid" id="grid"></main>
+  <footer>Made for Gill by Luke x</footer>
+</div>
+<div id="toast" role="status" hidden></div>
+<dialog id="door" aria-labelledby="doorDate">
+  <div class="card">
+    <button class="x" id="closeBtn" type="button">Close</button>
+    <p class="date" id="doorDate"></p>
+    <div class="stage" id="doorBody"></div>
+  </div>
+</dialog>
+
+<script>
+/* ============ EDIT ME: what's behind each door ============
+   t:'box'  = joke + "open box N"          (optional note: handwritten line from Luke)
+   t:'non'  = Naughty or Nice               (prize, nice, naughty)
+   t:'event'= password from the box, then a scratchcard reveal (code, icon, title, time, venue)
+   t:'game' = mini-game, win to unlock box  (g: memory | scramble | pop | bells | quiz | catch | five | cups | odd | drop)
+*/
+const YEAR = 2026;
+const DAYS = [null,
+ {t:'box', note:"Happy December, Gill. 25 boxes, a few games and some risky choices ahead. Love, Luke x", joke:["What do snowmen eat for breakfast?","Snowflakes."]},
+ {t:'game', g:'memory', pairs:7, secs:75},
+ {t:'box', joke:["Who hides in the bakery at Christmas?","A mince spy."]},
+ {t:'non', prize:"Film night", nice:"Gill's pick", naughty:"Luke's pick"},
+ {t:'game', g:'scramble', word:"MISTLETOE", clue:"You get kissed underneath it"},
+ {t:'event', code:"GRAVY", icon:"🎻", title:"Sunday Strings Roast", time:"3.30pm", venue:"Diecast"},
+ {t:'game', g:'pop', goal:12, secs:20},
+ {t:'box', joke:["How does Good King Wenceslas like his pizza?","Deep pan, crisp and even."]},
+ {t:'non', prize:"Meal in town", nice:"Gill's pick", naughty:"Luke's pick"},
+ {t:'game', g:'bells', len:7},
+ {t:'box', joke:["What do you get if you cross a snowman with a vampire?","Frostbite."]},
+ {t:'game', g:'quiz'},
+ {t:'non', prize:"Takeaway night", nice:"Gill chooses", naughty:"Luke chooses"},
+ {t:'event', code:"CELLO", icon:"🎼", title:"Christmas Orchestra", time:"8.45pm", venue:"Albert Hall"},
+ {t:'event', code:"DISCO", icon:"🥳", title:"Christmas Party", time:"7.45pm", venue:"Matt & Phreds"},
+ {t:'game', g:'catch', goal:10},
+ {t:'game', g:'five', word:"CAROL"},
+ {t:'box', joke:["What does Santa suffer from if he gets stuck in a chimney?","Claustrophobia."]},
+ {t:'non', prize:"Festive day out", nice:"Gill plans it", naughty:"Luke plans it"},
+ {t:'game', g:'cups'},
+ {t:'game', g:'odd', rounds:10, secs:40},
+ {t:'event', code:"CHOIR", icon:"🎶", title:"Christmas Cracker Carols", time:"7.30pm", venue:"Matt & Phreds"},
+ {t:'non', prize:"Lazy Sunday", nice:"Gill sets the plan", naughty:"Luke sets the plan"},
+ {t:'game', g:'drop', goal:8, presents:14},
+ {t:'finale', note:"Merry Christmas, Gill. Last box, best box. All my love, Luke x"}
+];
+/* ============ end of the bit to edit ============ */
+
+const $ = s => document.querySelector(s);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const KEY = 'gill-advent-' + YEAR;
+const blank = () => ({opened:{}, non:{}, won:{}, ev:{}});
+let real = blank(), prefs = {music:true, sfx:true};
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) { real = Object.assign(blank(), s.state); prefs = Object.assign(prefs, s.prefs); } } catch (e) {}
+let state = real, elf = false;
+function save() { try { localStorage.setItem(KEY, JSON.stringify({state:real, prefs})); } catch (e) {} }
+
+/* ---------- dates ---------- */
+function today() { const n = new Date(); if (n.getFullYear() > YEAR) return 99; if (n.getFullYear() < YEAR || n.getMonth() < 11) return 0; return n.getDate(); }
+const TESTING = true; /* set to false before sharing with Gill */
+const unlocked = d => TESTING || elf || today() >= d;
+
+/* ---------- sound ---------- */
+const A = {ctx:null, sfx:null, noise:null};
+const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+function audio() {
+  if (!A.ctx) {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return null;
+    A.ctx = new C();
+    A.sfx = A.ctx.createGain(); A.sfx.gain.value = 0.7;
+    A.sfx.connect(A.ctx.destination);
+  }
+  if (A.ctx.state === 'suspended' && !document.hidden) A.ctx.resume();
+  return A.ctx;
+}
+function tone(f, t, dur, vol, type, dest, f2) {
+  const o = A.ctx.createOscillator(), g = A.ctx.createGain();
+  o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + 0.05);
+}
+function fx(notes, step, o) { if (!prefs.sfx || !audio()) return; o = o || {}; const t = A.ctx.currentTime + 0.01;
+  notes.forEach((n, i) => tone(o.raw ? n : hz(n), t + i * step, o.dur || 0.3, o.vol || 0.2, o.type, A.sfx, o.to)); }
+const sfx = {
+  click: () => fx([84], 0, {dur:.08, vol:.12}),
+  locked: () => fx([180, 140], .12, {raw:true, type:'triangle', dur:.15, vol:.25}),
+  open: () => fx([72, 76, 79, 84, 88], .07, {dur:.5}),
+  win: () => fx([72, 76, 79, 84, 79, 84, 88, 91, 96], .09, {dur:.6}),
+  naughty: () => fx([63, 62, 61, 60], .28, {type:'sawtooth', dur:.34, vol:.12}),
+  flip: () => fx([79], 0, {dur:.1, vol:.12}),
+  match: () => fx([79, 86], .09, {dur:.25}),
+  wrong: () => fx([150, 110], .14, {raw:true, type:'square', dur:.16, vol:.08}),
+  pop: () => fx([900], 0, {raw:true, dur:.12, vol:.2, to:200}),
+  tick: () => fx([1100], 0, {raw:true, dur:.04, vol:.14, type:'triangle'}),
+  cackle: () => fx([70, 66, 70, 66, 63], .09, {type:'sawtooth', dur:.1, vol:.1}),
+  scratch: () => { if (!prefs.sfx || !audio()) return;
+    if (!A.noise) { const b = A.ctx.createBuffer(1, Math.floor(A.ctx.sampleRate * .08), A.ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length); A.noise = b; }
+    const n = A.ctx.createBufferSource(), g = A.ctx.createGain(); n.buffer = A.noise; n.playbackRate.value = .8 + Math.random() * .6; g.gain.value = .1; n.connect(g); g.connect(A.sfx); n.start(); },
+  bell: m => fx([m], 0, {dur:.7, vol:.25, type:'triangle'})
+};
+/* Music: three mp3 files that sit next to this page. Only one plays at a time. */
+const TRACKS = {bg:'background.mp3', naughty:'naughty.mp3', xmas:'xmasday.mp3'};
+const players = {}; let track = 'bg';
+function player(n) { if (!players[n]) { const a = new Audio(TRACKS[n]); a.loop = true; a.preload = 'auto'; a.volume = n === 'bg' ? .5 : .7; players[n] = a; } return players[n]; }
+function syncMusic() {
+  const on = prefs.music && !document.hidden;
+  Object.keys(players).forEach(n => { if (!on || n !== track) players[n].pause(); });
+  if (on) { const a = player(track); if (a.paused) { const p = a.play(); if (p) p.catch(() => {}); } }
+}
+function setTrack(n) { if (n === track) return; track = n; if (n !== 'bg') { try { player(n).currentTime = 0; } catch (e) {} } syncMusic(); }
+document.addEventListener('click', () => { audio(); syncMusic(); }, true);
+document.addEventListener('visibilitychange', () => { syncMusic(); if (A.ctx) document.hidden ? A.ctx.suspend() : A.ctx.resume(); });
+function paintToggles() {
+  $('#musicBtn').setAttribute('aria-pressed', prefs.music); $('#musicBtn').textContent = prefs.music ? 'Music on' : 'Music off';
+  $('#sfxBtn').setAttribute('aria-pressed', prefs.sfx); $('#sfxBtn').textContent = prefs.sfx ? 'Sounds on' : 'Sounds off';
+}
+$('#musicBtn').onclick = () => { prefs.music = !prefs.music; save(); paintToggles(); syncMusic(); };
+$('#sfxBtn').onclick = () => { prefs.sfx = !prefs.sfx; save(); paintToggles(); sfx.click(); };
+
+/* ---------- grid ---------- */
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
+function icon(d) { const c = DAYS[d]; if (c.t === 'non') return state.non[d] ? (state.non[d].r === 'nice' ? '😇' : '😈') : '🃏'; return {box:'🎁', game:'🎲', finale:'🎄', event:'🎟️'}[c.t]; }
+function renderGrid() {
+  const g = $('#grid'); g.innerHTML = '';
+  for (let d = 1; d <= 25; d++) {
+    const b = document.createElement('button'); b.type = 'button';
+    const open = state.opened[d], un = unlocked(d);
+    b.className = 'box p' + (d % 5) + (d === 25 ? ' wide' : '') + (open ? ' open' : un ? ' ready' : '');
+    b.innerHTML = open ? `<span class="peek">${icon(d)}</span><span class="mini">${d}</span>` : `<span class="tag">${d}</span>`;
+    b.setAttribute('aria-label', 'Door ' + d + (open ? ', opened' : un ? ', ready to open' : ', locked until ' + d + ' December'));
+    b.onclick = () => {
+      if (!unlocked(d)) { sfx.locked(); b.classList.remove('wiggle'); void b.offsetWidth; b.classList.add('wiggle'); toast('No peeking. Door ' + d + ' opens on ' + d + ' December.'); return; }
+      openDoor(d);
+    };
+    g.append(b);
+  }
+  const t = today(), n = Object.keys(state.opened).length, s = $('#status'); let msg;
+  if (t === 0) { const now = new Date(); const sl = Math.round((new Date(YEAR, 11, 1) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 864e5); msg = sl + (sl === 1 ? ' sleep' : ' sleeps') + ' until door 1'; }
+  else if (t > 25) msg = 'Every door is open. Merry Christmas.';
+  else if (!state.opened[t]) msg = 'Door ' + t + ' is ready';
+  else msg = t === 25 ? 'Merry Christmas, Gill' : 'Door ' + t + ' done. Back tomorrow for door ' + (t + 1) + '.';
+  s.innerHTML = msg + `<small>${n} of 25 opened</small>`;
+}
+let lastDay = today();
+setInterval(() => { if (today() !== lastDay) { lastDay = today(); renderGrid(); } }, 60000);
+
+/* ---------- elf mode: tap the star 5 times ---------- */
+let taps = 0, tapT;
+$('#star').onclick = () => { taps++; clearTimeout(tapT); tapT = setTimeout(() => taps = 0, 2500); if (taps >= 5) { taps = 0; setElf(!elf); } };
+$('#elfOff').onclick = () => setElf(false);
+/* testing only: wipe all progress */
+$('#resetBtn').hidden = !TESTING;
+$('#resetBtn').onclick = () => { real = blank(); if (!elf) state = real; save(); renderGrid(); toast('All doors wrapped up again.'); };
+function setElf(on) { elf = on; state = on ? blank() : real; $('#elf').hidden = !on; renderGrid(); }
+
+/* ---------- door ---------- */
+const dlg = $('#door'), body = $('#doorBody'); let cleanup = null;
+function stopGame() { if (cleanup) { try { cleanup(); } catch (e) {} cleanup = null; } }
+dlg.addEventListener('close', () => { setTrack('bg'); stopGame(); body.innerHTML = ''; renderGrid(); });
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+$('#closeBtn').onclick = () => dlg.close();
+function confetti() {
+  if (reduced) return; const c = document.createElement('div'); c.className = 'confetti';
+  const cols = ['var(--berry)', 'var(--gold)', 'var(--fir)', 'var(--kraft)'];
+  for (let i = 0; i < 36; i++) { const s = document.createElement('i'); s.style.setProperty('--x', Math.random() * 100 + '%'); s.style.setProperty('--d', Math.random() * .5 + 's'); s.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); s.style.background = cols[i % 4]; c.append(s); }
+  dlg.append(c); setTimeout(() => c.remove(), 2600);
+}
+const call = (d, line) => `<div class="call"><b>${d}</b><p><strong>Now open box ${d}.</strong><br>${line || "Today's treat is waiting."}</p></div>`;
+function openDoor(d) {
+  const c = DAYS[d], first = !state.opened[d];
+  if (first) { state.opened[d] = true; save(); sfx.open(); } else sfx.click();
+  $('#doorDate').textContent = d + ' December';
+  body.innerHTML = '';
+  setTrack(c.t === 'non' ? 'naughty' : c.t === 'finale' ? 'xmas' : 'bg');
+  if (c.t === 'box') doBox(d, c); else if (c.t === 'non') doNon(d, c); else if (c.t === 'game') doGame(d, c); else if (c.t === 'event') doEvent(d, c); else doFinale(d, c, first);
+  if (!dlg.open) dlg.showModal();
+}
+function doBox(d, c) {
+  body.innerHTML = (c.note ? `<p class="note">${c.note}</p>` : '') +
+    `<p class="kicker">Cracker joke</p><h2>${c.joke[0]}</h2><button class="btn" type="button" id="tell">Go on then</button><p class="punch" id="punch" hidden>${c.joke[1]}</p>` + call(d);
+  $('#tell').onclick = () => { $('#tell').hidden = true; $('#punch').hidden = false; sfx.match(); };
+}
+function doFinale(d, c, first) {
+  body.innerHTML = `<p class="kicker">The big one</p><h2>Merry Christmas, Gill</h2><img class="gif" src="photobot.gif" alt="Our photo booth strip from last Christmas"><p class="note">${c.note}</p>` + call(d, 'The last one. Make it count.');
+  confetti(); if (first) setTimeout(sfx.win, 500);
+}
+/* Event days: the password is inside the real box. Right word, then scratch off the gold. */
+function doEvent(d, c) {
+  const day = new Date(YEAR, 11, d).toLocaleDateString('en-GB', {weekday:'long'});
+  const ticket = `<div class="ticket"><p class="kicker">You're going to</p><p class="big">${c.icon}</p><h2>${c.title}</h2><p class="when">${day} ${d} December · ${c.time}</p><p class="where">${c.venue}</p></div>`;
+  if (state.ev[d] === 2) { body.innerHTML = `<p class="kicker">Golden ticket</p><div class="scratch">${ticket}</div><p class="meta">It's a date.</p>`; return; }
+  body.innerHTML = `<div class="stage" id="lock"><p class="padlock" id="padlock">🔒</p><p class="kicker">Top secret</p><h2>Something is planned…</h2>
+      <p class="how">Open box ${d} first. There's a five-letter password hiding inside. Type it in to find out what we're doing.</p>
+      <input class="code" id="code" maxlength="5" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" aria-label="Five-letter password" placeholder="?????">
+      <button class="btn" type="button" id="unlock">Unlock</button><p class="meta" id="lockMsg">No guessing. Santa is watching.</p></div>
+    <div class="stage" id="vault" hidden><p class="kicker">Password accepted</p><h2>Scratch off the gold</h2><div class="scratch">${ticket}<canvas id="foil" aria-label="Scratchcard. Rub to reveal."></canvas></div></div>
+    <div class="after" id="after"></div>`;
+  const code = $('#code'); let tries = 0;
+  const openVault = () => { $('#lock').hidden = true; $('#vault').hidden = false; foil(d); };
+  const attempt = () => {
+    const v = code.value.trim().toUpperCase();
+    if (v === c.code.toUpperCase()) { state.ev[d] = 1; save(); code.classList.add('good'); code.disabled = true; $('#padlock').textContent = '🔓'; $('#lockMsg').textContent = 'You\'re in!'; sfx.open(); setTimeout(() => { if (code.isConnected) openVault(); }, 900); return; }
+    tries++; sfx.wrong(); code.value = ''; code.classList.remove('shake'); void code.offsetWidth; code.classList.add('shake');
+    $('#lockMsg').textContent = v.length < 5 ? 'It needs five letters.' : ['Nope. Have you opened the box yet?', 'Still no. Check the box again.', 'Wrong again. The elves are getting suspicious.'][Math.min(tries - 1, 2)];
+  };
+  $('#unlock').onclick = attempt;
+  code.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+  if (state.ev[d] === 1) setTimeout(() => { if (code.isConnected) openVault(); }, 50);
+}
+function foil(d) {
+  const cv = $('#foil'), box = cv.parentNode, W = box.clientWidth, H = box.clientHeight, dpr = window.devicePixelRatio || 1;
+  cv.width = W * dpr; cv.height = H * dpr; const x = cv.getContext('2d'); x.scale(dpr, dpr);
+  const css = getComputedStyle(document.documentElement), tok = n => css.getPropertyValue('--' + n).trim();
+  const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, tok('kraft')); g.addColorStop(.35, tok('gold')); g.addColorStop(.6, tok('cream')); g.addColorStop(.8, tok('gold')); g.addColorStop(1, tok('kraft'));
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.fillStyle = tok('kraft'); for (let i = 0; i < 260; i++) x.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+  x.fillStyle = tok('ink'); x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.font = '26px ' + tok('display'); x.fillText('Scratch here', W / 2, H / 2 - 10);
+  x.font = '700 14px ' + tok('body'); x.fillText('use your finger', W / 2, H / 2 + 20);
+  x.font = '22px serif'; [[.12, .18], [.88, .2], [.15, .82], [.86, .8]].forEach(p => x.fillText('✨', W * p[0], H * p[1]));
+  x.globalCompositeOperation = 'destination-out'; x.lineWidth = 46; x.lineCap = 'round'; x.lineJoin = 'round';
+  const cols = 10, rows = 8, hit = new Set(); let down = false, lx = 0, ly = 0, done = false, lastS = 0;
+  const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  const rub = (px, py) => { if (done) return;
+    x.beginPath(); x.moveTo(lx, ly); x.lineTo(px, py); x.stroke(); x.beginPath(); x.arc(px, py, 23, 0, 7); x.fill(); lx = px; ly = py;
+    hit.add(Math.floor(px / W * cols) + ',' + Math.floor(py / H * rows));
+    const now = performance.now(); if (now - lastS > 60) { lastS = now; sfx.scratch(); }
+    if (hit.size >= cols * rows * .45) { done = true; state.ev[d] = 2; save(); cv.style.opacity = 0; cv.style.pointerEvents = 'none';
+      sfx.win(); confetti(); const a = $('#after'); if (a) a.innerHTML = `<p class="res nice">Surprise!</p><p class="meta">It's a date.</p>`; } };
+  cv.onpointerdown = e => { down = true; try { cv.setPointerCapture(e.pointerId); } catch (err) {} [lx, ly] = pos(e); rub(lx, ly); };
+  cv.onpointermove = e => { if (down) { const p = pos(e); rub(p[0], p[1]); } };
+  cv.onpointerup = cv.onpointercancel = () => down = false;
+}
+function doNon(d, c) {
+  body.innerHTML = `<p class="kicker">Naughty or Nice</p><h2>${c.prize}</h2>
+    <div class="stakes"><span class="sn">😇 Nice<br>${c.nice}</span><span class="sb">😈 Naughty<br>${c.naughty}</span></div>
+    <div class="wheelbox" id="wb"><div class="pointer" id="ptr"></div><div class="wheelclip"><div class="wheel" id="wheel">${[0,1,2,3,4,5,6,7].map(i => `<span style="transform:rotate(${i * 45 + 22.5}deg)">${i % 2 ? '😈' : '😇'}</span>`).join('')}</div></div><div class="hub" id="hub">?</div></div>
+    <div class="after" id="after"><button class="btn" type="button" id="spin">Spin the wheel</button><p class="meta">One spin. No do-overs.</p></div>`;
+  const wheel = $('#wheel'), after = $('#after');
+  const show = (r, live) => {
+    if (!wheel.isConnected) return;
+    const nice = r.r === 'nice'; $('#hub').textContent = nice ? '😇' : '😈';
+    after.innerHTML = `<p class="res ${r.r}">${nice ? 'Nice!' : 'Naughty!'}</p><p><strong>${c.prize}: ${c[r.r]}.</strong></p>
+      <p class="meta">${nice ? 'You dodged: ' + c.naughty : 'You just missed: ' + c.nice}.</p>` + call(d);
+    if (live) { $('#wb').classList.add('landed'); if (nice) { sfx.win(); confetti(); } else sfx.naughty(); }
+  };
+  if (state.non[d]) { const r = state.non[d]; wheel.style.transform = `rotate(${r.a != null ? r.a : (r.r === 'nice' ? -22.5 : -67.5)}deg)`; return show(r, false); }
+  $('#spin').onclick = () => {
+    /* 8 segments, even = nice, odd = naughty. The result is a fair 50/50, then the wheel is aimed at it. */
+    const kind = Math.random() < .5 ? 'nice' : 'naughty';
+    const seg = 2 * Math.floor(Math.random() * 4) + (kind === 'nice' ? 0 : 1);
+    const off = Math.random() < .45 ? (Math.random() < .5 ? 3 + Math.random() * 5 : 37 + Math.random() * 5) : 10 + Math.random() * 25;
+    const rest = 360 - (seg * 45 + off), total = 360 * 7 + rest, r = {r:kind, a:rest};
+    state.non[d] = r; save();
+    after.innerHTML = `<p class="meta">Round and round it goes…</p>`;
+    const dur = reduced ? 1200 : 7500, t0 = performance.now(), ptr = $('#ptr'); let lastK = 0, lastSound = 0, raf;
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur), ang = total * (1 - Math.pow(1 - p, 3));
+      wheel.style.transform = `rotate(${ang}deg)`;
+      const k = Math.floor(ang / 45);
+      if (k !== lastK) { lastK = k; if (now - lastSound > 45) { lastSound = now; sfx.tick(); } ptr.classList.add('tick'); setTimeout(() => ptr.classList.remove('tick'), 60); }
+      if (p < 1) raf = requestAnimationFrame(step); else { cleanup = null; setTimeout(() => show(r, true), 800); }
+    };
+    raf = requestAnimationFrame(step); cleanup = () => cancelAnimationFrame(raf);
+  };
+}
+function doGame(d, c) {
+  const G = GAMES[c.g];
+  body.innerHTML = `<p class="kicker">Mini-game</p><h2>${G.title}</h2><p class="how">${G.how(c)}</p><div class="stage" id="stage"></div><div class="after" id="after"></div>`;
+  const stage = $('#stage'), after = $('#after');
+  const start = () => { stopGame(); after.innerHTML = ''; stage.innerHTML = ''; sfx.click();
+    cleanup = G.run(stage, c, () => { stopGame(); state.won[d] = true; save(); sfx.win(); confetti();
+        after.innerHTML = `<p class="res nice">You did it!</p>` + call(d, 'You earned this one.') + `<button class="btn ghost" type="button" id="again">Play again</button>`; $('#again').onclick = start; },
+      msg => { stopGame(); sfx.wrong(); after.innerHTML = `<div class="lost"><p><strong>${msg}</strong></p><button class="btn" type="button" id="again">Have another go</button></div>`; $('#again').onclick = start; });
+  };
+  if (state.won[d]) after.innerHTML = call(d, 'Already won. Nicely done.');
+  stage.innerHTML = `<button class="btn" type="button" id="play">${state.won[d] ? 'Play again' : 'Play'}</button>`;
+  $('#play').onclick = start;
+}
+
+/* ---------- mini-games: run(stage, cfg, win, lose) returns a cleanup function ---------- */
+const GAMES = {
+ memory: { title:'Match the pairs', how: c => `Find all ${c.pairs} pairs before the clock runs out. Each pair wins back 2 seconds. Two imps are hiding in there: flip one and it scrambles every face-down card and steals 5 seconds.`,
+  run(stage, c, win, lose) {
+    const icons = ['🎄','🎁','⛄','🦌','🔔','🕯️','🧦','⭐'].slice(0, c.pairs), deck = shuffle(icons.concat(icons, ['😈', '😈']));
+    const total = c.secs; let left = total, first = null, lock = false, found = 0, streak = 0, ts = [], lastSec = 99;
+    stage.innerHTML = `<div class="tbar"><i></i></div><div class="mem"></div><p class="meta" id="mv">Streak: 0</p>`;
+    const bar = stage.querySelector('.tbar i'), grid = stage.querySelector('.mem');
+    const cards = deck.map((ic, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'memcard'; b.dataset.ic = ic; b.setAttribute('aria-label', 'Card ' + (i + 1)); b.innerHTML = `<span>${ic}</span>`; b.onclick = () => flip(b); grid.append(b); return b; });
+    function flip(b) {
+      if (lock || b.classList.contains('up')) return; b.classList.add('up'); const ic = b.dataset.ic;
+      if (ic === '😈') { b.classList.add('imp'); sfx.cackle(); streak = 0; left = Math.max(1, left - 5); if (first) { first.classList.remove('up'); first = null; } lock = true;
+        ts.push(setTimeout(() => { const down = cards.filter(x => !x.classList.contains('up')), mix = shuffle(down.map(x => x.dataset.ic));
+          down.forEach((x, i) => { x.dataset.ic = mix[i]; x.firstChild.textContent = mix[i]; x.classList.remove('shake'); void x.offsetWidth; x.classList.add('shake'); }); lock = false; }, 500));
+        $('#mv').textContent = 'Scrambled! Streak: 0'; return; }
+      sfx.flip(); if (!first) { first = b; return; }
+      const a = first; first = null;
+      if (a.dataset.ic === ic) { found++; streak++; left = Math.min(total, left + 2); a.classList.add('done'); b.classList.add('done'); fx([74 + streak * 2, 81 + streak * 2], .09, {dur:.25});
+        if (found === icons.length) { clearInterval(tk); ts.push(setTimeout(win, 500)); } }
+      else { streak = 0; lock = true; ts.push(setTimeout(() => { a.classList.remove('up'); b.classList.remove('up'); lock = false; }, 700)); }
+      $('#mv').textContent = 'Streak: ' + streak;
+    }
+    const tk = setInterval(() => { left -= .1; bar.style.width = Math.max(0, left / total * 100) + '%'; bar.parentNode.classList.toggle('low', left < 15);
+      const sec = Math.ceil(left); if (left < 10 && sec !== lastSec) { lastSec = sec; sfx.tick(); }
+      if (left <= 0) { clearInterval(tk); lock = true; lose('Out of time. You found ' + found + ' of ' + icons.length + ' pairs.'); } }, 100);
+    return () => { clearInterval(tk); ts.forEach(clearTimeout); lock = true; };
+  }},
+ scramble: { title:'Unscramble it', how: () => 'Tap the letters in the right order.',
+  run(stage, c, win) {
+    const word = c.word; let letters = shuffle(word.split('')); while (letters.join('') === word) letters = shuffle(letters);
+    let picked = [], t;
+    stage.innerHTML = `<p><strong>Clue:</strong> ${c.clue}</p><div class="slots"></div><div class="tiles"></div><button class="btn ghost" type="button" id="clr">Clear</button>`;
+    const slots = stage.querySelector('.slots'), tiles = stage.querySelector('.tiles');
+    const draw = () => {
+      slots.innerHTML = word.split('').map((_, i) => `<span class="slot">${picked[i] != null ? letters[picked[i]] : ''}</span>`).join('');
+      tiles.innerHTML = ''; letters.forEach((l, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tile'; b.textContent = l; b.disabled = picked.includes(i);
+        b.onclick = () => { picked.push(i); sfx.flip(); draw();
+          if (picked.length === word.length) { if (picked.map(k => letters[k]).join('') === word) t = setTimeout(win, 300);
+            else { sfx.wrong(); slots.classList.add('shake'); t = setTimeout(() => { slots.classList.remove('shake'); picked = []; draw(); }, 600); } } };
+        tiles.append(b); });
+    };
+    $('#clr').onclick = () => { picked = []; draw(); }; draw();
+    return () => clearTimeout(t);
+  }},
+ pop: { title:'Pop the baubles', how: c => `Pop ${c.goal} baubles in ${c.secs} seconds. They don't hang about.`,
+  run(stage, c, win, lose) {
+    let n = 0, left = c.secs; const cols = ['var(--berry)', 'var(--gold)', 'var(--fir)', 'var(--kraft)'];
+    stage.innerHTML = `<p class="meta"><strong id="pc">0</strong> / ${c.goal} popped · <strong id="pt">${left}</strong>s left</p><div class="arena"></div>`;
+    const arena = stage.querySelector('.arena');
+    const sp = setInterval(() => { const b = document.createElement('button'); b.type = 'button'; b.className = 'bauble'; b.setAttribute('aria-label', 'Bauble');
+      b.style.left = (2 + Math.random() * 80) + '%'; b.style.top = (2 + Math.random() * 78) + '%'; b.style.background = cols[Math.floor(Math.random() * 4)];
+      b.onclick = () => { b.remove(); sfx.pop(); n++; $('#pc').textContent = n; if (n >= c.goal) win(); };
+      arena.append(b); setTimeout(() => b.remove(), 1200); }, 480);
+    const tk = setInterval(() => { left--; const e = $('#pt'); if (e) e.textContent = left; if (left <= 0) lose('Time up. You popped ' + n + '.'); }, 1000);
+    return () => { clearInterval(sp); clearInterval(tk); arena.querySelectorAll('.bauble').forEach(b => b.disabled = true); };
+  }},
+ bells: { title:'Ring the bells', how: c => `Six bells. Listen, then ring them back in the same order. It gets faster every round. Get to ${c.len} in a row. Sounds on helps a lot.`,
+  run(stage, c, win, lose) {
+    const notes = [72, 74, 76, 79, 81, 84], cols = ['var(--berry)', 'var(--gold)', 'var(--fir)', 'var(--kraft)', 'var(--sky)', 'var(--plum)'];
+    const seq = Array.from({length:c.len}, () => Math.floor(Math.random() * 6)); let round = 1, pos = 0, ok = false, ts = [];
+    stage.innerHTML = `<p class="meta" id="bs">Listen…</p><div class="bells"></div>`;
+    const wrap = stage.querySelector('.bells'), bells = notes.map((m, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'bell'; b.style.background = cols[i]; b.textContent = '🔔'; b.setAttribute('aria-label', 'Bell ' + (i + 1));
+      b.onclick = () => { if (!ok) return; flash(i, 260);
+        if (i !== seq[pos]) { ok = false; return lose('Wrong bell. You got to ' + (round - 1) + ' of ' + c.len + '.'); }
+        pos++; if (pos === round) { ok = false; if (round === c.len) ts.push(setTimeout(win, 500)); else { round++; ts.push(setTimeout(show, 900)); } } };
+      wrap.append(b); return b; });
+    const flash = (i, ms) => { sfx.bell(notes[i]); bells[i].classList.add('lit'); ts.push(setTimeout(() => bells[i].classList.remove('lit'), ms)); };
+    function show() { ok = false; pos = 0; const gap = Math.max(300, 640 - round * 50); $('#bs').textContent = 'Listen… (' + round + ' of ' + c.len + ')';
+      seq.slice(0, round).forEach((s, k) => ts.push(setTimeout(() => flash(s, gap - 90), 500 + k * gap)));
+      ts.push(setTimeout(() => { ok = true; $('#bs').textContent = 'Your turn'; }, 500 + round * gap)); }
+    show();
+    return () => { ts.forEach(clearTimeout); ok = false; };
+  }},
+ quiz: { title:'Festive quiz', how: () => 'Three questions. Get each one right to move on.',
+  run(stage, c, win) {
+    const qs = [
+      ["How many reindeer pull the sleigh, counting Rudolph?", ["Eight", "Nine", "Twelve"], 1],
+      ["Which country gave us the Christmas tree tradition?", ["Norway", "Finland", "Germany"], 2],
+      ["What's traditionally hidden inside a Christmas pudding?", ["A silver sixpence", "A walnut", "A sprig of holly"], 0]];
+    let q = 0, t;
+    const draw = () => { const [text, opts, ans] = qs[q];
+      stage.innerHTML = `<p class="meta">Question ${q + 1} of 3</p><p><strong>${text}</strong></p><div class="opts"></div>`;
+      const box = stage.querySelector('.opts');
+      opts.forEach((o, i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = o;
+        b.onclick = () => { if (i !== ans) { b.disabled = true; sfx.wrong(); return; }
+          b.classList.add('right'); box.querySelectorAll('.opt').forEach(x => x.disabled = true); b.disabled = false; sfx.match();
+          q++; t = setTimeout(() => q === 3 ? win() : draw(), 700); };
+        box.append(b); }); };
+    draw(); return () => clearTimeout(t);
+  }},
+ catch: { title:'Catch the presents', how: c => `Slide the stocking to catch ${c.goal} presents. Three lumps of coal and you're out.`,
+  run(stage, c, win, lose) {
+    stage.innerHTML = `<p class="meta">Caught <strong id="cc">0</strong> / ${c.goal} · Coal <strong id="cl">0</strong> / 3</p><canvas class="catch" tabindex="0" aria-label="Game area. Drag, or use the arrow keys."></canvas>`;
+    const cv = stage.querySelector('canvas'), W = cv.clientWidth || 320, H = 300, dpr = window.devicePixelRatio || 1;
+    cv.width = W * dpr; cv.height = H * dpr; const x = cv.getContext('2d'); x.scale(dpr, dpr);
+    const css = getComputedStyle(document.documentElement), ink = css.getPropertyValue('--ink'), mut = css.getPropertyValue('--muted');
+    let px = W / 2, items = [], got = 0, coal = 0, last = performance.now(), acc = 0, raf, over = false;
+    const clamp = v => Math.max(24, Math.min(W - 24, v));
+    const move = e => { px = clamp(e.clientX - cv.getBoundingClientRect().left); };
+    cv.addEventListener('pointerdown', move); cv.addEventListener('pointermove', move);
+    cv.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') px = clamp(px - 28); if (e.key === 'ArrowRight') px = clamp(px + 28); });
+    function loop(t) { if (over) return; const dt = Math.min(.05, (t - last) / 1000); last = t; acc += dt;
+      if (acc > .65) { acc = 0; items.push({x:24 + Math.random() * (W - 48), y:-20, v:130 + Math.random() * 70 + got * 7, bad:Math.random() < .25}); }
+      x.clearRect(0, 0, W, H); x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '30px serif';
+      items = items.filter(it => { it.y += it.v * dt;
+        if (it.y > H - 56 && it.y < H - 10 && Math.abs(it.x - px) < 32) {
+          if (it.bad) { coal++; $('#cl').textContent = coal; sfx.wrong(); if (coal >= 3) { over = true; lose('Too much coal. You caught ' + got + '.'); } }
+          else { got++; $('#cc').textContent = got; sfx.pop(); if (got >= c.goal) { over = true; win(); } }
+          return false; }
+        if (it.bad) { x.fillStyle = ink; x.beginPath(); x.arc(it.x, it.y, 13, 0, 7); x.fill(); x.fillStyle = mut; x.beginPath(); x.arc(it.x - 4, it.y - 4, 4, 0, 7); x.fill(); }
+        else x.fillText('🎁', it.x, it.y);
+        return it.y < H + 30; });
+      x.font = '40px serif'; x.fillText('🧦', px, H - 28);
+      if (!over) raf = requestAnimationFrame(loop); }
+    raf = requestAnimationFrame(loop);
+    return () => { over = true; cancelAnimationFrame(raf); };
+  }},
+ five: { title:'Festive five', how: () => 'Guess the five-letter Christmas word in six goes. Green is right, gold is in the word but in the wrong place.',
+  run(stage, c, win, lose) {
+    const ans = c.word; let row = 0, cur = '', done = false, t;
+    stage.innerHTML = `<div class="five">${'<div class="frow">' + '<span class="fc"></span>'.repeat(5) + '</div>'}</div><p class="meta" id="fm">Type a word, then press Enter.</p><div class="kb"></div>`;
+    const five = stage.querySelector('.five'); five.innerHTML = five.innerHTML.repeat(6);
+    const rows = [...five.querySelectorAll('.frow')], kb = stage.querySelector('.kb'), keys = {};
+    ['QWERTYUIOP', 'ASDFGHJKL', '↵ZXCVBNM⌫'].forEach(r => { const d = document.createElement('div'); d.className = 'krow';
+      r.split('').forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'key' + (k === '↵' || k === '⌫' ? ' big' : ''); b.textContent = k === '↵' ? 'Enter' : k;
+        b.setAttribute('aria-label', k === '↵' ? 'Enter' : k === '⌫' ? 'Delete' : k); b.onclick = () => press(k); keys[k] = b; d.append(b); });
+      kb.append(d); });
+    const paint = () => [...rows[row].children].forEach((cell, i) => cell.textContent = cur[i] || '');
+    function press(k) { if (done) return;
+      if (k === '⌫') cur = cur.slice(0, -1);
+      else if (k === '↵') return submit();
+      else if (cur.length < 5) { cur += k; sfx.flip(); }
+      paint(); }
+    function submit() {
+      if (cur.length < 5) { $('#fm').textContent = 'It needs five letters.'; return; }
+      const res = Array(5).fill('n'), pool = {};
+      for (let i = 0; i < 5; i++) { if (cur[i] === ans[i]) res[i] = 'g'; else pool[ans[i]] = (pool[ans[i]] || 0) + 1; }
+      for (let i = 0; i < 5; i++) if (res[i] !== 'g' && pool[cur[i]]) { res[i] = 'y'; pool[cur[i]]--; }
+      [...rows[row].children].forEach((cell, i) => { cell.classList.add(res[i]); const k = keys[cur[i]];
+        if (res[i] === 'g') k.className = 'key g'; else if (res[i] === 'y' && !k.classList.contains('g')) k.className = 'key y'; else if (res[i] === 'n' && k.className === 'key') k.className = 'key n'; });
+      if (cur === ans) { done = true; t = setTimeout(win, 500); return; }
+      row++; cur = ''; sfx.click();
+      if (row === 6) { done = true; lose('Out of guesses. Here is a hint: it starts with ' + ans[0] + '.'); }
+      else $('#fm').textContent = (6 - row) + (6 - row === 1 ? ' go left.' : ' goes left.');
+    }
+    const onKey = e => { if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === 'Enter') { e.preventDefault(); press('↵'); } else if (e.key === 'Backspace') press('⌫'); else if (/^[a-zA-Z]$/.test(e.key)) press(e.key.toUpperCase()); };
+    document.addEventListener('keydown', onKey);
+    return () => { done = true; clearTimeout(t); document.removeEventListener('keydown', onKey); };
+  }},
+ cups: { title:'Find the star', how: () => 'Watch which box the star goes in, keep your eye on it while they shuffle, then pick. Three rounds, each one faster.',
+  run(stage, c, win, lose) {
+    stage.innerHTML = `<p class="meta" id="cs"></p><div class="cups"></div>`;
+    const wrap = stage.querySelector('.cups'), swaps = [5, 8, 12], speed = [450, 330, 240], r3 = () => Math.floor(Math.random() * 3);
+    let slots = [0, 1, 2], star = 0, round = 0, ok = false, ts = [];
+    const cups = [0, 1, 2].map(i => { const b = document.createElement('button'); b.type = 'button'; b.className = 'cup'; b.setAttribute('aria-label', 'Box'); b.onclick = () => pick(i); wrap.append(b); return b; });
+    const place = () => cups.forEach((b, i) => b.style.left = slots[i] * 36 + '%');
+    const face = open => cups.forEach((b, i) => { b.textContent = open ? (i === star ? '⭐' : '') : '?'; b.classList.toggle('lift', open && i === star); });
+    function startRound() { ok = false; star = r3(); $('#cs').textContent = 'Round ' + (round + 1) + ' of 3. Watch the star…';
+      cups.forEach(b => b.style.transitionDuration = speed[round] + 'ms'); face(true);
+      ts.push(setTimeout(() => { face(false); let k = 0;
+        const go = () => { if (k++ >= swaps[round]) { ok = true; $('#cs').textContent = 'Where is the star?'; return; }
+          const a = r3(); let b = r3(); while (b === a) b = r3(); [slots[a], slots[b]] = [slots[b], slots[a]]; place(); sfx.flip(); ts.push(setTimeout(go, speed[round] + 70)); };
+        ts.push(setTimeout(go, 450)); }, 1400)); }
+    function pick(i) { if (!ok) return; ok = false; face(true);
+      if (i === star) { sfx.match(); round++; $('#cs').textContent = 'Got it!'; ts.push(setTimeout(round === 3 ? win : startRound, round === 3 ? 700 : 1300)); }
+      else { cups[i].textContent = '✖'; lose('Not that one. You got through ' + round + ' of 3 rounds.'); } }
+    place(); startRound();
+    return () => { ts.forEach(clearTimeout); ok = false; };
+  }},
+ odd: { title:'Odd one out', how: c => `One of these is not like the others. Spot it ${c.rounds} times in ${c.secs} seconds. The grid keeps growing and a wrong tap costs 3 seconds.`,
+  run(stage, c, win, lose) {
+    const sets = shuffle([['🎄','🌲'],['⭐','🌟'],['🎅','🤶'],['🍬','🍭'],['🧦','🧤'],['🔔','🛎️'],['🎁','🎀'],['⛄','☃️'],['🦌','🐐'],['🍪','🥮']]);
+    let r = 0, left = c.secs, stopped = false;
+    stage.innerHTML = `<div class="tbar"><i></i></div><p class="meta" id="os"></p><div class="odd"></div>`;
+    const bar = stage.querySelector('.tbar i'), grid = stage.querySelector('.odd');
+    const draw = () => { const n = r < 3 ? 3 : r < 7 ? 4 : 5, pair = shuffle(sets[r % sets.length]), odd = Math.floor(Math.random() * n * n);
+      $('#os').textContent = 'Found ' + r + ' of ' + c.rounds; grid.style.gridTemplateColumns = `repeat(${n},1fr)`; grid.innerHTML = '';
+      for (let i = 0; i < n * n; i++) { const b = document.createElement('button'); b.type = 'button'; b.textContent = i === odd ? pair[1] : pair[0]; b.setAttribute('aria-label', 'Tile ' + (i + 1));
+        b.onclick = () => { if (stopped) return;
+          if (i === odd) { sfx.match(); r++; if (r === c.rounds) { stopped = true; clearInterval(tk); win(); } else draw(); }
+          else { left -= 3; sfx.wrong(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); } };
+        grid.append(b); } };
+    const tk = setInterval(() => { left -= .1; bar.style.width = Math.max(0, left / c.secs * 100) + '%'; bar.parentNode.classList.toggle('low', left < 10);
+      if (left <= 0) { stopped = true; clearInterval(tk); lose('Time up. You spotted ' + r + ' of ' + c.rounds + '.'); } }, 100);
+    draw();
+    return () => { stopped = true; clearInterval(tk); };
+  }},
+ drop: { title:'Chimney drop', how: c => `It's Christmas Eve and the sleigh is flying. Tap to drop a present as the rooftops pass underneath, and time it so it lands down the chimney. Deliver ${c.goal}. You have ${c.presents} presents.`,
+  run(stage, c, win, lose) {
+    stage.innerHTML = `<p class="meta">Delivered <strong id="dd">0</strong> / ${c.goal} · Presents left <strong id="dp">${c.presents}</strong></p><canvas class="catch" tabindex="0" aria-label="Game area. Tap, or press space, to drop a present."></canvas><button class="btn" type="button" id="dropBtn">Drop a present</button>`;
+    const cv = stage.querySelector('canvas'), W = cv.clientWidth || 320, H = 300, dpr = window.devicePixelRatio || 1;
+    cv.width = W * dpr; cv.height = H * dpr; const x = cv.getContext('2d'); x.scale(dpr, dpr);
+    const css = getComputedStyle(document.documentElement), tok = n => css.getPropertyValue('--' + n);
+    const C = {cream:tok('cream'), gold:tok('gold'), berry:tok('berry'), kraft:tok('kraft'), ink:tok('ink'), night:tok('night')};
+    const sx = W * .28, stars = Array.from({length:22}, () => [Math.random() * W, Math.random() * 150, Math.random() * 1.5 + .5]);
+    let houses = [], gifts = [], got = 0, left = c.presents, over = false, last = performance.now(), raf, gap = 0;
+    const drop = () => { if (over || left <= 0) return; left--; $('#dp').textContent = left; gifts.push({x:sx, y:60}); sfx.flip(); };
+    cv.addEventListener('pointerdown', drop); $('#dropBtn').onclick = drop;
+    cv.addEventListener('keydown', e => { if (e.key === ' ') { e.preventDefault(); drop(); } });
+    function loop(t) { if (over) return; const dt = Math.min(.05, (t - last) / 1000); last = t; const speed = 105 + got * 7;
+      houses.forEach(h => h.x -= speed * dt); houses = houses.filter(h => h.x > -80);
+      const tail = houses[houses.length - 1];
+      if (!tail || tail.x < W + 60 - gap) { houses.push({x:W + 60, w:64 + Math.random() * 30, lit:false, red:Math.random() < .5}); gap = 150 + Math.random() * 90; }
+      x.clearRect(0, 0, W, H);
+      x.fillStyle = C.cream; stars.forEach(s => { x.globalAlpha = .6; x.beginPath(); x.arc(s[0], s[1], s[2], 0, 7); x.fill(); }); x.globalAlpha = 1;
+      x.beginPath(); x.arc(W - 46, 44, 20, 0, 7); x.fill();
+      houses.forEach(h => { const cx = h.x + h.w * .22, l = h.x - h.w / 2;
+        x.fillStyle = C.ink; x.fillRect(cx - 13, H - 118, 26, 44); x.fillStyle = C.cream; x.fillRect(cx - 15, H - 122, 30, 6);
+        x.fillStyle = h.red ? C.berry : C.kraft; x.beginPath(); x.moveTo(l - 8, H - 70); x.lineTo(h.x, H - 106); x.lineTo(l + h.w + 8, H - 70); x.fill();
+        x.fillStyle = h.red ? C.kraft : C.berry; x.fillRect(l, H - 70, h.w, 60);
+        x.fillStyle = h.lit ? C.gold : C.night; x.fillRect(h.x - 9, H - 54, 18, 20); });
+      x.fillStyle = C.cream; x.fillRect(0, H - 12, W, 12);
+      x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '24px serif';
+      gifts = gifts.filter(g => { g.y += 300 * dt;
+        if (!g.seen && g.y >= H - 118) { g.seen = true; const h = houses.find(h => !h.lit && Math.abs(h.x + h.w * .22 - g.x) < 17);
+          if (h) { h.lit = true; got++; $('#dd').textContent = got; sfx.match(); if (got >= c.goal) { over = true; win(); } return false; } }
+        if (g.y > H - 16) { sfx.wrong(); return false; }
+        x.fillText('🎁', g.x, g.y); return true; });
+      x.save(); x.translate(sx, 38); x.scale(-1, 1); x.font = '34px serif'; x.fillText('🛷', 0, 0); x.fillText('🦌', -36, -2); x.restore();
+      if (!over && left === 0 && !gifts.length && got < c.goal) { over = true; lose('Out of presents. ' + got + ' delivered.'); }
+      if (!over) raf = requestAnimationFrame(loop); }
+    raf = requestAnimationFrame(loop);
+    return () => { over = true; cancelAnimationFrame(raf); };
+  }}
+};
+
+/* ---------- snow ---------- */
+(function snow() {
+  const cv = $('#snow'), x = cv.getContext('2d'); let W, H, flakes = [], raf;
+  const col = getComputedStyle(document.documentElement).getPropertyValue('--cream');
+  const size = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; };
+  size(); addEventListener('resize', size);
+  for (let i = 0; i < 70; i++) flakes.push({x:Math.random(), y:Math.random(), r:1 + Math.random() * 2.4, v:.02 + Math.random() * .05, s:Math.random() * 6});
+  function draw(t) { x.clearRect(0, 0, W, H); x.fillStyle = col;
+    flakes.forEach(f => { if (!reduced) { f.y += f.v / 60; if (f.y > 1.02) { f.y = -.02; f.x = Math.random(); } }
+      x.globalAlpha = .25 + f.r / 6; x.beginPath(); x.arc(f.x * W + Math.sin(t / 1400 + f.s) * 12, f.y * H, f.r, 0, 7); x.fill(); });
+    if (!reduced && !document.hidden) raf = requestAnimationFrame(draw); }
+  draw(0);
+  document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden && !reduced) raf = requestAnimationFrame(draw); });
+})();
+
+paintToggles(); renderGrid();
+</script>
+</body>
+</html>
