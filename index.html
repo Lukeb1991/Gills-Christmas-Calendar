@@ -11,13 +11,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,500..600&family=Kalam:wght@400&family=Nunito+Sans:wght@400;700;800&family=Yeseva+One&display=swap">
 <style>
 /* Homepage: a wall of wrapped presents on deep spruce, under fairy lights.
-   Behind each door: the present unwraps, then a taped sheet of paper with a cracker to pull,
-   a handwritten love note, and that day's picture, game, wheel, lock or premiere. */
+   Behind each door: the present unwraps into a card coloured by the kind of day,
+   with a cracker, a handwritten love note, and a button that opens the day's main event. */
 :root{
   color-scheme: dark;
   --night:#0f2a26; --spruce:#1a443b; --fir:#2f7a5f;
   --cream:#f6ecd9; --kraft:#c9a26b; --berry:#b3263a; --gold:#e2b659; --ink:#1f1c17;
-  --muted:#6b6254; --sky:#3f7fa6; --plum:#7a3b6e;
+  --muted:#6b6254; --sky:#3f7fa6; --plum:#7a3b6e; --grinch:#3f7f17;
   --paperc:#f8eedc; --inkh:#3a2a1c; --goldwash:#f1dca6;
   --display:"Yeseva One", Georgia, "Times New Roman", serif;
   --serif:"Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
@@ -29,13 +29,14 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 img{max-width:100%}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;background:var(--night)}
 html,body{min-height:100%}
 body{position:relative;margin:0;background:var(--night);color:var(--cream);font-family:var(--body);font-size:16px;line-height:1.5;
   background-image:radial-gradient(ellipse at 50% -10%, var(--spruce), transparent 60%)}
 button{font:inherit}
 .defs{position:absolute;width:0;height:0;overflow:hidden}
 #snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.os{font-size:.5em;line-height:0;vertical-align:.9em;margin-left:.04em}
 
 /* fairy lights strung across the top */
 .lights{position:absolute;left:0;right:0;top:0;height:64px;z-index:0;pointer-events:none;overflow:hidden}
@@ -63,11 +64,12 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
   color:var(--gold);padding:6px 12px;cursor:pointer}
 .pill[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
 .pill.love{border-color:#e0455c;color:#ffd9de}
+.pill.jk{border-color:var(--cream);color:var(--cream)}
 #elf{background:var(--berry);border-radius:14px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
 #elf p{margin:0;flex:1 1 220px;min-width:0}
 #elf .pill{border-color:var(--cream);color:var(--cream)}
 
-/* ---------- wrapping papers (shared by the grid, the big present and the crackers) ---------- */
+/* ---------- wrapping papers (shared by the grid, the big present, crackers and the box picture) ---------- */
 .p0{--paper:var(--berry);--ribbon:var(--gold);--pat:radial-gradient(circle,color-mix(in srgb,var(--cream) 60%,transparent) 14%,transparent 15%);--pat-size:14px 14px}
 .p1{--paper:var(--kraft);--ribbon:var(--berry);--pat:repeating-linear-gradient(45deg,transparent 0 8px,color-mix(in srgb,var(--cream) 50%,transparent) 8px 11px);--pat-size:auto}
 .p2{--paper:var(--fir);--ribbon:var(--cream);--pat:radial-gradient(circle,var(--gold) 12%,transparent 13%);--pat-size:18px 18px}
@@ -114,17 +116,18 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
 .box.wide .otag i{font-size:1.25rem}
 footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--gold)}
 :focus-visible{outline:3px solid var(--cream);outline-offset:3px}
-.sheet :focus-visible{outline-color:var(--berry)}
+.sheet :focus-visible{outline-color:var(--sh-accent,var(--berry))}
+dialog:focus,dialog:focus-visible{outline:none}
 
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom, 0px));z-index:5;
   background:var(--cream);color:var(--ink);font-weight:700;padding:10px 16px;border-radius:999px;max-width:calc(100% - 32px);text-align:center;
   box-shadow:0 6px 20px color-mix(in srgb,var(--ink) 60%,transparent)}
 
-/* ---------- dialogs: the door and the love notes ---------- */
-.pd{border:0;padding:0;background:transparent;color:var(--ink);color-scheme:light;
+/* ---------- dialogs ---------- */
+.pd{border:0;padding:0;outline:none;background:transparent;color:var(--ink);color-scheme:light;
   width:min(440px,calc(100% - 20px));max-width:none;max-height:calc(100dvh - 12px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
 .pd::-webkit-scrollbar{display:none}
-.pd::backdrop{background:color-mix(in srgb,var(--night) 86%,transparent);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.pd::backdrop{background:rgba(8,24,21,.95)}
 .door-wrap{padding:22px 4px 18px}
 .fxlayer{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
 
@@ -143,84 +146,140 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 @keyframes halo{50%{opacity:.45;transform:scale(.94)}}
 .gift:not(.open){animation:nudge 3.4s ease-in-out .8s infinite}
 @keyframes nudge{0%,84%,100%{transform:none}88%{transform:rotate(-4deg)}92%{transform:rotate(4deg)}96%{transform:rotate(-2deg)}}
+.g-glow{position:absolute;left:50%;bottom:60px;z-index:0;width:320px;height:320px;margin-left:-160px;border-radius:50%;opacity:0;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,rgba(255,226,150,.55) 0 9deg,transparent 9deg 22deg);
+  -webkit-mask:radial-gradient(circle,#000 16%,transparent 66%);mask:radial-gradient(circle,#000 16%,transparent 66%)}
 .g-box{position:absolute;left:12px;right:12px;bottom:0;height:140px;z-index:2;border-radius:6px;overflow:hidden;
   box-shadow:0 24px 46px rgba(0,0,0,.5),inset 0 -10px 0 rgba(0,0,0,.12)}
 .g-lid{position:absolute;left:0;right:0;bottom:130px;height:44px;z-index:3;border-radius:6px;overflow:hidden;
-  box-shadow:0 10px 16px rgba(0,0,0,.3),inset 0 -6px 0 rgba(0,0,0,.14);transition:transform .75s cubic-bezier(.3,.7,.3,1) .2s,opacity .5s ease .5s}
+  box-shadow:0 10px 16px rgba(0,0,0,.3),inset 0 -6px 0 rgba(0,0,0,.14)}
 .g-rv{position:absolute;top:0;bottom:0;left:50%;width:30px;margin-left:-15px;background:var(--ribbon);box-shadow:inset 6px 0 0 rgba(255,255,255,.2),inset -6px 0 0 rgba(0,0,0,.12)}
 .g-rh{position:absolute;left:0;right:0;top:44%;height:26px;background:var(--ribbon);box-shadow:inset 0 6px 0 rgba(255,255,255,.2),inset 0 -6px 0 rgba(0,0,0,.12)}
-.g-bow{position:absolute;left:50%;bottom:162px;width:116px;height:68px;margin-left:-58px;z-index:4;color:var(--ribbon);
-  filter:drop-shadow(0 4px 4px rgba(0,0,0,.3));transition:transform .45s ease,opacity .4s ease}
+.g-bow{position:absolute;left:50%;bottom:162px;width:116px;height:68px;margin-left:-58px;z-index:4;color:var(--ribbon);filter:drop-shadow(0 4px 4px rgba(0,0,0,.3))}
 .g-bow svg{width:100%;height:100%;display:block}
 .g-card{position:absolute;left:34px;right:34px;bottom:20px;height:124px;z-index:1;display:flex;flex-direction:column;align-items:center;padding-top:14px;
-  background-color:var(--paperc);background-image:var(--grain);border-radius:3px;outline:1px solid color-mix(in srgb,var(--gold) 70%,transparent);outline-offset:-6px;
-  color:var(--berry);transition:transform .85s cubic-bezier(.2,.75,.2,1) .6s}
-.g-card b{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.7rem;line-height:1}
+  background-color:var(--paperc);background-image:var(--grain);border-radius:3px;outline:1px solid color-mix(in srgb,var(--gold) 70%,transparent);outline-offset:-6px;color:var(--berry)}
+.g-card b{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.6rem;line-height:1.05}
 .g-card span{font-family:var(--hand);font-size:1rem;color:var(--inkh)}
-.g-tagw{position:absolute;right:-16px;bottom:50px;z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));transform:rotate(11deg);transform-origin:0 50%;transition:transform .6s ease}
+.g-tagw{position:absolute;right:-16px;bottom:50px;z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));transform:rotate(11deg);transform-origin:0 50%}
 .g-tag{position:relative;display:block;padding:7px 12px 7px 22px;background-color:var(--paperc);background-image:var(--grain);
   clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 50%);font-family:var(--hand);font-size:1.05rem;color:var(--inkh);white-space:nowrap}
 .g-tag::before{content:"";position:absolute;left:9px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--night)}
+/* the unwrap: bow pulled off, ribbons slide away, then the lid lifts and the card rises out */
 .gift.open{cursor:default;animation:none}
 .gift.open::before{animation:none;opacity:0;transition:opacity .4s}
-.gift.open .g-bow{transform:translateY(-50px) scale(1.25) rotate(-12deg);opacity:0}
-.gift.open .g-lid{transform:translate(-70px,-130px) rotate(-30deg);opacity:0}
-.gift.open .g-card{transform:translateY(-150px)}
-.gift.open .g-tagw{transform:rotate(30deg) translateY(8px)}
+.gift.open .g-box{animation:boxSquash .4s ease}
+@keyframes boxSquash{35%{transform:scale(1.05,.94)}70%{transform:scale(.98,1.03)}}
+.gift.open .g-bow{animation:bowOff .75s cubic-bezier(.5,0,.7,.4) .05s forwards}
+@keyframes bowOff{0%{transform:none}28%{transform:scale(1.18) rotate(-8deg)}52%{transform:scale(.9,1.1) rotate(10deg) translateY(-8px)}100%{transform:translate(120px,96px) rotate(150deg) scale(.5);opacity:0}}
+.gift.open .g-tagw{animation:tagOff .7s ease-in .15s forwards}
+@keyframes tagOff{to{transform:rotate(55deg) translate(30px,70px);opacity:0}}
+.gift.open .g-rv{animation:ribDown .55s cubic-bezier(.6,0,.8,.4) .32s forwards}
+.gift.open .g-lid .g-rv{animation-name:ribUp}
+.gift.open .g-rh{animation:ribSide .55s cubic-bezier(.6,0,.8,.4) .46s forwards}
+@keyframes ribDown{to{transform:translateY(105%)}}
+@keyframes ribUp{to{transform:translateY(-105%)}}
+@keyframes ribSide{to{transform:translateX(105%)}}
+.gift.open .g-lid{animation:lidOff 1s cubic-bezier(.3,.7,.3,1) .95s forwards}
+@keyframes lidOff{0%{transform:none}22%{transform:translateY(-18px) rotate(2deg)}100%{transform:translate(-90px,-175px) rotate(-38deg);opacity:0}}
+.gift.open .g-glow{animation:glowUp 1.6s ease 1.1s forwards}
+@keyframes glowUp{0%{opacity:0;transform:scale(.4)}40%{opacity:1}100%{opacity:.85;transform:scale(1) rotate(25deg)}}
+.gift.open .g-card{animation:cardUp .9s cubic-bezier(.2,.75,.2,1) 1.25s forwards}
+@keyframes cardUp{to{transform:translateY(-138px)}}
 
-/* step two: a taped sheet of paper */
-.sheet{position:relative;display:flex;flex-direction:column;gap:16px;padding:34px 20px 24px;text-align:center;
-  background-color:var(--paperc);background-image:var(--grain),var(--mottle);color:var(--ink);border-radius:3px;
+/* step two: a sheet of paper, coloured by the kind of day */
+.sheet{--sh-bg:#f8eedc;--sh-ink:#1f1c17;--sh-muted:#6b6254;--sh-accent:#b3263a;--sh-hand:#3a2a1c;--sh-dash:rgba(201,162,107,.75);
+  --sh-btn:#b3263a;--sh-btn-hi:#d23b52;--sh-btn-lo:#7e1426;--sh-btn-ink:#fff;
+  position:relative;display:flex;flex-direction:column;gap:16px;padding:34px 20px 24px;text-align:center;
+  background-color:var(--sh-bg);background-image:var(--grain),var(--mottle);color:var(--sh-ink);border-radius:3px;
   box-shadow:inset 0 0 34px rgba(140,90,40,.14),inset 0 1px 0 rgba(255,255,255,.6),0 22px 48px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.25)}
+.sheet.t-candy{--sh-bg:#fbe8e5;--sh-muted:#7d5f5b;--sh-dash:rgba(179,38,58,.35)}
+.sheet.t-game{--sh-bg:#e2eef4;--sh-ink:#14232b;--sh-muted:#55707d;--sh-accent:#2a668c;--sh-hand:#1d3340;--sh-dash:rgba(42,102,140,.38);--sh-btn:#2a668c;--sh-btn-hi:#3f86b3;--sh-btn-lo:#1b4a66}
+.sheet.t-non{--sh-bg:#e4efd0;--sh-ink:#17240e;--sh-muted:#5b6c49;--sh-accent:#3f7f17;--sh-hand:#22330f;--sh-dash:rgba(63,127,23,.4);--sh-btn:#3f7f17;--sh-btn-hi:#5aa327;--sh-btn-lo:#2a5a0e}
+.sheet.t-lock{--sh-bg:#f6e5bf;--sh-ink:#2a1c08;--sh-muted:#7a6440;--sh-accent:#99620f;--sh-hand:#3a2a10;--sh-dash:rgba(154,101,18,.42);--sh-btn:#a86d12;--sh-btn-hi:#d39b2c;--sh-btn-lo:#7a4c08}
+.sheet.t-reveal{--sh-bg:#8e1b2b;--sh-ink:#fff4e0;--sh-muted:#f0cbbd;--sh-accent:#f1c86a;--sh-hand:#fff4e0;--sh-dash:rgba(241,200,106,.45);--sh-btn:#e2b659;--sh-btn-hi:#f6d888;--sh-btn-lo:#b98a35;--sh-btn-ink:#2a1a07;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2),0 22px 48px rgba(0,0,0,.45)}
 .sheet.rise{animation:rise .6s cubic-bezier(.2,.75,.2,1) both}
 @keyframes rise{from{transform:translateY(28px) rotate(-1deg);opacity:0}}
 .sheet.jolt{animation:jolt .35s ease}
 @keyframes jolt{30%{transform:translateY(5px) rotate(.5deg)}60%{transform:translateY(-2px)}}
+.sheet.slidein{animation:slideIn .45s cubic-bezier(.2,.8,.2,1) both}
+.sheet.slideback{animation:slideBack .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes slideIn{from{transform:translateX(44px);opacity:0}}
+@keyframes slideBack{from{transform:translateX(-44px);opacity:0}}
 .tape{position:absolute;z-index:3;top:-13px;left:50%;width:112px;height:28px;transform:translateX(-50%) rotate(var(--tilt,-3deg));pointer-events:none;
   clip-path:polygon(0 0,100% 0,97% 20%,100% 40%,97% 60%,100% 80%,97% 100%,0 100%,3% 80%,0 60%,3% 40%,0 20%)}
 .tape.t0{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--berry) 80%,transparent) 0 7px,color-mix(in srgb,var(--cream) 84%,transparent) 7px 14px)}
 .tape.t1{background:repeating-linear-gradient(135deg,rgba(255,255,255,.22) 0 6px,transparent 6px 12px),color-mix(in srgb,var(--gold) 82%,transparent)}
-.tape.t2{background:repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px),color-mix(in srgb,var(--fir) 78%,transparent)}
-.x{position:absolute;right:8px;top:8px;z-index:4;border:0;background:none;padding:8px 10px;font-size:.85rem;font-weight:700;color:var(--muted);cursor:pointer;border-radius:999px}
-.x:hover{color:var(--ink)}
+.tape.tg{background:repeating-linear-gradient(135deg,rgba(42,102,140,.78) 0 7px,rgba(255,255,255,.86) 7px 14px)}
+.tape.tn{background:repeating-linear-gradient(135deg,rgba(63,127,23,.82) 0 7px,rgba(200,16,46,.78) 7px 14px)}
+.x{position:absolute;right:8px;top:8px;z-index:4;border:0;background:none;padding:8px 10px;font-size:.85rem;font-weight:700;color:var(--sh-muted);cursor:pointer;border-radius:999px}
+.x:hover{color:var(--sh-ink)}
+.back{position:absolute;left:8px;top:8px;z-index:4;display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:8px 10px;font-size:.85rem;font-weight:800;color:var(--sh-accent);cursor:pointer;border-radius:999px}
+.back svg{width:14px;height:14px}
+.panel{padding-top:54px}
 .s-head{display:flex;flex-direction:column;align-items:center;gap:2px}
-.s-day{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--berry)}
-.s-date{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:2.2rem;line-height:1.05;color:var(--ink)}
+.s-day{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--sh-accent)}
+.s-date{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:2.2rem;line-height:1.05;color:var(--sh-ink);text-wrap:balance}
+.panel .s-date{font-size:1.9rem}
 .s-head::after{content:"";width:64px;height:7px;margin-top:8px;background:radial-gradient(circle,var(--gold) 2.4px,transparent 3px) center/14px 7px repeat-x}
 .s-body,.act{display:flex;flex-direction:column;gap:14px;align-items:stretch}
 .s-body p{margin:0}
-.kick{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.1rem;color:var(--berry)}
+.kick{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.1rem;color:var(--sh-accent)}
 .s-body h3{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.75rem;line-height:1.12;text-wrap:balance}
-.how,.meta,.skip{color:var(--muted);font-size:.95rem}
+.how,.meta,.skip{color:var(--sh-muted);font-size:.95rem}
 .skip{font-size:.8rem}
-.hint{font-family:var(--hand);font-size:1.15rem;color:var(--berry)}
+.hint{font-family:var(--hand);font-size:1.15rem;color:var(--sh-accent)}
 .stage,.after{display:flex;flex-direction:column;gap:12px;align-items:stretch}
-.btn{border:0;border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;align-self:center;color:#fff;
-  background:radial-gradient(circle at 38% 30%,#d23b52,var(--berry) 60%,#7e1426);box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 8px 18px rgba(0,0,0,.22);transition:transform .12s}
+.btn{border:0;border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;align-self:center;color:var(--sh-btn-ink,#fff);
+  background:radial-gradient(circle at 38% 30%,var(--sh-btn-hi,#d23b52),var(--sh-btn,#b3263a) 60%,var(--sh-btn-lo,#7e1426));
+  box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 8px 18px rgba(0,0,0,.22);transition:transform .12s}
 .btn:active{transform:scale(.97)}
-.btn.ghost{background:transparent;color:var(--berry);box-shadow:inset 0 0 0 1.5px var(--berry)}
+.btn:disabled{opacity:.6;cursor:default}
+.btn.ghost{background:transparent;color:var(--sh-accent,#b3263a);box-shadow:inset 0 0 0 1.5px var(--sh-accent,#b3263a)}
 .btn.small{padding:8px 16px;font-size:.9rem}
 .res{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2rem;line-height:1.1}
-.res.nice{color:var(--fir)}.res.naughty{color:var(--berry)}
-.outcome{font-family:var(--hand);font-size:1.45rem;line-height:1.25;color:var(--inkh)}
+.res.nice{color:var(--fir)}
+.outcome{font-family:var(--hand);font-size:1.45rem;line-height:1.25;color:var(--sh-hand)}
 .lost{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:8px;background:color-mix(in srgb,var(--berry) 9%,transparent)}
-.lost p{font-family:var(--hand);font-size:1.25rem;line-height:1.3;color:var(--inkh)}
-.lost .meta{font-family:var(--body);font-size:.9rem;color:var(--muted)}
-.xmas{font-size:2.3rem!important;color:var(--berry)}
+.lost p{font-family:var(--hand);font-size:1.25rem;line-height:1.3;color:var(--sh-hand)}
+.lost .meta{font-family:var(--body);font-size:.9rem;color:var(--sh-muted)}
+.xmas{font-size:2.3rem!important;color:var(--sh-accent)}
 
-/* "now open box N", sealed with wax */
-.call{display:flex;align-items:center;gap:14px;text-align:left;margin-top:4px;padding:16px 4px 2px;border-top:1.5px dashed color-mix(in srgb,var(--kraft) 75%,transparent)}
-.call .seal{flex:none;width:64px;height:64px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
-.call .seal svg{width:100%;height:100%;display:block}
-.call b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.35rem;line-height:1.1}
-.call span{display:block;margin-top:2px;font-family:var(--hand);font-size:1.1rem;line-height:1.25;color:var(--inkh)}
-.call.pending .seal{opacity:0}
-.call.fresh .seal{animation:stampIn .55s cubic-bezier(.3,1.5,.5,1) .25s both}
-@keyframes stampIn{from{transform:scale(1.9) rotate(-25deg);opacity:0}}
+/* the big button that opens the day's main event; it stays in reach at the bottom */
+.cta-bar{position:sticky;bottom:0;z-index:6;display:flex;flex-direction:column;align-items:center;gap:6px;margin:4px -20px -24px;
+  padding:24px 20px calc(16px + env(safe-area-inset-bottom,0px));border-radius:0 0 3px 3px}
+/* the fade behind the button only appears while it's floating over the card */
+.cta-bar::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;opacity:0;transition:opacity .25s;
+  background:linear-gradient(to top,var(--sh-bg) 62%,color-mix(in srgb,var(--sh-bg) 0%,transparent))}
+.cta-bar.stuck::before{opacity:1}
+.cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;font-size:1.05rem;animation:ctaPulse 2.8s ease-in-out 1.5s infinite}
+.cta svg{width:17px;height:17px}
+@keyframes ctaPulse{0%,100%{transform:none}50%{transform:scale(1.04)}}
+.cta-bar small{font-size:.8rem;color:var(--sh-muted)}
+
+/* "Now open Calendar Box N": a little tree with that day's present underneath */
+.call{display:flex;align-items:center;gap:12px;text-align:left;margin-top:4px;padding:14px 2px 2px;border-top:1.5px dashed var(--sh-dash)}
+.call .tree{flex:none;width:64px;height:72px}
+.call .tree svg{width:100%;height:100%;display:block;overflow:visible}
+.call b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.3rem;line-height:1.12;color:var(--sh-ink);text-wrap:balance}
+.call span.line{display:block;margin-top:3px;font-family:var(--hand);font-size:1.08rem;line-height:1.25;color:var(--sh-hand)}
+.call .pres{transform-box:fill-box;transform-origin:50% 100%;animation:presHop 3s ease-in-out 1.2s infinite}
+@keyframes presHop{0%,68%,100%{transform:none}76%{transform:translateY(-6px) rotate(-6deg)}84%{transform:translateY(0) rotate(4deg)}91%{transform:rotate(-2deg)}}
+.call .tstar{transform-box:fill-box;transform-origin:center;animation:starTw 1.6s ease-in-out infinite alternate}
+@keyframes starTw{to{transform:scale(1.25) rotate(18deg);opacity:.75}}
+.call.pending{visibility:hidden}
+.call.fresh{animation:callIn .6s cubic-bezier(.2,1.2,.4,1) both}
+.call.fresh .tree{animation:treePop .75s cubic-bezier(.3,1.6,.5,1) .15s both}
+@keyframes callIn{from{transform:translateY(14px) scale(.96);opacity:0}}
+@keyframes treePop{from{transform:scale(.3) rotate(-14deg);opacity:0}}
 
 /* the cracker */
-.crk{display:flex;flex-direction:column;align-items:center;gap:8px}
-.cstage{position:relative;width:100%;height:100px;display:grid;place-items:center}
+.crk{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cstage{position:relative;width:100%;height:118px;display:flex;justify-content:center;padding-top:12px}
+.crk.done .cstage{height:100px}
+.crk-hint{position:absolute;left:0;right:0;bottom:2px;margin:0!important;transition:opacity .35s}
+.crk-hint.gone{opacity:0}
 .cracker{position:relative;width:min(280px,100%);height:72px;border:0;padding:0;background:none;cursor:grab;touch-action:pan-y;
   -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 .cracker:not(.popped){animation:jiggle 3.4s ease-in-out 1.2s infinite}
@@ -250,23 +309,32 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 .cracker.popped .half.r{transform:translate(16px,10px) rotate(12deg)}
 .cracker.popped .c-band{transform:translate(-50%,-280%) rotate(-30deg);opacity:0}
 .cracker.still .half,.cracker.still .c-band{transition:none}
-.bang{position:absolute;left:50%;top:50%;z-index:3;width:124px;height:124px;margin:-62px 0 0 -62px;pointer-events:none;opacity:0}
+.bang{position:absolute;left:50%;top:48px;z-index:3;width:124px;height:124px;margin:-62px 0 0 -62px;pointer-events:none;opacity:0}
 .bang svg{width:100%;height:100%;display:block}
 .bang.go{animation:bang .85s ease-out both}
 @keyframes bang{0%{transform:scale(.2) rotate(-10deg);opacity:0}25%{transform:scale(1.15) rotate(4deg);opacity:1}70%{opacity:1}100%{transform:scale(1.35) rotate(8deg);opacity:0}}
-.slipw{position:relative;align-self:center;margin-top:10px;filter:drop-shadow(0 6px 10px rgba(60,40,20,.22))}
-.slipw.in{animation:slipUp .55s cubic-bezier(.2,1.25,.4,1) both}
-@keyframes slipUp{from{transform:translateY(-40px) scale(.4);opacity:0}}
-.slip{display:block;max-width:290px;border:0;padding:16px 30px 14px;cursor:pointer;font:inherit;color:var(--ink);text-align:center;
+/* the joke slip grows in smoothly, and both faces share one footprint so flipping never moves the page */
+.slipbox{display:grid;grid-template-rows:0fr;width:100%;transition:grid-template-rows .55s cubic-bezier(.3,.8,.3,1)}
+.slipbox.open{grid-template-rows:1fr}
+.slipbox.still{transition:none}
+.slipin{min-height:0;overflow:hidden}
+.slipbox.done .slipin{overflow:visible}
+.slippad{display:flex;justify-content:center;padding:28px 0 10px}
+.slipw{position:relative;filter:drop-shadow(0 6px 10px rgba(60,40,20,.22))}
+.slipw.in{animation:slipUp .6s cubic-bezier(.2,1.25,.4,1) both}
+@keyframes slipUp{from{transform:translateY(-36px) scale(.5);opacity:0}}
+.slip{display:grid;max-width:290px;border:0;padding:16px 30px 14px;cursor:pointer;font:inherit;color:#1f1c17;text-align:center;
   background-color:#fffdf8;background-image:var(--grain);transform:rotate(-1.2deg);
   clip-path:polygon(0 0,100% 0,95% 12%,100% 25%,95% 37%,100% 50%,95% 62%,100% 75%,95% 87%,100% 100%,0 100%,5% 87%,0 75%,5% 62%,0 50%,5% 37%,0 25%,5% 12%)}
 .slip.flip{animation:flipX .44s ease-in-out}
 @keyframes flipX{50%{transform:rotate(-1.2deg) scaleX(0)}}
-.sf{display:flex;flex-direction:column;align-items:center;gap:6px}
+.sf{grid-area:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.sf.off{visibility:hidden}
 .sf small{font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--berry)}
 .sf b{font-weight:700;font-size:1.06rem;line-height:1.35}
 .sf.back b{font-family:var(--hand);font-weight:400;font-size:1.6rem;line-height:1.2;color:var(--berry)}
-.sf i{font-style:normal;font-size:.75rem;color:var(--muted)}
+.sf em{font-family:var(--hand);font-style:normal;font-size:1.05rem;line-height:1.2;color:var(--inkh)}
+.sf i{font-style:normal;font-size:.72rem;color:#6b6254}
 .crown{position:absolute;left:-8px;top:-24px;z-index:2;width:58px;height:31px;transform:rotate(-14deg);pointer-events:none}
 .crown svg{width:100%;height:100%;display:block}
 .slipw.in .crown{animation:crownPop .9s cubic-bezier(.2,1.5,.4,1) .2s both}
@@ -278,6 +346,7 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
   background-color:#fffcf6;background-image:repeating-linear-gradient(to bottom,transparent 0 27px,rgba(122,90,60,.2) 27px 28px),var(--grain);
   background-origin:content-box,padding-box;background-position:0 -4px,0 0;transform:rotate(.6deg);
   box-shadow:0 8px 18px rgba(60,40,20,.18),0 1px 3px rgba(60,40,20,.2)}
+.note .nbody::before{content:"";float:right;width:30px;height:24px}
 .note p{margin:0 0 28px;font-size:19px;line-height:28px}
 .note .nbody p:last-child{margin-bottom:0}
 .note .nsign{margin:0;text-align:right;font-size:20px}
@@ -287,47 +356,64 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 .note.pre .nbody,.note.pre .nsign,.note.pre .nps{visibility:hidden}
 .note.writing .ln{clip-path:inset(-8px calc(100% + 8px) -8px -4px);transition-property:clip-path;transition-timing-function:linear}
 .note.writing .ln.on{clip-path:inset(-8px -4px -8px -4px)}
-.nseal{position:absolute;right:-10px;top:-18px;width:54px;height:54px;display:none;transform:rotate(-10deg);filter:drop-shadow(0 4px 5px rgba(0,0,0,.3))}
+.nseal{position:absolute;right:-12px;top:-20px;width:52px;height:52px;display:none;transform:rotate(-10deg);filter:drop-shadow(0 4px 5px rgba(0,0,0,.3))}
 .nseal svg{width:100%;height:100%;display:block}
 .note.sealed .nseal{display:block;animation:sealIn .5s cubic-bezier(.3,1.5,.5,1) both}
 .note.still .nseal{animation:none}
 @keyframes sealIn{from{transform:scale(1.8) rotate(-30deg);opacity:0}}
 
-/* polaroid that develops */
-.polaroid{position:relative;align-self:center;width:min(250px,80%);margin:14px 0 6px;padding:10px 10px 0;background-color:#fff;background-image:var(--grain);
+/* polaroids: tap to shake them until they develop */
+.polaroid{position:relative;align-self:center;width:min(250px,80%);margin:14px 0 4px;padding:10px 10px 0;background-color:#fff;background-image:var(--grain);
   box-shadow:0 12px 26px rgba(40,25,10,.28),0 1px 3px rgba(40,25,10,.2);transform:rotate(-2.5deg)}
+.polaroid img{display:block;width:100%;height:auto;background:var(--goldwash);transition:filter .9s ease}
+.polaroid figcaption{min-height:44px;padding:10px 4px 12px;font-family:var(--hand);font-size:1.05rem;line-height:1.25;color:var(--inkh)}
+.polaroid .tape{width:90px;height:24px;top:-12px}
+.polaroid.undev{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.polaroid.undev img{filter:brightness(.12) sepia(1) saturate(.3) contrast(.6) blur(3px)}
 .polaroid.drop{animation:drop .8s cubic-bezier(.2,.9,.3,1.2) .15s both}
 @keyframes drop{from{transform:rotate(-14deg) translateY(-30px) scale(.9);opacity:0}}
 .polaroid.shake{animation:shake .5s ease}
-@keyframes shake{20%{transform:rotate(-7deg)}50%{transform:rotate(2deg)}80%{transform:rotate(-4deg)}}
-.polaroid img{display:block;width:100%;height:auto;background:var(--goldwash)}
+@keyframes shake{15%{transform:rotate(-9deg) translateX(-6px)}35%{transform:rotate(5deg) translateX(6px)}55%{transform:rotate(-6deg) translateX(-4px)}75%{transform:rotate(1deg) translateX(2px)}}
 .polaroid.develop{cursor:pointer}
 .polaroid.develop img{filter:brightness(.12) sepia(1) saturate(.3) contrast(.6) blur(3px)}
 .polaroid.develop.go img{animation:develop 6s ease-out .3s both}
 .polaroid.develop.go.fast img{animation-duration:1.4s}
 @keyframes develop{0%{filter:brightness(.12) sepia(1) saturate(.3) contrast(.6) blur(3px)}35%{filter:brightness(.55) sepia(.8) saturate(.5) contrast(.8) blur(1.5px)}100%{filter:brightness(1) sepia(0) saturate(1) contrast(1) blur(0)}}
-.polaroid figcaption{min-height:44px;padding:10px 4px 12px;font-family:var(--hand);font-size:1.05rem;line-height:1.25;color:var(--inkh)}
-.polaroid .tape{width:90px;height:24px;top:-12px}
 .ph{display:grid;place-items:center;aspect-ratio:4/5;padding:16px;background:var(--goldwash);font-family:var(--hand);font-size:1.05rem;line-height:1.3;color:var(--inkh);text-align:center}
-.devhint{font-size:.8rem;color:var(--muted)}
+.devhint{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.85rem;color:var(--sh-muted)}
+.devhint .dots{display:flex;gap:7px}
+.devhint .dots i{width:10px;height:10px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--sh-accent);transition:background .3s}
+.devhint .dots i.on{background:var(--sh-accent)}
 
-/* game premise: win to unlock the box */
-.prize{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border:1.5px dashed color-mix(in srgb,var(--kraft) 85%,transparent);border-radius:10px;background:color-mix(in srgb,var(--gold) 13%,transparent)}
+/* game premise: win it to open the box */
+.prize{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border:1.5px dashed var(--sh-dash);border-radius:10px;background:color-mix(in srgb,var(--sh-accent) 8%,transparent)}
 .prize .padlock{flex:none;width:34px;height:40px}
-.prize b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.15rem;line-height:1.15}
-.prize span{display:block;font-family:var(--hand);font-size:1.05rem;color:var(--inkh)}
+.prize b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.15rem;line-height:1.15;color:var(--sh-ink);text-wrap:balance}
+.prize span{display:block;margin-top:2px;font-family:var(--hand);font-size:1.05rem;line-height:1.25;color:var(--sh-hand)}
 
-/* Naughty or Nice */
+/* save your prize as a picture */
+.psave{display:flex;align-items:center;gap:14px;text-align:left;padding:12px;border-radius:12px;background:color-mix(in srgb,var(--sh-accent) 9%,transparent)}
+.psave .thumb{flex:none;width:72px;aspect-ratio:4/5;border:0;padding:0;border-radius:6px;overflow:hidden;cursor:zoom-in;background:var(--goldwash);
+  box-shadow:0 6px 14px rgba(0,0,0,.25);transform:rotate(-4deg)}
+.psave .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.psave b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.1rem;line-height:1.15;color:var(--sh-ink)}
+.psave span{display:block;margin:2px 0 8px;font-size:.85rem;line-height:1.3;color:var(--sh-muted)}
+.psave .btn{align-self:flex-start}
+.viewer .vbox{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;color:var(--cream)}
+.viewer img{display:block;width:min(360px,100%);border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.vhelp{margin:0;font-size:.9rem;color:color-mix(in srgb,var(--cream) 80%,transparent)}
+
+/* Naughty or Nice (Grinch green) */
 .stakes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stake{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0;padding:10px 8px 10px 24px;text-align:center;clip-path:polygon(12px 0,100% 0,100% 100%,12px 100%,0 50%)}
-.stake::before{content:"";position:absolute;left:8px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--paperc);box-shadow:inset 0 0 0 2px rgba(0,0,0,.28)}
+.stake::before{content:"";position:absolute;left:8px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--sh-bg);box-shadow:inset 0 0 0 2px rgba(0,0,0,.28)}
 .stake span{font-size:.66rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
 .stake b{font-family:var(--hand);font-weight:400;font-size:1.15rem;line-height:1.15}
 .stake.nice{background:var(--gold);color:var(--ink)}
-.stake.naughty{background:var(--berry);color:var(--cream)}
+.stake.naughty{background:var(--grinch);color:var(--cream)}
 .wheelbox{--w:min(264px,calc(100vw - 100px));position:relative;flex:none;width:var(--w);height:var(--w);align-self:center;margin:18px 0 4px}
-.wheelclip{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;border:8px solid var(--ink);box-shadow:0 0 0 4px var(--gold),0 12px 26px rgba(0,0,0,.35)}
-.wheel{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(var(--gold) 0 45deg,var(--berry) 45deg 90deg);will-change:transform}
+.wheelclip{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;border:8px solid var(--ink);box-shadow:0 0 0 4px #c8102e,0 12px 26px rgba(0,0,0,.35)}
+.wheel{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(var(--gold) 0 45deg,var(--grinch) 45deg 90deg);will-change:transform}
 .wheel span{position:absolute;left:50%;top:0;width:0;height:50%;transform-origin:50% 100%}
 .wheel i{position:absolute;top:calc(var(--w) * .045);left:0;transform:translateX(-50%);writing-mode:vertical-rl;font-style:normal;font-weight:800;
   font-size:calc(var(--w) * .042);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
@@ -340,10 +426,13 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 .pointer.tick{transform:rotate(-16deg)}
 .verdict{position:absolute;left:50%;top:50%;z-index:3;transform:translate(-50%,-50%) rotate(-14deg);padding:8px 16px 6px;border:5px double currentColor;border-radius:12px;
   font-family:var(--body);font-weight:800;font-size:calc(var(--w) * .13);line-height:1;letter-spacing:.12em;text-transform:uppercase;
-  background:color-mix(in srgb,var(--paperc) 90%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--paperc) 90%,transparent),0 8px 18px rgba(0,0,0,.25)}
-.verdict.nice{color:var(--fir)}.verdict.naughty{color:var(--berry)}
+  background:color-mix(in srgb,var(--sh-bg) 92%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--sh-bg) 92%,transparent),0 8px 18px rgba(0,0,0,.25)}
+.verdict.nice,.mini-verdict.nice{color:#a8741a}
+.verdict.naughty,.mini-verdict.naughty{color:var(--grinch)}
 .verdict.thump{animation:thump .42s cubic-bezier(.5,0,.75,0) both}
 @keyframes thump{from{transform:translate(-50%,-50%) rotate(-4deg) scale(2.6);opacity:0}}
+.mini-verdict{align-self:center;display:inline-block;padding:7px 16px 5px;border:4px double currentColor;border-radius:10px;font-weight:800;font-size:1.5rem;
+  letter-spacing:.12em;text-transform:uppercase;line-height:1;transform:rotate(-7deg)}
 
 /* locked days */
 .padlock{width:56px;height:64px;align-self:center;overflow:visible}
@@ -351,25 +440,26 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 .padlock.open .shackle{transform:translateY(-6px) rotate(34deg)}
 .code{width:100%;padding:10px 0 10px .35em;border:3px dashed var(--kraft);border-radius:12px;background:#fffcf6;color:var(--ink);
   font-family:var(--serif);font-style:italic;font-weight:600;font-size:2rem;text-align:center;text-transform:uppercase;letter-spacing:.35em}
-.code:focus{outline:none;border-color:var(--berry)}
+.code:focus{outline:none;border-color:var(--sh-accent)}
 .code.good{border-style:solid;border-color:var(--fir);background:var(--fir);color:var(--cream)}
 .code.shake{animation:wiggle .4s}
-.lockmsg{font-family:var(--hand);font-size:1.15rem;color:var(--inkh)}
+.lockmsg{font-family:var(--hand);font-size:1.15rem;color:var(--sh-hand)}
 .scratch{position:relative;-webkit-user-select:none;user-select:none}
 .scratch canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:6px;touch-action:none;cursor:grab;transition:opacity .7s}
 .ticket{position:relative;display:grid;grid-template-columns:1fr auto;text-align:left;border-radius:6px;overflow:hidden;
   background-color:var(--goldwash);background-image:var(--grain);box-shadow:0 10px 22px rgba(60,40,20,.22)}
-.t-main{display:flex;flex-direction:column;gap:4px;min-width:0;padding:18px 16px 16px}
+.t-main{display:flex;flex-direction:column;gap:4px;min-width:0;padding:16px 16px 16px}
+.t-emoji{font-size:1.8rem;line-height:1.1;letter-spacing:.08em}
 .t-kick{font-size:.64rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--berry)}
 .t-title{font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.5rem;line-height:1.1;color:var(--ink);text-wrap:balance}
 .t-detail{font-size:.88rem;line-height:1.35;color:var(--inkh)}
 .t-venue{font-family:var(--hand);font-size:1.3rem;line-height:1.2;color:var(--inkh)}
-.t-stub{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:84px;padding:14px 14px;
+.t-stub{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:84px;padding:14px 12px;
   border-left:2px dashed color-mix(in srgb,var(--ink) 40%,transparent);background:var(--berry);color:var(--cream);text-align:center}
-.t-stub::before,.t-stub::after{content:"";position:absolute;left:-10px;width:18px;height:18px;border-radius:50%;background:var(--paperc)}
+.t-stub::before,.t-stub::after{content:"";position:absolute;left:-10px;width:18px;height:18px;border-radius:50%;background:var(--sh-bg,var(--paperc))}
 .t-stub::before{top:-9px}.t-stub::after{bottom:-9px}
 .t-stub small{font-size:.64rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
-.t-stub b{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.5rem;line-height:1}
+.t-stub b{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.3rem;line-height:1.05}
 .t-stub span{margin-top:6px;font-weight:800;font-size:.9rem;white-space:nowrap}
 
 /* Christmas Day: the premiere */
@@ -421,7 +511,7 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 @keyframes sway{50%{transform:translateX(-50%) rotate(3deg)}}
 .tassel svg{width:22px;height:46px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.5))}
 .tlabel{padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.6);font-weight:800;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;box-shadow:inset 0 0 0 1.5px var(--gold)}
-.tissue{font-family:var(--hand);font-size:1rem;color:color-mix(in srgb,var(--cream) 75%,transparent)}
+.popcorn{font-family:var(--hand);font-size:1.05rem;color:#ffe9b8}
 
 /* games */
 .ico{display:block}
@@ -439,10 +529,12 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 .memcard.done{box-shadow:inset 0 0 0 3px var(--fir)}
 .memcard.imp{background:color-mix(in srgb,var(--berry) 18%,#fffcf6);box-shadow:inset 0 0 0 2px var(--berry)}
 @keyframes flip{from{transform:rotateY(90deg)}}
-.slots,.tiles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.slot,.tile{width:32px;height:38px;border-radius:7px;display:grid;place-items:center;font-weight:800;font-size:1.1rem}
-.slot{box-shadow:inset 0 0 0 2px var(--kraft);background:#fffcf6}
-.tile{border:0;background:var(--fir);color:var(--cream);cursor:pointer}
+.clue{display:flex;flex-direction:column;align-items:center;gap:2px}
+.clue small{font-size:.66rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--sh-accent)}
+.slots,.tiles{display:flex;flex-wrap:nowrap;gap:var(--gap,6px);justify-content:center}
+.slot,.tile{flex:none;width:var(--cell,32px);height:calc(var(--cell,32px) * 1.2);border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:calc(var(--cell,32px) * .55)}
+.slot{box-shadow:inset 0 0 0 2px var(--kraft);background:#fffcf6;color:var(--ink)}
+.tile{border:0;padding:0;background:var(--fir);color:var(--cream);cursor:pointer}
 .tile:disabled{opacity:.25}
 .shake{animation:wiggle .4s}
 .arena{position:relative;height:270px;border-radius:12px;background:var(--spruce);overflow:hidden;box-shadow:inset 0 0 0 3px var(--ink)}
@@ -460,7 +552,7 @@ footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--go
 canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background:var(--spruce);touch-action:none;box-shadow:inset 0 0 0 3px var(--ink)}
 .five{display:grid;gap:5px;justify-content:center}
 .frow{display:grid;grid-template-columns:repeat(5,40px);gap:5px}
-.fc{height:40px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:1.15rem;background:#fffcf6;box-shadow:inset 0 0 0 2px var(--kraft)}
+.fc{height:40px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:1.15rem;background:#fffcf6;color:var(--ink);box-shadow:inset 0 0 0 2px var(--kraft)}
 .fc.g,.key.g{background:var(--fir);color:var(--cream);box-shadow:none}
 .fc.y,.key.y{background:var(--gold);color:var(--ink);box-shadow:none}
 .fc.n,.key.n{background:var(--muted);color:var(--cream);box-shadow:none}
@@ -481,11 +573,17 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
 .odd button{display:grid;place-items:center;aspect-ratio:1;border:0;border-radius:8px;padding:0;cursor:pointer;background:#fffcf6;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--kraft) 60%,transparent)}
 .odd svg{width:78%;height:78%}
 
-/* love notes keepsake */
-.nb-list{display:flex;flex-direction:column;gap:26px}
-.nb-item{display:flex;flex-direction:column;gap:8px}
+/* keepsakes: love notes and cracker jokes */
+.nb-list,.jk-list{display:flex;flex-direction:column;gap:26px}
+.nb-item,.jk-item{display:flex;flex-direction:column;gap:8px}
 .nb-item:nth-child(even) .note{transform:rotate(-.8deg)}
 .nb-empty{font-family:var(--hand);font-size:1.2rem;line-height:1.35;color:var(--inkh)}
+.jk-item{align-items:center}
+.jk-w{filter:drop-shadow(0 6px 10px rgba(60,40,20,.2))}
+.jk-slip{max-width:300px;padding:14px 30px 16px;background-color:#fffdf8;background-image:var(--grain);transform:rotate(var(--r,-1deg));
+  clip-path:polygon(0 0,100% 0,95% 12%,100% 25%,95% 37%,100% 50%,95% 62%,100% 75%,95% 87%,100% 100%,0 100%,5% 87%,0 75%,5% 62%,0 50%,5% 37%,0 25%,5% 12%)}
+.jk-slip b{display:block;font-weight:700;font-size:1rem;line-height:1.35;color:#1f1c17}
+.jk-slip i{display:block;margin-top:6px;font-family:var(--hand);font-style:normal;font-size:1.35rem;line-height:1.2;color:var(--berry)}
 
 /* sparkles and snow bursts */
 .spark,.flake{position:fixed;opacity:0}
@@ -526,6 +624,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     <p id="status"></p>
     <div class="toggles">
       <button class="pill love" id="notesBtn" type="button">Love notes</button>
+      <button class="pill jk" id="jokesBtn" type="button">Cracker jokes</button>
       <button class="pill" id="musicBtn" type="button" aria-pressed="true">Music</button>
       <button class="pill" id="sfxBtn" type="button" aria-pressed="true">Sounds</button>
       <button class="pill" id="resetBtn" type="button" hidden>Reset doors</button>
@@ -540,12 +639,13 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
 </div>
 <div id="toast" role="status" hidden></div>
 
-<dialog class="pd" id="door" aria-label="Today's door">
+<dialog class="pd" id="door" tabindex="-1" aria-label="Today's door">
   <div class="fxlayer" id="fx" aria-hidden="true"></div>
   <div class="door-wrap">
     <div class="unwrap" id="unwrap" hidden>
       <p class="u-date" id="uDate"></p>
       <button class="gift" id="gift" type="button" aria-label="Unwrap today's present">
+        <span class="g-glow"></span>
         <span class="g-card"><b id="gNum"></b><span>December</span></span>
         <span class="g-box paper"><span class="g-rv"></span><span class="g-rh"></span></span>
         <span class="g-lid paper"><span class="g-rv"></span></span>
@@ -560,11 +660,18 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
       <button class="x" id="closeBtn" type="button">Close</button>
       <header class="s-head"><p class="s-day" id="sDay"></p><h2 class="s-date" id="sDate"></h2></header>
       <div class="s-body" id="doorBody"></div>
+      <div class="cta-bar" id="ctaBar" hidden></div>
+    </article>
+    <article class="sheet panel" id="panel" hidden>
+      <span class="tape" id="pTape"></span>
+      <button class="back" id="backBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4M7.5 4l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to your card</button>
+      <button class="x" id="pClose" type="button">Close</button>
+      <div class="s-body" id="panelBody"></div>
     </article>
   </div>
 </dialog>
 
-<dialog class="pd" id="notes" aria-label="Your love notes">
+<dialog class="pd" id="notes" tabindex="-1" aria-label="Your love notes">
   <div class="door-wrap">
     <article class="sheet">
       <span class="tape t0"></span>
@@ -575,6 +682,28 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
   </div>
 </dialog>
 
+<dialog class="pd" id="jokes" tabindex="-1" aria-label="Your cracker jokes">
+  <div class="door-wrap">
+    <article class="sheet">
+      <span class="tape t1"></span>
+      <button class="x" id="jokesClose" type="button">Close</button>
+      <header class="s-head"><p class="s-day">Kept safe</p><h2 class="s-date">Your cracker jokes</h2></header>
+      <div class="jk-list" id="jkList"></div>
+    </article>
+  </div>
+</dialog>
+
+<dialog class="pd viewer" id="viewer" tabindex="-1" aria-label="Your prize">
+  <div class="door-wrap">
+    <div class="vbox">
+      <img id="vImg" alt="Your prize">
+      <p class="vhelp">Press and hold the picture to save it to your phone.</p>
+      <button class="btn" id="vSave" type="button">Save to your phone</button>
+      <button class="u-later" id="vClose" type="button">Close</button>
+    </div>
+  </div>
+</dialog>
+
 <script>
 /* ============ EDIT ME: what's behind each door ============
    Every door has:
@@ -582,12 +711,12 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
      joke:  ["the cracker question", "the punchline"]
 
    Then one of:
-     t:'candy'  = a polaroid, then "open box N"            (photo: an image file next to this page, caption optional)
-     t:'game'   = win the game to unlock box N             (g: five | cups | memory | scramble | catch | pop | drop | bells | quiz | odd)
-     t:'non'    = Naughty or Nice wheel, then "open box N" (prize, nice, naughty)
-     t:'lock'   = clue in the box leads to a password, then a scratchcard ticket
-                  (code, title, detail, venue, time or stub, outcome, label)
-     t:'reveal' = Christmas Day premiere                    (photo, caption, video, credit)
+     t:'candy'  = a polaroid she shakes to develop, then "open Calendar Box N"   (photo, caption optional)
+     t:'game'   = win the game to open Calendar Box N         (g: five | cups | memory | scramble | catch | pop | drop | bells | quiz | odd)
+     t:'non'    = Naughty or Nice wheel, then a savable coupon (prize, nice, naughty)
+     t:'lock'   = clue in the box leads to a password, then a scratchcard ticket she can save
+                  (code, emoji, title, detail, venue, time or stub, outcome, label)
+     t:'reveal' = Christmas Day premiere                       (photo, caption, video, credit)
 */
 const TO = "Gill", FROM = "Luke", YEAR = 2026;
 const DAYS = [null,
@@ -606,13 +735,13 @@ const DAYS = [null,
  /* 5 */ {t:'game', g:'memory', pairs:7, secs:75,
    note:"Day 5 already!? Beat the game for a festive treat!",
    joke:["Which of Santa's reindeer is always sneaking off to the club to party?", "Dancer."]},
- /* 6 */ {t:'lock', code:'GRAVY', title:"Sunday Strings Roast", detail:"A Sunday roast with a live string quartet", venue:"Diecast", time:"3.30pm",
+ /* 6 */ {t:'lock', code:'GRAVY', emoji:'🎻🍽️', title:"Sunday Strings Roast", detail:"A Sunday roast with a live string quartet", venue:"Diecast", time:"3.30pm",
    note:"You've had a tough weekend, I'm gonna stroke your hair and tell you you're pretty, but first it's time to find your present!",
    joke:["What do you get from eating decorations?", "Tinselitis."]},
  /* 7 */ {t:'non', prize:"Time to relax", nice:"A home spa evening", naughty:"Good back rubs",
    note:"Feeling lucky? Spin the wheel to reveal whether you're on Santa's naughty or nice list. One spin only!",
    joke:["What was the name of Kris Jenner's husband that transitioned into a Christmas tree?", "Spruce Jenner."]},
- /* 8 */ {t:'lock', code:'BLEAT', kick:"Ready to play", title:"Goat Simulator", detail:"A new expansion pack for the PS5, bought and ready to go", venue:"On the PS5", stub:"Play now", outcome:"Grab the controller.", label:"game on",
+ /* 8 */ {t:'lock', code:'BLEAT', emoji:'🐐🎮', kick:"Ready to play", title:"Goat Simulator", detail:"A new expansion pack for the PS5, bought and ready to go", venue:"On the PS5", stub:"Play now", outcome:"Grab the controller.", label:"game on",
    note:"Why you hanging around reading this? Figure out the clue and win your pressie!",
    joke:["Why did Mrs. Claus divorce Santa?", "She couldn't cope with all the ho's."]},
  /* 9 */ {t:'candy', photo:'pic2.jpg',
@@ -630,10 +759,10 @@ const DAYS = [null,
  /* 13 */ {t:'game', g:'catch', goal:10,
    note:"Ohhhh the weather outside is weather. You have the cutest patootiest smile xoxoxox",
    joke:["What did the reindeer say to Santa?", "Nothing, they can't talk you idiot."]},
- /* 14 */ {t:'lock', code:'CELLO', title:"Christmas Orchestra", detail:"A live Christmas orchestra", venue:"Albert Hall", time:"8.45pm",
+ /* 14 */ {t:'lock', code:'CELLO', emoji:'🎼🎄', title:"Christmas Orchestra", detail:"A live Christmas orchestra", venue:"Albert Hall", time:"8.45pm",
    note:"Is this a treat for me or a treat for you? Only one way to find out, go find your present!",
    joke:["How does Darth Vader like his women?", "On the dark side."]},
- /* 15 */ {t:'lock', code:'DISCO', title:"Matt & Phred's Christmas Party", detail:"Happy hour on cocktails and pizza!", venue:"Matt & Phred's Jazz Club", time:"7.45pm",
+ /* 15 */ {t:'lock', code:'DISCO', emoji:'🎷🍸🍕', title:"Matt & Phred's Christmas Party", detail:"Happy hour on cocktails and pizza!", venue:"Matt & Phred's Jazz Club", time:"7.45pm",
    note:"Ok now this one's defo more for me, but also it's Christmas, let's go get our merry on…",
    joke:["What is E.T. short for?", "Because he's got little legs."]},
  /* 16 */ {t:'game', g:'pop', goal:12, secs:20,
@@ -642,7 +771,7 @@ const DAYS = [null,
  /* 17 */ {t:'candy', photo:'pic4.jpg',
    note:"Robert get your breath away it's mingin… go open box 17 you sausage.",
    joke:["What's Postman Pat called on his holiday?", "Pat."]},
- /* 18 */ {t:'lock', code:'SMILE', title:"The Photo Booth", detail:"A photo booth print at Fred Aldous, and we can get it enlarged if we want", venue:"Fred Aldous", stub:"Anytime", outcome:"Practise your best pose.",
+ /* 18 */ {t:'lock', code:'SMILE', emoji:'📸✨', title:"The Photo Booth", detail:"A photo booth print at Fred Aldous, and we can get it enlarged if we want", venue:"Fred Aldous", stub:"Anytime", outcome:"Practise your best pose.",
    note:"Category is Christmas Realness, go open your box queen. #SANTASBAGRACEUK",
    joke:["My dad used to work in a tiddlywink factory. But he didn't like it.", "He said it was counter productive."]},
  /* 19 */ {t:'non', prize:"A home-cooked meal by Luke", nice:"Gill picks the menu", naughty:"Luke picks the menu",
@@ -654,13 +783,13 @@ const DAYS = [null,
  /* 21 */ {t:'candy', photo:'pic5.jpg',
    note:"Day 21, and now the end is near… and so I face… the final sweet box.",
    joke:["What is a French burglar's favourite Christmas film?", "Louvre Actually."]},
- /* 22 */ {t:'lock', code:'CHOIR', title:"Christmas Cracker Carols", detail:"Happy hour on cocktails and pizza!", venue:"Matt & Phred's Jazz Club", time:"7.30pm",
+ /* 22 */ {t:'lock', code:'CHOIR', emoji:'🎶🍸🍕', title:"Christmas Cracker Carols", detail:"Happy hour on cocktails and pizza!", venue:"Matt & Phred's Jazz Club", time:"7.30pm",
    note:"Another day another treat, ohhh I spoil you. You're worth every penny my darling.",
    joke:["Why are Christmas trees not crack heads?", "They always lose their needles."]},
  /* 23 */ {t:'non', prize:"A very valuable coupon", nice:"A full Yes Day", naughty:"A Yorkshire pudding favour",
    note:"Shantay you stay or Sashay away? It's the naughty or nice game time.",
    joke:["What did one Christmas tree say to the other?", "Lighten up!"]},
- /* 24 */ {t:'lock', code:'COMFY', kick:"Your present is", title:"Cosy Christmas Pyjamas", detail:"For snuggling up on Christmas Eve", venue:"Check under the tree", stub:"Tonight", outcome:"Go and have a look under the tree.", label:"cosy",
+ /* 24 */ {t:'lock', code:'COMFY', emoji:'🌙🎄', kick:"Your present is", title:"Cosy Christmas Pyjamas", detail:"For snuggling up on Christmas Eve", venue:"Check under the tree", stub:"Tonight", outcome:"Go and have a look under the tree.", label:"cosy",
    note:"It was chriiiiistmas eveeee babe. Did you know Kirsty MacColl died in a speed boat accident! ANYWAYYYY 1 more sleep till Xmas.",
    joke:["Why did the weird elf call in sick?", "'Cause he had mental elf problems."]},
  /* 25 */ {t:'reveal', photo:'photobot.gif', caption:"Courts Club, Manchester · 20.12.25", video:"https://www.youtube.com/watch?v=ZeyHl1tQeaQ", credit:"A Luke Bennett production",
@@ -668,14 +797,22 @@ const DAYS = [null,
    signOff:"Lots of love,\nLuke xxxxxxx", ps:"PS. If there was a Golden Retriever, I mean I'll take it, I don't wanna be rude!",
    joke:["Why did George Michael have chocolate on his trousers?", "Because he was careless with his Wispa."]}
 ];
+/* The line under each punchline, picked per day */
+const QUIPS = ["Terrible, I know.", "Oof, that one was bad.", "Too much of a dad joke?", "Quite funny, if I say so myself.", "I'll get my coat.",
+  "Go on, you smiled.", "Sorry. Not sorry.", "That one's a cracker. Literally.", "Peak dad joke.", "Groan all you like.",
+  "Ten out of ten, no notes.", "Don't roll your eyes at me.", "Comedy gold, that.", "I'll be here all December."];
 /* ============ end of the bit to edit ============ */
 
 const $ = s => document.querySelector(s);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const weekday = (d, style) => new Date(YEAR, 11, d).toLocaleDateString('en-GB', {weekday: style || 'long'});
+const ordSfx = n => (n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({1:'st', 2:'nd', 3:'rd'})[n % 10] || 'th';
+const ord = n => n + ordSfx(n);
+const ordHTML = n => `${n}<sup class="os">${ordSfx(n)}</sup>`;
+const longDate = d => weekday(d) + ' ' + ord(d) + ' December';
 const KEY = 'gill-advent-' + YEAR + '-v2';
-const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, film:false});
+const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, dev:{}, film:false});
 let real = blank(), prefs = {music:true, sfx:true};
 try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) { real = Object.assign(blank(), s.state); prefs = Object.assign(prefs, s.prefs); } } catch (e) {}
 let state = real, elf = false;
@@ -716,7 +853,9 @@ function noise(dur, vol, rate, cut) {
 const sfx = {
   click: () => fx([84], 0, {dur:.08, vol:.12}),
   locked: () => fx([180, 140], .12, {raw:true, type:'triangle', dur:.15, vol:.25}),
-  unwrap: () => { noise(.45, .22, .8, 3200); setTimeout(() => fx([72, 76, 79, 84, 88], .07, {dur:.5}), 180); },
+  untie: () => { noise(.22, .2, 1.4, 6000); fx([660, 880], .06, {raw:true, dur:.12, vol:.06}); },
+  ribbon: () => noise(.5, .22, .75, 3500),
+  lid: () => { fx([392, 784], .05, {raw:true, dur:.18, vol:.18, type:'triangle'}); setTimeout(() => fx([72, 76, 79, 84, 88], .07, {dur:.5}), 120); },
   win: () => fx([72, 76, 79, 84, 79, 84, 88, 91, 96], .09, {dur:.6}),
   chime: () => fx([659, 784, 988, 1319], .12, {raw:true, dur:.5, vol:.12}),
   sparkle: () => fx([1568, 1760, 2093, 2349, 2637], .07, {raw:true, dur:.35, vol:.05}),
@@ -724,6 +863,7 @@ const sfx = {
   seal: () => { noise(.08, .16, .6, 1200); fx([523, 784], .08, {raw:true, dur:.4, vol:.07}); },
   bang: () => { noise(.24, .75, 1.3, 8000); fx([150], 0, {raw:true, dur:.25, vol:.5, to:50}); setTimeout(() => sfx.sparkle(), 140); },
   creak: () => fx([190 + Math.random() * 90], 0, {raw:true, dur:.06, vol:.05, type:'triangle'}),
+  shake: () => { for (let i = 0; i < 3; i++) setTimeout(() => noise(.06, .14, 1.8, 4000), i * 70); },
   swoosh: () => noise(1.5, .22, .45, 1400),
   leader: () => { fx([1000], 0, {raw:true, dur:.12, vol:.12}); noise(.05, .2, 1.5, 3000); },
   naughty: () => fx([63, 62, 61, 60], .28, {type:'sawtooth', dur:.34, vol:.12}),
@@ -756,9 +896,9 @@ function paintToggles() {
 $('#musicBtn').onclick = () => { prefs.music = !prefs.music; save(); paintToggles(); syncMusic(); };
 $('#sfxBtn').onclick = () => { prefs.sfx = !prefs.sfx; save(); paintToggles(); sfx.click(); };
 
-/* ---------- drawings: wax seals, bow, cracker bits and the little Christmas icons ---------- */
+/* ---------- drawings ---------- */
 const P = {berry:'#b3263a', berryD:'#8c1a2b', gold:'#e2b659', goldD:'#b98a35', fir:'#2f7a5f', firD:'#1f5a45', cream:'#f6ecd9',
-  kraft:'#c9a26b', kraftD:'#9a7746', ink:'#1f1c17', sky:'#3f7fa6', plum:'#7a3b6e', deer:'#8b5e34'};
+  kraft:'#c9a26b', kraftD:'#9a7746', ink:'#1f1c17', sky:'#3f7fa6', plum:'#7a3b6e', deer:'#8b5e34', grinch:'#3f7f17'};
 const SPARK = 'M12 0C12.9 7.6 16.4 11.1 24 12 16.4 12.9 12.9 16.4 12 24 11.1 16.4 7.6 12.9 0 12 7.6 11.1 11.1 7.6 12 0Z';
 const FLAKE = 'M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M12 5.5l-2.4-2.4M12 5.5l2.4-2.4M12 18.5l-2.4 2.4M12 18.5l2.4 2.4';
 function burstPts(n, R, r, cx, cy) { let s = ''; for (let i = 0; i < n * 2; i++) { const a = Math.PI * i / n - Math.PI / 2, k = i % 2 ? r : R; s += (i ? 'L' : 'M') + (cx + Math.cos(a) * k).toFixed(1) + ' ' + (cy + Math.sin(a) * k).toFixed(1); } return s + 'Z'; }
@@ -767,14 +907,17 @@ const seal = t => { const s = String(t), two = s.length > 1; return `<svg viewBo
 const HEART = 'M0 9C-7 4-11 0-11-4.5-11-8-8.5-10.5-5.5-10.5-3.2-10.5-1.5-9.3 0-7.2 1.5-9.3 3.2-10.5 5.5-10.5 8.5-10.5 11-8 11-4.5 11 0 7 4 0 9Z';
 const SEAL_HEART = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="url(#waxShine)" filter="url(#wobble)"/><circle cx="50" cy="50" r="31" fill="none" stroke="#7a1222" stroke-width="2.2" opacity=".85"/><path d="${HEART}" transform="translate(51 52) scale(1.55)" fill="#e05a6e" opacity=".6"/><path d="${HEART}" transform="translate(50 51) scale(1.55)" fill="#f6ecd9"/></svg>`;
 const BOW = '<svg viewBox="0 0 132 78" aria-hidden="true"><path d="M66 42C46 10 12 6 14 28c2 18 30 20 52 14Z" fill="currentColor"/><path d="M66 42c20-32 54-36 52-14-2 18-30 20-52 14Z" fill="currentColor"/><path d="M66 42C50 26 26 20 26 28c1 8 22 14 40 14Z" fill="#000" opacity=".18"/><path d="M66 42c16-16 40-22 40-14-1 8-22 14-40 14Z" fill="#000" opacity=".18"/><path d="M60 46 48 76l9-4 6 6 3-30Z" fill="currentColor"/><path d="M72 46l12 30-9-4-6 6-3-30Z" fill="currentColor"/><ellipse cx="66" cy="42" rx="11" ry="9" fill="currentColor"/><ellipse cx="66" cy="42" rx="11" ry="9" fill="#000" opacity=".15"/><ellipse cx="63" cy="39" rx="4" ry="2.5" fill="#fff" opacity=".45"/></svg>';
-const POINTER = `<svg viewBox="0 0 28 34" aria-hidden="true"><path d="M14 33 2.5 9a11.5 11.5 0 1 1 23 0Z" fill="${P.fir}" stroke="${P.ink}" stroke-width="2" stroke-linejoin="round"/><circle cx="14" cy="10" r="4" fill="${P.gold}"/></svg>`;
+const POINTER = `<svg viewBox="0 0 28 34" aria-hidden="true"><path d="M14 33 2.5 9a11.5 11.5 0 1 1 23 0Z" fill="#c8102e" stroke="${P.ink}" stroke-width="2" stroke-linejoin="round"/><circle cx="14" cy="10" r="4" fill="${P.gold}"/></svg>`;
 const padlock = (cls, id) => `<svg class="${cls || 'padlock'}"${id ? ` id="${id}"` : ''} viewBox="0 0 56 64" aria-hidden="true"><path class="shackle" d="M16 28V18a12 12 0 0 1 24 0v10" fill="none" stroke="${P.ink}" stroke-width="5.5" stroke-linecap="round"/><rect x="6" y="27" width="44" height="34" rx="7" fill="${P.gold}" stroke="${P.goldD}" stroke-width="2"/><circle cx="28" cy="41" r="4.5" fill="${P.ink}"/><rect x="25.8" y="43" width="4.4" height="9" rx="2.2" fill="${P.ink}"/></svg>`;
 const BANG = `<svg viewBox="0 0 124 124" aria-hidden="true"><path d="${burstPts(14, 60, 40, 62, 62)}" fill="${P.gold}" stroke="${P.berry}" stroke-width="3" stroke-linejoin="round"/><path d="${burstPts(14, 46, 32, 62, 62)}" fill="#fff3cf"/><text x="62" y="70" text-anchor="middle" font-family="'Nunito Sans', system-ui, sans-serif" font-weight="800" font-size="25" fill="${P.berry}" transform="rotate(-8 62 62)">BANG!</text></svg>`;
 const CROWN = '<svg viewBox="0 0 64 34" aria-hidden="true"><path d="M3 31V9l10 10 9-15 10 13 10-13 9 15 10-10v22z" fill="currentColor" stroke="rgba(0,0,0,.2)" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 25h56" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/><path d="M14 19v12M32 17v14M50 19v12" stroke="rgba(0,0,0,.12)" stroke-width="1"/></svg>';
 const CROWN_COLS = [P.gold, P.berry, P.fir, P.plum, P.sky];
 const TASSEL = `<svg viewBox="0 0 24 50" aria-hidden="true"><path d="M12 0v15" stroke="${P.gold}" stroke-width="3"/><circle cx="12" cy="18" r="5" fill="${P.gold}"/><path d="M7.5 22h9l3.5 26H4z" fill="${P.gold}"/><path d="M8 25v21M10.7 25v22M13.3 25v22M16 25v21" stroke="${P.goldD}" stroke-width="1"/></svg>`;
 const PLAY_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>';
+const ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const BELL_MONO = '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="22" y="3" width="4" height="6" rx="2" fill="currentColor"/><path d="M24 8c-7.5 0-11 6-11 13v7l-4 6h30l-4-6v-7c0-7-3.5-13-11-13z" fill="currentColor"/><circle cx="24" cy="38.5" r="3.6" fill="currentColor"/></svg>';
+/* the little tree with that day's present underneath, numbered on its tag */
+const treeArt = d => `<svg viewBox="0 0 64 72" aria-hidden="true"><path d="M26 8 37 24h-5l9 13h-5l10 15H6l10-15h-5l9-13h-5z" fill="${P.fir}" stroke="${P.firD}" stroke-width="1.2" stroke-linejoin="round"/><rect x="23" y="52" width="6" height="7" fill="${P.kraftD}"/><path d="M17 28q9 5 18-1M12 41q13 7 26-1" stroke="${P.gold}" stroke-width="1" fill="none" opacity=".75"/><circle cx="22" cy="22" r="2" fill="${P.berry}"/><circle cx="31" cy="30" r="2" fill="${P.gold}"/><circle cx="19" cy="36" r="2" fill="${P.cream}"/><circle cx="34" cy="44" r="2" fill="${P.berry}"/><circle cx="14" cy="47" r="2" fill="${P.gold}"/><path class="tstar" d="${starPts(26, 7, 6, 2.6)}" fill="${P.gold}"/><g class="pres"><rect x="36" y="50" width="24" height="18" rx="2" style="fill:var(--paper)" stroke="rgba(0,0,0,.25)"/><rect x="46" y="50" width="4" height="18" style="fill:var(--ribbon)"/><rect x="36" y="56.5" width="24" height="4" style="fill:var(--ribbon)"/><path d="M48 50c-2-5-8-6-8-3s5 3 8 3zM48 50c2-5 8-6 8-3s-5 3-8 3z" style="fill:var(--ribbon)" stroke="rgba(0,0,0,.2)" stroke-width=".6"/><g transform="rotate(-12 37 60)"><rect x="28" y="55" width="15" height="10" rx="1.5" fill="#fffaf0" stroke="${P.kraftD}" stroke-width=".8"/><text x="35.5" y="62.6" text-anchor="middle" font-family="'Nunito Sans', sans-serif" font-weight="800" font-size="7" fill="${P.ink}">${d}</text></g></g></svg>`;
 const baubleArt = col => `<rect x="20" y="3" width="8" height="6" rx="1.5" fill="${P.kraftD}"/><circle cx="24" cy="27" r="18" fill="${col}"/><path d="M7 25q17 7 34 0" stroke="${P.cream}" stroke-width="2.5" fill="none" opacity=".7"/><circle cx="17" cy="20" r="4" fill="#fff" opacity=".35"/>`;
 const ICON = {
   tree: `<path d="M24 5 34 18h-5l8 11h-5l8 11H8l8-11h-5l8-11h-5z" fill="${P.fir}" stroke="${P.firD}" stroke-width="1.2" stroke-linejoin="round"/><rect x="21" y="40" width="6" height="5" fill="${P.kraftD}"/><path d="${starPts(24, 6, 5.5, 2.4)}" fill="${P.gold}"/><circle cx="20" cy="23" r="2" fill="${P.berry}"/><circle cx="28" cy="30" r="2" fill="${P.gold}"/><circle cx="18" cy="35" r="2" fill="${P.cream}"/><circle cx="31" cy="37" r="2" fill="${P.berry}"/>`,
@@ -799,11 +942,11 @@ $('#gBow').innerHTML = BOW;
 $('#gTag').textContent = 'for ' + TO;
 
 /* ---------- sparkles and snow ---------- */
-const dlg = $('#door'), notesDlg = $('#notes'), fxl = $('#fx');
+const dlg = $('#door'), notesDlg = $('#notes'), jokesDlg = $('#jokes'), viewer = $('#viewer'), fxl = $('#fx');
 const fxHost = () => dlg.open ? fxl : document.body;
-function sparkAt(el, n) {
+function sparkAt(el, n, dy) {
   if (reduced || !el || !el.isConnected) return;
-  const r = el.getBoundingClientRect(), x0 = r.left + r.width / 2, y0 = r.top + r.height / 2, cols = [P.gold, P.cream, '#ffffff', P.berry], host = fxHost();
+  const r = el.getBoundingClientRect(), x0 = r.left + r.width / 2, y0 = r.top + r.height / 2 + (dy || 0), cols = [P.gold, P.cream, '#ffffff', P.berry], host = fxHost();
   for (let i = 0; i < (n || 20); i++) {
     const s = document.createElement('span'), a = Math.random() * Math.PI * 2, dist = 60 + Math.random() * 140;
     s.className = 'spark'; s.innerHTML = `<svg viewBox="0 0 24 24"><path fill="currentColor" d="${SPARK}"/></svg>`;
@@ -863,9 +1006,9 @@ function renderGrid() {
     const open = state.opened[d], un = unlocked(d);
     b.className = 'box paper p' + (d % 5) + (d === 25 ? ' wide' : '') + (open ? ' open' : un ? ' ready' : '');
     b.innerHTML = open ? `<span class="rem paper"></span><span class="otagw" style="--rot:${TILT[d % 6]}deg"><span class="otag"><b>${d}</b><i>${label(d)}</i></span></span>` : `<span class="tag">${d}</span>`;
-    b.setAttribute('aria-label', 'Door ' + d + (open ? ', opened: ' + label(d) : un ? ', ready to open' : ', locked until ' + d + ' December'));
+    b.setAttribute('aria-label', 'Door ' + d + (open ? ', opened: ' + label(d) : un ? ', ready to open' : ', locked until ' + ord(d) + ' December'));
     b.onclick = () => {
-      if (!unlocked(d)) { sfx.locked(); b.classList.remove('wiggle'); void b.offsetWidth; b.classList.add('wiggle'); toast('No peeking. Door ' + d + ' opens on ' + d + ' December.'); return; }
+      if (!unlocked(d)) { sfx.locked(); b.classList.remove('wiggle'); void b.offsetWidth; b.classList.add('wiggle'); toast('No peeking. Door ' + d + ' opens on ' + ord(d) + ' December.'); return; }
       openDoor(d);
     };
     g.append(b);
@@ -878,7 +1021,9 @@ function renderGrid() {
   let nice = 0, naughty = 0;
   for (let d = 1; d <= 25; d++) if (DAYS[d].t === 'non' && state.non[d]) state.non[d].r === 'nice' ? nice++ : naughty++;
   s.innerHTML = msg + `<small>${n} of 25 opened${nice + naughty ? ` · Santa's list: ${nice} nice, ${naughty} naughty` : ''}</small>`;
+  const jn = Object.keys(state.cr).length;
   $('#notesBtn').textContent = n ? 'Love notes · ' + n : 'Love notes';
+  $('#jokesBtn').textContent = jn ? 'Cracker jokes · ' + jn : 'Cracker jokes';
 }
 let lastDay = today();
 setInterval(() => { if (today() !== lastDay) { lastDay = today(); renderGrid(); } }, 60000);
@@ -893,10 +1038,20 @@ $('#resetBtn').onclick = () => { real = blank(); if (!elf) state = real; save();
 function setElf(on) { elf = on; state = on ? blank() : real; $('#elf').hidden = !on; renderGrid(); }
 
 /* ---------- the door ---------- */
-const unwrap = $('#unwrap'), sheet = $('#sheet'), body = $('#doorBody');
-let cleanup = null, timers = [], writing = null, observers = [];
+const unwrap = $('#unwrap'), sheet = $('#sheet'), body = $('#doorBody'), panel = $('#panel'), pbody = $('#panelBody'), ctaBar = $('#ctaBar');
+const TAPE = {candy:'t0', game:'tg', non:'tn', lock:'t1', reveal:'t1'};
+/* the big button floats at the bottom of the screen while the card is taller than the screen */
+function ctaStuck() { if (ctaBar.hidden || sheet.hidden) return; ctaBar.classList.toggle('stuck', sheet.offsetTop + sheet.offsetHeight - dlg.scrollTop > dlg.clientHeight + 1); }
+dlg.addEventListener('scroll', ctaStuck, {passive:true});
+addEventListener('resize', ctaStuck);
+if ('ResizeObserver' in window) new ResizeObserver(ctaStuck).observe(sheet);
+/* open a dialog and focus the dialog itself, so no button inside it starts with a focus ring */
+function showDlg(dl) { if (!dl.open) dl.showModal(); try { dl.focus({preventScroll:true}); } catch (e) {} }
+let cleanup = null, timers = [], ptimers = [], writing = null, observers = [], cur = 0, backScroll = 0;
 const later = (fn, ms) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
-const clearLater = () => { timers.forEach(clearTimeout); timers = []; writing = null; observers.forEach(o => o.disconnect()); observers = []; };
+const plater = (fn, ms) => { const t = setTimeout(fn, ms); ptimers.push(t); return t; };
+const clearPanelTimers = () => { ptimers.forEach(clearTimeout); ptimers = []; };
+const clearLater = () => { timers.forEach(clearTimeout); timers = []; clearPanelTimers(); writing = null; observers.forEach(o => o.disconnect()); observers = []; };
 function whenSeen(el, fn, th) {
   if (!el) return;
   if (!('IntersectionObserver' in window)) { fn(); return; }
@@ -904,74 +1059,107 @@ function whenSeen(el, fn, th) {
   io.observe(el); observers.push(io);
 }
 function stopGame() { if (cleanup) { try { cleanup(); } catch (e) {} cleanup = null; } }
-dlg.addEventListener('close', () => { clearLater(); stopGame(); setTrack('bg'); body.innerHTML = ''; fxl.innerHTML = ''; renderGrid(); });
+dlg.addEventListener('close', () => { clearLater(); stopGame(); setTrack('bg'); body.innerHTML = ''; pbody.innerHTML = ''; panel.hidden = true; ctaBar.hidden = true; fxl.innerHTML = ''; renderGrid(); });
 dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
-$('#closeBtn').onclick = () => dlg.close();
-$('#uLater').onclick = () => dlg.close();
-sheet.addEventListener('animationend', e => { if (e.target === sheet) sheet.classList.remove('rise', 'jolt'); });
+$('#closeBtn').onclick = $('#pClose').onclick = $('#uLater').onclick = () => dlg.close();
+$('#backBtn').onclick = () => closePanel();
+[sheet, panel].forEach(el => el.addEventListener('animationend', e => { if (e.target === el) el.classList.remove('rise', 'jolt', 'slidein', 'slideback'); }));
 
 function openDoor(d) {
-  const c = DAYS[d], first = !state.opened[d];
-  clearLater(); stopGame(); body.innerHTML = '';
+  const c = DAYS[d], first = !state.opened[d]; cur = d;
+  clearLater(); stopGame(); body.innerHTML = ''; pbody.innerHTML = '';
   setTrack(c.t === 'non' ? 'naughty' : c.t === 'reveal' ? 'xmas' : 'bg');
-  sheet.hidden = true; unwrap.hidden = true;
-  if (!dlg.open) dlg.showModal();
+  sheet.hidden = true; panel.hidden = true; unwrap.hidden = true;
+  showDlg(dlg);
   if (first) showGift(d, c); else { sfx.click(); showSheet(d, c, false); }
 }
 /* step one: the present, wrapped in that day's paper */
 function showGift(d, c) {
   const g = $('#gift');
   g.className = 'gift p' + (d % 5); g.disabled = false;
-  $('#gNum').textContent = d;
-  $('#uDate').innerHTML = `<span>${weekday(d)}</span>${d} December`;
+  $('#gNum').innerHTML = ordHTML(d);
+  $('#uDate').innerHTML = `<span>${weekday(d)}</span>${ordHTML(d)} December`;
   unwrap.hidden = false; unwrap.classList.remove('in'); void unwrap.offsetWidth; unwrap.classList.add('in');
   dlg.scrollTop = 0;
   g.onclick = () => {
     if (g.classList.contains('open')) return;
     g.classList.add('open'); g.disabled = true;
-    state.opened[d] = true; save(); sfx.unwrap();
-    later(() => { sparkAt(g.querySelector('.g-lid'), 24); sfx.sparkle(); }, 300);
-    later(() => { unwrap.hidden = true; g.className = 'gift'; showSheet(d, c, true); }, reduced ? 0 : 1750);
+    state.opened[d] = true; save(); sfx.untie();
+    later(sfx.ribbon, 320);
+    later(sfx.lid, 950);
+    later(() => { sparkAt(g.querySelector('.g-box'), 26, -70); sfx.sparkle(); }, 1150);
+    later(() => { unwrap.hidden = true; g.className = 'gift'; showSheet(d, c, true); }, reduced ? 0 : 2400);
   };
 }
-/* step two: a sheet of paper with the cracker, the love note, then the day's surprise */
+/* step two: the card. Cracker, love note, then the day's main event */
 function showSheet(d, c, first) {
-  const tape = $('#tape'); tape.className = 'tape t' + (d % 3); tape.style.setProperty('--tilt', (d % 2 ? -3 : 2.5) + 'deg');
+  sheet.className = 'sheet t-' + c.t;
+  const tape = $('#tape'); tape.className = 'tape ' + TAPE[c.t]; tape.style.setProperty('--tilt', (d % 2 ? -3 : 2.5) + 'deg');
   $('#sDay').textContent = weekday(d);
-  $('#sDate').textContent = d + ' December';
-  sheet.hidden = false; sheet.classList.remove('rise', 'jolt'); void sheet.offsetWidth; sheet.classList.add('rise');
+  $('#sDate').innerHTML = ordHTML(d) + ' December';
+  sheet.hidden = false; panel.hidden = true; void sheet.offsetWidth; sheet.classList.add('rise');
   dlg.scrollTop = 0;
   body.innerHTML = (c.t === 'reveal' ? `<h3 class="xmas">Merry Christmas, ${TO}</h3>` : '')
     + crackerHTML(d, c)
-    + `<div class="notew"><p class="kick">A little note</p>${noteHTML(c, 'note')}<p class="skip" id="skip" hidden>Tap the note to skip ahead</p>${c.reread ? '<button class="btn ghost small" type="button" id="reread">Reread your love notes</button>' : ''}</div>`
+    + `<div class="notew"><p class="kick">A little note from ${FROM}…</p>${noteHTML(c, 'note')}<p class="skip" id="skip" hidden>Tap the note to skip ahead</p>${c.reread ? '<button class="btn ghost small" type="button" id="reread">Reread your love notes</button>' : ''}</div>`
     + `<div class="act" id="act"></div>`;
   wireCracker(d);
   startNote(c, first);
   const rr = $('#reread'); if (rr) rr.onclick = openNotes;
-  ({candy:doCandy, game:doGame, non:doNon, lock:doLock, reveal:doReveal})[c.t](d, c, first, $('#act'));
+  renderAct(d, c, first);
 }
-const call = (d, line, cls) => `<div class="call${cls ? ' ' + cls : ''}"><span class="seal">${seal(d)}</span><div><b>Now open box ${d}</b><span>${line || "Today's treat is waiting."}</span></div></div>`;
-function stampWhenSeen(act) { const cl = act.querySelector('.call.pending'); whenSeen(cl, () => { cl.classList.remove('pending'); cl.classList.add('fresh'); }, .6); }
+/* what sits under the note: either a big button into the main event, or what she won */
+function renderAct(d, c, first) {
+  const act = $('#act'); if (!act) return;
+  act.innerHTML = ''; ctaBar.innerHTML = ''; ctaBar.hidden = true;
+  const cta = (text, note, open) => { ctaBar.hidden = false; ctaBar.innerHTML = `<button class="btn cta" type="button" id="ctaBtn">${text}${ARROW}</button>${note ? `<small>${note}</small>` : ''}`; $('#ctaBtn').onclick = open; ctaStuck(); };
+  if (c.t === 'candy') return doCandy(d, c, first, act);
+  if (c.t === 'game') return state.won[d] ? gameDone(d, c, act) : cta("Play today's game", `You need to win it to open Calendar Box ${d}`, () => openPanel(d, c, gamePanel));
+  if (c.t === 'non') return state.non[d] ? nonDone(d, c, act) : cta('Spin the wheel', 'One spin only. No do-overs.', () => openPanel(d, c, nonPanel));
+  if (c.t === 'lock') return state.ev[d] === 2 ? lockDone(d, c, act)
+    : cta(state.ev[d] === 1 ? 'Scratch your ticket' : 'Unlock your present', state.ev[d] === 1 ? 'The gold is waiting' : `The clue is inside Calendar Box ${d}, under the tree`, () => openPanel(d, c, lockPanel));
+  if (c.t === 'reveal') return revealCard(d, c, first, act, cta);
+}
+/* the main event opens in its own panel, so the card never gets crowded */
+function openPanel(d, c, build) {
+  backScroll = dlg.scrollTop; clearPanelTimers(); stopGame();
+  panel.className = 'sheet panel t-' + c.t;
+  const pt = $('#pTape'); pt.className = 'tape ' + TAPE[c.t]; pt.style.setProperty('--tilt', (d % 2 ? 2.5 : -3) + 'deg');
+  sheet.hidden = true; panel.hidden = false; void panel.offsetWidth; panel.classList.add('slidein');
+  pbody.innerHTML = ''; dlg.scrollTop = 0; sfx.click();
+  build(d, c, pbody);
+}
+function closePanel() {
+  clearPanelTimers(); stopGame(); pbody.innerHTML = '';
+  panel.hidden = true; sheet.hidden = false; sheet.classList.remove('rise', 'jolt', 'slideback'); void sheet.offsetWidth; sheet.classList.add('slideback');
+  renderAct(cur, DAYS[cur], false);
+  dlg.scrollTop = backScroll;
+  later(() => { const a = $('#act'); if (a && a.firstElementChild) a.scrollIntoView({block:'nearest', behavior: reduced ? 'auto' : 'smooth'}); }, 60);
+  sfx.click();
+}
+const call = (d, line, cls) => `<div class="call p${d % 5}${cls ? ' ' + cls : ''}"><span class="tree">${treeArt(d)}</span><div><b>Open your Calendar Box ${d}</b><span class="line">${line || "It's waiting for you under the tree."}</span></div></div>`;
+function stampWhenSeen(root) { const cl = root.querySelector('.call.pending'); whenSeen(cl, () => { cl.classList.remove('pending'); cl.classList.add('fresh'); }, .6); }
 
 /* the cracker: tap it, or grab an end and pull */
 function crackerHTML(d, c) {
-  const done = !!state.cr[d];
+  const done = !!state.cr[d], quip = QUIPS[(d * 5 + 3) % QUIPS.length];
   const l = '<span class="half l"><span class="c-end paper"></span><span class="c-neck paper"></span><span class="c-body paper"></span></span>';
   const r = '<span class="half r"><span class="c-body paper"></span><span class="c-neck paper"></span><span class="c-end paper"></span></span>';
-  return `<div class="crk p${d % 5}" id="crk">
+  return `<div class="crk p${d % 5}${done ? ' done' : ''}" id="crk">
     <p class="kick" id="crkKick">${done ? 'Your cracker joke' : 'Pull your cracker'}</p>
-    <div class="cstage"><button class="cracker${done ? ' popped still' : ''}" id="cracker" type="button" aria-label="Pull the cracker"${done ? ' disabled' : ''}>${l}${r}<span class="c-band">Pull me</span></button><span class="bang" id="bang">${BANG}</span></div>
-    <p class="meta" id="crkHint"${done ? ' hidden' : ''}>Tap it, or grab an end and pull</p>
-    <div class="slipw" id="slipw"${done ? '' : ' hidden'}><span class="crown" style="color:${CROWN_COLS[d % 5]}">${CROWN}</span>
-      <button class="slip" id="slip" type="button" aria-label="Flip the joke over"><span class="sf front"><small>Cracker joke</small><b>${c.joke[0]}</b><i>Tap for the punchline</i></span><span class="sf back" hidden><b>${c.joke[1]}</b><i>Terrible, I know. Tap to flip back.</i></span></button></div>
+    <div class="cstage"><button class="cracker${done ? ' popped still' : ''}" id="cracker" type="button" aria-label="Pull the cracker"${done ? ' disabled' : ''}>${l}${r}<span class="c-band">Pull me</span></button><span class="bang" id="bang">${BANG}</span><p class="meta crk-hint" id="crkHint"${done ? ' hidden' : ''}>Tap it, or grab an end and pull</p></div>
+    <div class="slipbox${done ? ' open done still' : ''}" id="slipbox"><div class="slipin"><div class="slippad">
+      <div class="slipw" id="slipw"><span class="crown" style="color:${CROWN_COLS[d % 5]}">${CROWN}</span>
+        <button class="slip" id="slip" type="button" aria-label="Flip the joke over"><span class="sf front"><small>Cracker joke</small><b>${c.joke[0]}</b><i>Tap for the punchline</i></span><span class="sf back off"><b>${c.joke[1]}</b><em>${quip}</em><i>Tap to flip it back</i></span></button></div>
+    </div></div></div>
   </div>`;
 }
 function wireCracker(d) {
   const btn = $('#cracker'), slip = $('#slip');
   slip.onclick = () => {
-    const front = slip.querySelector('.front'), back = slip.querySelector('.back'), toBack = back.hidden;
+    const front = slip.querySelector('.front'), back = slip.querySelector('.back'), toBack = back.classList.contains('off');
     slip.classList.remove('flip'); void slip.offsetWidth; slip.classList.add('flip'); sfx.flip();
-    later(() => { front.hidden = toBack; back.hidden = !toBack; if (toBack) sfx.chime(); }, reduced ? 0 : 220);
+    later(() => { front.classList.toggle('off', toBack); back.classList.toggle('off', !toBack); if (toBack) sfx.chime(); }, reduced ? 0 : 220);
   };
   if (btn.disabled) return;
   const halves = btn.querySelectorAll('.half'); let sx = null, moved = 0, popped = false, lastCreak = 0;
@@ -983,8 +1171,8 @@ function wireCracker(d) {
     state.cr[d] = true; save(); sfx.bang();
     const bang = $('#bang'); bang.classList.remove('go'); void bang.offsetWidth; bang.classList.add('go');
     sparkAt(btn, 30);
-    $('#crkHint').hidden = true; $('#crkKick').textContent = 'Your cracker joke';
-    later(() => { const w = $('#slipw'); if (!w) return; w.hidden = false; w.classList.add('in'); }, reduced ? 0 : 380);
+    $('#crkHint').classList.add('gone'); $('#crkKick').textContent = 'Your cracker joke';
+    later(() => { const sb = $('#slipbox'); if (!sb) return; sb.classList.add('open'); $('#slipw').classList.add('in'); later(() => sb.classList.add('done'), 600); }, reduced ? 0 : 320);
   };
   btn.addEventListener('pointerdown', e => { if (popped) return; sx = e.clientX; moved = 0; btn.classList.add('held'); try { btn.setPointerCapture(e.pointerId); } catch (err) {} });
   btn.addEventListener('pointermove', e => {
@@ -1058,68 +1246,106 @@ function writeLines(note, lines) {
   note.onclick = finish;
 }
 
-/* polaroids develop like an instant photo; tap to give one a shake */
-const polaroid = (c, fresh) => `<figure class="polaroid${fresh ? ' drop develop' : ''}" id="pol"><span class="tape t1"></span><img src="${c.photo}" alt="${c.caption || 'A photo of us'}" onerror="photoMissing(this)"><figcaption>${c.caption || ''}</figcaption></figure>${fresh ? '<p class="devhint" id="devhint">Developing… tap it to give it a shake</p>' : ''}`;
+/* ---------- sweet treat days: shake the polaroid until it develops, then the box message appears ---------- */
+const devFilter = p => `brightness(${(.12 + .88 * p).toFixed(2)}) sepia(${(1 - p).toFixed(2)}) saturate(${(.3 + .7 * p).toFixed(2)}) contrast(${(.6 + .4 * p).toFixed(2)}) blur(${(3 * (1 - p)).toFixed(1)}px)`;
+function doCandy(d, c, first, act) {
+  const dev = !!state.dev[d] || !c.photo;
+  act.innerHTML = (c.photo ? `<figure class="polaroid${dev ? '' : ' undev'}" id="pol"><span class="tape t1"></span><img src="${c.photo}" alt="${c.caption || 'A photo of us'}" onerror="photoMissing(this)"><figcaption>${c.caption || ''}</figcaption></figure>
+      <div class="devhint" id="devhint"${dev ? ' hidden' : ''}><span>Tap the photo to give it a shake</span><span class="dots"><i></i><i></i><i></i></span></div>` : '')
+    + `<div id="callWrap"${dev ? '' : ' hidden'}>${call(d, "It's waiting for you under the tree.", dev && first ? 'pending' : '')}</div>`;
+  if (dev) { if (first) stampWhenSeen(act); return; }
+  const f = $('#pol'), dots = [...act.querySelectorAll('#devhint .dots i')], img = () => f.querySelector('img'); let step = 0;
+  if (img()) img().style.filter = devFilter(0);
+  f.onclick = () => {
+    if (step >= 3) return; step++;
+    f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); sfx.shake();
+    if (img()) img().style.filter = devFilter(step / 3);
+    dots.forEach((b, i) => b.classList.toggle('on', i < step));
+    if (step < 3) return;
+    state.dev[d] = true; save();
+    later(() => {
+      f.classList.remove('undev'); f.onclick = null; if (img()) img().style.filter = '';
+      const h = $('#devhint'); if (h) h.hidden = true;
+      sparkAt(f, 26); sfx.chime();
+      const w = $('#callWrap'); if (!w) return;
+      w.hidden = false; w.querySelector('.call').classList.add('fresh');
+      later(() => w.scrollIntoView({block:'nearest', behavior: reduced ? 'auto' : 'smooth'}), 200);
+    }, 950);
+  };
+}
 function photoMissing(img) {
   const f = img.closest('.polaroid'); if (!f) return;
-  const h = document.getElementById('devhint'); if (h) h.hidden = true;
-  if (!TESTING) { f.hidden = true; return; }
+  if (!TESTING) {
+    f.hidden = true;
+    const h = document.getElementById('devhint'); if (h) h.hidden = true;
+    const w = document.getElementById('callWrap'); if (w) w.hidden = false;
+    return;
+  }
   const ph = document.createElement('div'); ph.className = 'ph'; ph.textContent = 'Add ' + img.getAttribute('src') + ' to the repo and it shows up here';
   img.replaceWith(ph); f.classList.remove('develop');
 }
-function wirePolaroid() {
+/* Christmas Day's photo strip develops on its own once it scrolls into view */
+const polaroidAuto = (c, fresh) => `<figure class="polaroid${fresh ? ' drop develop' : ''}" id="pol"><span class="tape t1"></span><img src="${c.photo}" alt="${c.caption || 'A photo of us'}" onerror="photoMissing(this)"><figcaption>${c.caption || ''}</figcaption></figure>${fresh ? '<p class="devhint" id="devhint">Developing… tap it to give it a shake</p>' : ''}`;
+function wirePolaroidAuto() {
   const f = $('#pol'); if (!f || !f.classList.contains('develop')) return;
   const img = f.querySelector('img');
   whenSeen(f, () => f.classList.add('go'), .3);
-  f.onclick = () => { if (!f.classList.contains('develop')) return; f.classList.add('go', 'fast'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); sfx.flip(); };
+  f.onclick = () => { if (!f.classList.contains('develop')) return; f.classList.add('go', 'fast'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); sfx.shake(); };
   if (img) img.addEventListener('animationend', e => { if (e.animationName !== 'develop') return; f.classList.remove('develop', 'go', 'fast'); f.onclick = null; const h = $('#devhint'); if (h) h.hidden = true; });
 }
 
-/* ---------- the five kinds of door ---------- */
-function doCandy(d, c, first, act) {
-  act.innerHTML = (c.photo ? polaroid(c, first) : '') + call(d, c.callLine, first ? 'pending' : '');
-  wirePolaroid();
-  if (first) stampWhenSeen(act);
-}
-
-function doGame(d, c, first, act) {
+/* ---------- game days ---------- */
+function gamePanel(d, c, p) {
   const G = GAMES[c.g];
-  act.innerHTML = `<p class="kick">Today's game</p><h3>${G.title}</h3><p class="how">${G.how(c)}</p>${c.hint ? `<p class="hint">${c.hint}</p>` : ''}
-    <div class="prize" id="prize">${padlock('padlock')}<div><b>Win to unlock box ${d}</b><span>There's a small treat inside.</span></div></div>
+  p.innerHTML = `<header class="s-head"><p class="s-day">Today's game</p><h2 class="s-date">${G.title}</h2></header>
+    <p class="how">${G.how(c)}</p>${c.hint ? `<p class="hint">${c.hint}</p>` : ''}
+    <div class="prize" id="prize">${padlock('padlock')}<div><b>Win this game to open Calendar Box ${d}</b><span>It's under the tree, but it stays shut until you've won!</span></div></div>
     <div class="stage" id="stage"></div><div class="after" id="after"></div>`;
-  const stage = $('#stage'), after = $('#after'), prize = $('#prize');
+  const stage = p.querySelector('#stage'), after = p.querySelector('#after'), prize = p.querySelector('#prize');
   const start = () => {
     stopGame(); after.innerHTML = ''; stage.innerHTML = ''; sfx.click();
     cleanup = G.run(stage, c,
-      () => { stopGame(); state.won[d] = true; save(); sfx.win(); shower(50); prize.hidden = true;
-        after.innerHTML = `<p class="res nice">You did it!</p>` + call(d, 'You earned it. Your treat is waiting.', 'fresh') + `<button class="btn ghost" type="button" id="again">Play again</button>`;
-        $('#again').onclick = start; later(() => sparkAt(after.querySelector('.seal'), 18), 600); },
-      msg => { stopGame(); sfx.wrong(); after.innerHTML = `<div class="lost"><p>${msg}</p><p class="meta">Box ${d} stays shut until you win.</p><button class="btn" type="button" id="again">Have another go</button></div>`; $('#again').onclick = start; });
+      () => {
+        stopGame(); state.won[d] = true; save(); sfx.win(); shower(50); prize.hidden = true; stage.innerHTML = '';
+        after.innerHTML = `<p class="res nice">You did it!</p>` + call(d, 'You won it fair and square. Go and get it from under the tree.', 'fresh')
+          + `<button class="btn" type="button" id="toCard">Back to your card</button><button class="btn ghost small" type="button" id="again">Play again</button>`;
+        after.querySelector('#again').onclick = start; after.querySelector('#toCard').onclick = closePanel;
+        dlg.scrollTo({top:0, behavior: reduced ? 'auto' : 'smooth'});
+        plater(() => sparkAt(after.querySelector('.tree'), 18), 600);
+      },
+      msg => { stopGame(); sfx.wrong(); after.innerHTML = `<div class="lost"><p>${msg}</p>${state.won[d] ? '' : `<p class="meta">Calendar Box ${d} stays shut until you win.</p>`}<button class="btn" type="button" id="again">Have another go</button></div>`; after.querySelector('#again').onclick = start; });
   };
-  if (state.won[d]) { prize.hidden = true; after.innerHTML = call(d, 'Already won. Nicely done.'); }
-  stage.innerHTML = `<button class="btn" type="button" id="play">${state.won[d] ? 'Play again' : 'Play'}</button>`;
-  $('#play').onclick = start;
+  if (state.won[d]) prize.hidden = true;
+  stage.innerHTML = `<button class="btn" type="button" id="play">${state.won[d] ? 'Play again' : 'Start the game'}</button>`;
+  stage.querySelector('#play').onclick = start;
+}
+function gameDone(d, c, act) {
+  act.innerHTML = `<p class="kick">Today's game: ${GAMES[c.g].title}</p><p class="res nice">You won!</p>` + call(d, 'You won it fair and square. Go and get it from under the tree.') + `<button class="btn ghost small" type="button" id="replay">Play again</button>`;
+  act.querySelector('#replay').onclick = () => openPanel(d, c, gamePanel);
 }
 
-function doNon(d, c, first, act) {
+/* ---------- Naughty or Nice days ---------- */
+function nonPanel(d, c, p) {
   const segs = [0, 1, 2, 3, 4, 5, 6, 7].map(i => `<span style="transform:rotate(${i * 45 + 22.5}deg)"><i>${i % 2 ? 'Naughty' : 'Nice'}</i></span>`).join('');
-  act.innerHTML = `<p class="kick">Naughty or Nice</p><h3>${c.prize}</h3>
+  p.innerHTML = `<header class="s-head"><p class="s-day">Naughty or Nice</p><h2 class="s-date">${c.prize}</h2></header>
     <div class="stakes"><div class="stake nice"><span>Nice</span><b>${c.nice}</b></div><div class="stake naughty"><span>Naughty</span><b>${c.naughty}</b></div></div>
-    <div class="wheelbox" id="wb"><div class="pointer" id="ptr">${POINTER}</div><div class="wheelclip"><div class="wheel" id="wheel">${segs}</div></div><div class="hub">${seal('?')}</div><div class="verdict" id="verdict" hidden></div></div>
+    <div class="wheelbox"><div class="pointer" id="ptr">${POINTER}</div><div class="wheelclip"><div class="wheel" id="wheel">${segs}</div></div><div class="hub">${seal('?')}</div><div class="verdict" id="verdict" hidden></div></div>
     <div class="after" id="after"><button class="btn" type="button" id="spin">Spin the wheel</button><p class="meta">One spin. No do-overs.</p></div>`;
-  const wheel = $('#wheel'), after = $('#after');
+  const wheel = p.querySelector('#wheel'), after = p.querySelector('#after');
   const show = (r, live) => {
     if (!wheel.isConnected) return;
-    const nice = r.r === 'nice', v = $('#verdict');
+    const nice = r.r === 'nice', v = p.querySelector('#verdict');
     v.className = 'verdict ' + r.r + (live ? ' thump' : ''); v.textContent = nice ? 'Nice' : 'Naughty'; v.hidden = false;
-    after.innerHTML = `<p class="outcome">${c.prize}: <b>${c[r.r]}</b></p><p class="meta">${nice ? 'You dodged: ' + c.naughty : 'So close. You missed: ' + c.nice}.</p>` + call(d, 'Go and claim your prize.', live ? 'fresh' : '');
+    after.innerHTML = `<p class="outcome">${c.prize}: <b>${c[r.r]}</b></p><p class="meta">${nice ? 'You dodged: ' + c.naughty : 'So close. You missed: ' + c.nice}.</p>`
+      + saveRow(c) + call(d, "Go and claim your prize. It's waiting under the tree.", live ? 'fresh' : '') + `<button class="btn" type="button" id="toCard">Back to your card</button>`;
+    wireSave(after, d, c); after.querySelector('#toCard').onclick = closePanel;
     if (live) {
-      later(() => { sfx.stamp(); sheet.classList.remove('rise', 'jolt'); void sheet.offsetWidth; sheet.classList.add('jolt'); }, 380);
-      later(() => { if (nice) { sfx.win(); sparkAt(v, 26); shower(50); } else sfx.naughty(); }, 650);
+      plater(() => { sfx.stamp(); panel.classList.remove('slidein', 'jolt'); void panel.offsetWidth; panel.classList.add('jolt'); }, 380);
+      plater(() => { if (nice) { sfx.win(); sparkAt(v, 26); shower(50); } else sfx.naughty(); }, 650);
     }
   };
   if (state.non[d]) { const r = state.non[d]; wheel.style.transform = `rotate(${r.a != null ? r.a : (r.r === 'nice' ? -22.5 : -67.5)}deg)`; return show(r, false); }
-  $('#spin').onclick = () => {
+  p.querySelector('#spin').onclick = () => {
     /* 8 segments, even = nice, odd = naughty. The result is a fair 50/50, then the wheel is aimed at it. */
     const kind = Math.random() < .5 ? 'nice' : 'naughty';
     const seg = 2 * Math.floor(Math.random() * 4) + (kind === 'nice' ? 0 : 1);
@@ -1127,48 +1353,59 @@ function doNon(d, c, first, act) {
     const rest = 360 - (seg * 45 + off), total = 360 * 7 + rest, r = {r:kind, a:rest};
     state.non[d] = r; save();
     after.innerHTML = `<p class="meta">Round and round it goes…</p>`;
-    const dur = reduced ? 1200 : 7500, t0 = performance.now(), ptr = $('#ptr'); let lastK = 0, lastSound = 0, raf;
+    const dur = reduced ? 1200 : 7500, t0 = performance.now(), ptr = p.querySelector('#ptr'); let lastK = 0, lastSound = 0, raf;
     const step = now => {
-      const p = Math.min(1, (now - t0) / dur), ang = total * (1 - Math.pow(1 - p, 3));
+      const prog = Math.min(1, (now - t0) / dur), ang = total * (1 - Math.pow(1 - prog, 3));
       wheel.style.transform = `rotate(${ang}deg)`;
       const k = Math.floor(ang / 45);
       if (k !== lastK) { lastK = k; if (now - lastSound > 45) { lastSound = now; sfx.tick(); } ptr.classList.add('tick'); setTimeout(() => ptr.classList.remove('tick'), 60); }
-      if (p < 1) raf = requestAnimationFrame(step); else { cleanup = null; later(() => show(r, true), 700); }
+      if (prog < 1) raf = requestAnimationFrame(step); else { cleanup = null; plater(() => show(r, true), 700); }
     };
     raf = requestAnimationFrame(step); cleanup = () => cancelAnimationFrame(raf);
   };
 }
+function nonDone(d, c, act) {
+  const r = state.non[d], nice = r.r === 'nice';
+  act.innerHTML = `<p class="kick">Naughty or Nice</p><span class="mini-verdict ${r.r}">${nice ? 'Nice' : 'Naughty'}</span><p class="outcome">${c.prize}: <b>${c[r.r]}</b></p>`
+    + saveRow(c) + call(d, "Go and claim your prize. It's waiting under the tree.") + `<button class="btn ghost small" type="button" id="seeWheel">See the wheel again</button>`;
+  wireSave(act, d, c); act.querySelector('#seeWheel').onclick = () => openPanel(d, c, nonPanel);
+}
 
-/* locked days: the box has a clue, the clue leads to the password, then scratch off the gold */
-const ticketHTML = (d, c) => `<div class="ticket" id="ticket"><div class="t-main"><p class="t-kick">${c.kick || "You're going to"}</p><p class="t-title">${c.title}</p>${c.detail ? `<p class="t-detail">${c.detail}</p>` : ''}${c.venue ? `<p class="t-venue">${c.venue}</p>` : ''}</div>
-  <div class="t-stub"><small>${weekday(d, 'short')}</small><b>${d}</b><small>Dec</small><span>${c.time || c.stub || ''}</span></div></div>`;
-function doLock(d, c, first, act) {
-  const len = c.code.length, ticket = ticketHTML(d, c);
-  if (state.ev[d] === 2) { act.innerHTML = `<p class="kick">Your golden ticket</p><div class="scratch">${ticket}</div><p class="outcome">${c.outcome || "It's a date."}</p>`; return; }
-  act.innerHTML = `<div class="stage" id="lock">${padlock('padlock', 'padlock')}<p class="kick">Top secret</p><h3>Your present is locked</h3>
-      <p class="how">Open box ${d} and follow the clue inside. It leads you to the password.</p>
+/* ---------- locked days: the box has a clue, the clue leads to the password, then scratch off the gold ---------- */
+const ticketHTML = (d, c) => `<div class="ticket"><div class="t-main">${c.emoji ? `<p class="t-emoji">${c.emoji}</p>` : ''}<p class="t-kick">${c.kick || "You're going to"}</p><p class="t-title">${c.title}</p>${c.detail ? `<p class="t-detail">${c.detail}</p>` : ''}${c.venue ? `<p class="t-venue">${c.venue}</p>` : ''}</div>
+  <div class="t-stub"><small>${weekday(d, 'short')}</small><b>${ordHTML(d)}</b><small>Dec</small><span>${c.time || c.stub || ''}</span></div></div>`;
+function lockPanel(d, c, p) {
+  const len = c.code.length;
+  p.innerHTML = `<header class="s-head"><p class="s-day" id="lday">Top secret</p><h2 class="s-date" id="ltitle">Your present is locked</h2></header>
+    <div class="stage" id="lock">${padlock('padlock', 'padlock')}
+      <p class="how">Go to the tree and open Calendar Box ${d}. Inside there's a clue. Follow it to find the password, then type it in here.</p>
       <input class="code" id="code" maxlength="${len}" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" aria-label="${len}-letter password" placeholder="${'·'.repeat(len)}">
       <button class="btn" type="button" id="unlock">Unlock</button><p class="lockmsg" id="lockMsg">No guessing. Santa is watching.</p></div>
-    <div class="stage" id="vault" hidden><p class="kick">Password accepted</p><h3>Scratch off the gold</h3><div class="scratch">${ticket}<canvas id="foil" aria-label="Scratchcard. Rub to reveal."></canvas></div></div>
+    <div class="stage" id="vault" hidden><div class="scratch">${ticketHTML(d, c)}<canvas id="foil" aria-label="Scratchcard. Rub to reveal."></canvas></div><p class="meta" id="scratchHint">Rub the gold away with your finger</p></div>
     <div class="after" id="after"></div>`;
-  const code = $('#code'); let tries = 0;
-  const openVault = () => { $('#lock').hidden = true; $('#vault').hidden = false; foil(d, c); };
+  const code = p.querySelector('#code'); let tries = 0;
+  const openVault = () => {
+    if (!code.isConnected) return;
+    p.querySelector('#lock').hidden = true; p.querySelector('#vault').hidden = false;
+    p.querySelector('#lday').textContent = 'Password accepted'; p.querySelector('#ltitle').textContent = 'Scratch off the gold';
+    foil(d, c, p);
+  };
   const attempt = () => {
     const v = code.value.trim().toUpperCase();
     if (v === c.code.toUpperCase()) {
-      state.ev[d] = 1; save(); code.classList.add('good'); code.disabled = true; $('#padlock').classList.add('open');
-      $('#lockMsg').textContent = "You're in!"; sfx.chime(); sparkAt($('#padlock'), 18);
-      later(() => { if (code.isConnected) openVault(); }, 1100); return;
+      state.ev[d] = 1; save(); code.classList.add('good'); code.disabled = true; p.querySelector('#padlock').classList.add('open');
+      p.querySelector('#lockMsg').textContent = "You're in!"; sfx.chime(); sparkAt(p.querySelector('#padlock'), 18);
+      plater(openVault, 1100); return;
     }
     tries++; sfx.wrong(); code.value = ''; code.classList.remove('shake'); void code.offsetWidth; code.classList.add('shake');
-    $('#lockMsg').textContent = v.length < len ? `It needs ${len} letters.` : ['Nope. Have you followed the clue?', 'Still no. Read the clue again.', 'Wrong again. The elves are getting suspicious.'][Math.min(tries - 1, 2)];
+    p.querySelector('#lockMsg').textContent = v.length < len ? `It needs ${len} letters.` : ['Nope. Have you followed the clue?', 'Still no. Read the clue again.', 'Wrong again. The elves are getting suspicious.'][Math.min(tries - 1, 2)];
   };
-  $('#unlock').onclick = attempt;
+  p.querySelector('#unlock').onclick = attempt;
   code.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
-  if (state.ev[d] === 1) later(() => { if (code.isConnected) openVault(); }, 80);
+  if (state.ev[d] === 1) plater(openVault, 60);
 }
-function foil(d, c) {
-  const cv = $('#foil'), box = cv.parentNode, W = box.clientWidth, H = box.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+function foil(d, c, p) {
+  const cv = p.querySelector('#foil'), box = cv.parentNode, W = box.clientWidth, H = box.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
   cv.width = W * dpr; cv.height = H * dpr; const x = cv.getContext('2d'); x.scale(dpr, dpr);
   const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#f7dd93'); g.addColorStop(.45, '#d8a23f'); g.addColorStop(.7, '#f2cf78'); g.addColorStop(1, '#c9922f');
   x.fillStyle = g; x.fillRect(0, 0, W, H);
@@ -1187,20 +1424,34 @@ function foil(d, c) {
     const now = performance.now(); if (now - lastS > 60) { lastS = now; sfx.scratch(); }
     if (hit.size >= cols * rows * .45) {
       done = true; state.ev[d] = 2; save(); cv.style.opacity = 0; cv.style.pointerEvents = 'none';
-      sfx.win(); sparkAt($('#ticket'), 34); shower(50);
-      const v = $('#vault'); if (v) { v.querySelector('.kick').textContent = 'Your golden ticket'; v.querySelector('h3').textContent = 'Surprise!'; }
-      const a = $('#after'); if (a) a.innerHTML = `<p class="outcome">${c.outcome || "It's a date."}</p>`;
+      sfx.win(); sparkAt(p.querySelector('.ticket'), 34); shower(50);
+      p.querySelector('#lday').textContent = 'Your golden ticket'; p.querySelector('#ltitle').textContent = 'Surprise!';
+      const hint = p.querySelector('#scratchHint'); if (hint) hint.hidden = true;
+      const a = p.querySelector('#after');
+      a.innerHTML = `<p class="outcome">${c.outcome || "It's a date."}</p>` + saveRow(c) + `<button class="btn" type="button" id="toCard">Back to your card</button>`;
+      wireSave(a, d, c); a.querySelector('#toCard').onclick = closePanel;
     }
   };
   cv.onpointerdown = e => { e.preventDefault(); down = true; try { cv.setPointerCapture(e.pointerId); } catch (err) {} [lx, ly] = pos(e); rub(lx, ly); };
-  cv.onpointermove = e => { if (down) { const p = pos(e); rub(p[0], p[1]); } };
+  cv.onpointermove = e => { if (down) { const q = pos(e); rub(q[0], q[1]); } };
   cv.onpointerup = cv.onpointercancel = () => down = false;
 }
+function lockDone(d, c, act) {
+  act.innerHTML = `<p class="kick">Your golden ticket</p><div class="scratch">${ticketHTML(d, c)}</div><p class="outcome">${c.outcome || "It's a date."}</p>` + saveRow(c);
+  wireSave(act, d, c);
+}
 
-/* Christmas Day: the photo booth strip, then a world premiere behind red curtains */
-function doReveal(d, c, first, act) {
+/* ---------- Christmas Day: the photo booth strip, then a premiere behind red curtains ---------- */
+function revealCard(d, c, first, act, cta) {
+  act.innerHTML = c.photo ? polaroidAuto(c, first) : '';
+  wirePolaroidAuto();
+  if (state.film) { act.insertAdjacentHTML('beforeend', `<p class="kick">One last surprise</p><button class="btn" type="button" id="toFilm">Back to the premiere</button>`); act.querySelector('#toFilm').onclick = () => openPanel(d, c, revealPanel); }
+  else cta('One last surprise', 'Get comfy first', () => openPanel(d, c, revealPanel));
+  if (first) later(() => { sfx.win(); shower(80); }, 450);
+}
+function revealPanel(d, c, p) {
   const done = !!state.film;
-  act.innerHTML = (c.photo ? polaroid(c, first) : '') + `<p class="kick">One more surprise</p>
+  p.innerHTML = `<header class="s-head"><p class="s-day">Christmas Day</p><h2 class="s-date">One last surprise</h2></header>
     <div class="cinema${done ? ' open done' : ''}" id="cinema">
       <div class="marquee"><p class="mq-small">World premiere</p><p class="mq-title">${TO} &amp; ${FROM}</p><p class="mq-small">Christmas Day · One night only</p></div>
       <div class="screen">
@@ -1210,39 +1461,185 @@ function doReveal(d, c, first, act) {
         <span class="curtain l"></span><span class="curtain r"></span><span class="pelmet"></span>
         <button class="tassel" id="tassel" type="button"${done ? ' hidden' : ''}>${TASSEL}<span class="tlabel">Pull to open</span></button>
       </div>
-      <p class="tissue">Tissues at the ready.</p>
+      <p class="popcorn">Popcorn at the ready!</p>
     </div>`;
-  wirePolaroid();
-  $('#playFilm').onclick = () => { Object.keys(players).forEach(n => players[n].pause()); sfx.chime(); };
-  const cin = $('#cinema'), tas = $('#tassel');
+  const cin = p.querySelector('#cinema'), tas = p.querySelector('#tassel');
+  p.querySelector('#playFilm').onclick = () => { Object.keys(players).forEach(n => players[n].pause()); sfx.chime(); };
   tas.onclick = () => {
     if (cin.classList.contains('open')) return;
     tas.hidden = true; cin.classList.add('open'); state.film = true; save(); sfx.swoosh();
-    let n = 5; const cnt = $('#cnt'), sw = $('#sweep');
-    const roll = () => { if (!cin.isConnected) return; $('#leader').hidden = true; const tc = $('#titlecard'); tc.hidden = false; tc.classList.add('in'); sfx.win(); later(() => sparkAt(tc, 30), 200); shower(70); };
-    const tick = () => { if (!cin.isConnected) return; cnt.textContent = n; sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go'); sfx.leader(); n--; later(n >= 1 ? tick : roll, 1000); };
-    later(tick, reduced ? 200 : 1700);
+    let n = 5; const cnt = p.querySelector('#cnt'), sw = p.querySelector('#sweep');
+    const roll = () => { if (!cin.isConnected) return; p.querySelector('#leader').hidden = true; const tc = p.querySelector('#titlecard'); tc.hidden = false; tc.classList.add('in'); sfx.win(); plater(() => sparkAt(tc, 30), 200); shower(70); };
+    const tick = () => { if (!cin.isConnected) return; cnt.textContent = n; sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go'); sfx.leader(); n--; plater(n >= 1 ? tick : roll, 1000); };
+    plater(tick, reduced ? 200 : 1700);
   };
-  if (first) later(() => { sfx.win(); shower(80); }, 450);
 }
 
-/* ---------- love notes keepsake ---------- */
+/* ---------- prizes she can save to her phone as a picture ---------- */
+const saveRow = c => `<div class="psave"><button class="thumb" type="button" aria-label="See your ${c.t === 'non' ? 'coupon' : 'ticket'}"><img alt=""></button><div><b>${c.t === 'non' ? 'Your prize coupon' : 'Keep your ticket'}</b><span>Save it to your phone so you never forget it</span><button class="btn small save" type="button" disabled>Getting it ready…</button></div></div>`;
+function wireSave(root, d, c) {
+  const row = root.querySelector('.psave'); if (!row) return;
+  const btn = row.querySelector('.save'), th = row.querySelector('.thumb'), img = th.querySelector('img');
+  makeCoupon(d, c).then(cp => {
+    if (!row.isConnected) return;
+    img.src = cp.url; btn.disabled = false; btn.textContent = 'Save to your phone';
+    btn.onclick = () => saveCoupon(cp); th.onclick = () => openViewer(cp);
+  }).catch(() => { if (row.isConnected) btn.textContent = "Couldn't make the picture"; });
+}
+const isIOS = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function saveCoupon(cp) {
+  sfx.click();
+  if (isIOS()) {
+    if (cp.file && navigator.canShare && navigator.canShare({files:[cp.file]})) { navigator.share({files:[cp.file]}).catch(e => { if (e && e.name !== 'AbortError') openViewer(cp); }); return; }
+    return openViewer(cp);
+  }
+  const a = document.createElement('a'); a.href = cp.url; a.download = cp.name; document.body.append(a); a.click(); a.remove();
+  toast('Saved to your downloads');
+}
+function openViewer(cp) {
+  $('#vImg').src = cp.url;
+  const canShare = !isIOS() || (cp.file && navigator.canShare && navigator.canShare({files:[cp.file]}));
+  const b = $('#vSave'); b.hidden = !canShare; b.onclick = () => saveCoupon(cp);
+  showDlg(viewer);
+}
+$('#vClose').onclick = () => viewer.close();
+viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); });
+
+const coupons = {};
+async function makeCoupon(d, c) {
+  const key = d + ':' + (c.t === 'non' ? state.non[d].r : 'ticket');
+  if (coupons[key]) return coupons[key];
+  if (document.fonts && document.fonts.load) {
+    const loads = ['italic 600 80px "Bodoni Moda"', '400 60px Kalam', '800 40px "Nunito Sans"', '700 40px "Nunito Sans"'].map(f => document.fonts.load(f).catch(() => {}));
+    await Promise.race([Promise.all(loads), new Promise(r => setTimeout(r, 2500))]);
+  }
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
+  if (c.t === 'non') drawNonCoupon(x, W, H, d, c); else drawTicketCoupon(x, W, H, d, c);
+  const url = cv.toDataURL('image/jpeg', .92);
+  const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', .92));
+  const name = `${TO.toLowerCase()}-advent-day-${d}.jpg`;
+  const file = blob && typeof File === 'function' ? new File([blob], name, {type:'image/jpeg'}) : null;
+  return coupons[key] = {url, file, name};
+}
+function spacedWidth(x, text, sp) { return [...text].reduce((w, ch) => w + x.measureText(ch).width, 0) + sp * ([...text].length - 1); }
+function spaced(x, text, cx, y, sp) {
+  const chars = [...text]; let px = cx - spacedWidth(x, text, sp) / 2; const al = x.textAlign; x.textAlign = 'left';
+  chars.forEach(ch => { x.fillText(ch, px, y); px += x.measureText(ch).width + sp; }); x.textAlign = al;
+}
+function wrapLines(x, text, maxW) {
+  const words = String(text).split(/\s+/), lines = []; let line = '';
+  words.forEach(w => { const t = line ? line + ' ' + w : w; if (x.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; });
+  if (line) lines.push(line); return lines;
+}
+function roundRect(x, l, t, w, h, r) { x.beginPath(); x.moveTo(l + r, t); x.arcTo(l + w, t, l + w, t + h, r); x.arcTo(l + w, t + h, l, t + h, r); x.arcTo(l, t + h, l, t, r); x.arcTo(l, t, l + w, t, r); x.closePath(); }
+function couponShape(x, l, t, w, h, r, n) {
+  const step = h / n; x.beginPath(); x.moveTo(l, t); x.lineTo(l + w, t);
+  for (let i = 0; i < n; i++) { const cy = t + step * (i + .5); x.lineTo(l + w, cy - r); x.arc(l + w, cy, r, -Math.PI / 2, Math.PI / 2, true); }
+  x.lineTo(l + w, t + h); x.lineTo(l, t + h);
+  for (let i = n - 1; i >= 0; i--) { const cy = t + step * (i + .5); x.lineTo(l, cy + r); x.arc(l, cy, r, Math.PI / 2, -Math.PI / 2, true); }
+  x.closePath();
+}
+function ticketShape(x, l, t, w, h, r, cy, nr) {
+  x.beginPath(); x.moveTo(l + r, t); x.lineTo(l + w - r, t); x.arcTo(l + w, t, l + w, t + r, r);
+  x.lineTo(l + w, cy - nr); x.arc(l + w, cy, nr, -Math.PI / 2, Math.PI / 2, true);
+  x.lineTo(l + w, t + h - r); x.arcTo(l + w, t + h, l + w - r, t + h, r); x.lineTo(l + r, t + h); x.arcTo(l, t + h, l, t + h - r, r);
+  x.lineTo(l, cy + nr); x.arc(l, cy, nr, Math.PI / 2, -Math.PI / 2, true);
+  x.lineTo(l, t + r); x.arcTo(l, t, l + r, t, r); x.closePath();
+}
+function sparkleAt(x, cx, cy, s, col) { x.save(); x.translate(cx - s / 2, cy - s / 2); x.scale(s / 24, s / 24); x.fillStyle = col; x.fill(new Path2D(SPARK)); x.restore(); }
+const F = {serif:'"Bodoni Moda", Georgia, serif', hand:'Kalam, "Bradley Hand", cursive', body:'"Nunito Sans", system-ui, sans-serif', emoji:'"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'};
+function drawNonCoupon(x, W, H, d, c) {
+  const r = state.non[d].r, nice = r === 'nice', green = P.grinch, gold = P.gold;
+  const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#24521a'); g.addColorStop(1, '#0d2a0b'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 140; i++) { x.globalAlpha = .12 + Math.random() * .4; x.fillStyle = '#fff'; x.beginPath(); x.arc(Math.random() * W, Math.random() * H, 1.5 + Math.random() * 3.5, 0, 7); x.fill(); }
+  x.globalAlpha = 1; x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+  x.fillStyle = gold; x.font = `800 30px ${F.body}`; spaced(x, `${TO.toUpperCase()}'S ADVENT CALENDAR · ${YEAR}`, W / 2, 110, 7);
+  const L = 90, T = 160, CW = W - 180, CH = 1010;
+  x.save(); x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = 50; x.shadowOffsetY = 20; x.fillStyle = '#f8eedc'; couponShape(x, L, T, CW, CH, 20, 9); x.fill(); x.restore();
+  x.setLineDash([16, 12]); x.lineWidth = 4; x.strokeStyle = green; roundRect(x, L + 42, T + 42, CW - 84, CH - 84, 20); x.stroke(); x.setLineDash([]);
+  x.fillStyle = green; x.font = `800 30px ${F.body}`; spaced(x, 'NAUGHTY OR NICE COUPON', W / 2, T + 130, 6);
+  const word = nice ? 'NICE' : 'NAUGHTY', col = nice ? '#a8741a' : green;
+  x.save(); x.translate(W / 2, T + 300); x.rotate(-.1);
+  x.font = `800 118px ${F.body}`; const tw = spacedWidth(x, word, 10) + 90;
+  x.strokeStyle = col; x.lineWidth = 9; roundRect(x, -tw / 2, -100, tw, 168, 26); x.stroke();
+  x.lineWidth = 4; roundRect(x, -tw / 2 + 16, -84, tw - 32, 136, 16); x.stroke();
+  x.fillStyle = col; spaced(x, word, 0, 26, 10); x.restore();
+  /* the prize sits centred between the stamp and the small print, and shrinks if it's long */
+  const top = T + 420, bottom = T + CH - 196, maxW = CW - 180;
+  let pf = 76, rf = 68, pl, rl, total;
+  const fit = () => { x.font = `italic 600 ${pf}px ${F.serif}`; pl = wrapLines(x, c.prize, maxW); x.font = `400 ${rf}px ${F.hand}`; rl = wrapLines(x, c[r], maxW); total = pl.length * pf * 1.14 + 18 + rl.length * rf * 1.18; };
+  fit(); while (total > bottom - top && pf > 52) { pf -= 6; rf -= 5; fit(); }
+  let y = top + Math.max(0, (bottom - top - total) / 2);
+  x.fillStyle = P.ink; x.font = `italic 600 ${pf}px ${F.serif}`; pl.forEach(l => { x.fillText(l, W / 2, y + pf * .86); y += pf * 1.14; });
+  y += 18; x.fillStyle = P.berry; x.font = `400 ${rf}px ${F.hand}`; rl.forEach(l => { x.fillText(l, W / 2, y + rf * .9); y += rf * 1.18; });
+  if (bottom - y > 56) [-64, 0, 64].forEach((dx, i) => sparkleAt(x, W / 2 + dx, y + 40, i === 1 ? 34 : 22, i === 1 ? gold : green));
+  x.fillStyle = '#6b6254'; x.font = `700 30px ${F.body}`;
+  x.fillText('Won on ' + longDate(d) + ' ' + YEAR, W / 2, T + CH - 150);
+  x.fillText('Redeem with ' + FROM + ' whenever you like. No expiry.', W / 2, T + CH - 104);
+  x.fillStyle = gold; x.font = `400 52px ${F.hand}`; x.fillText('Made for ' + TO + ' by ' + FROM + ' x', W / 2, H - 70);
+}
+function drawTicketCoupon(x, W, H, d, c) {
+  const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6d1222'); g.addColorStop(1, '#2a070d'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 40; i++) sparkleAt(x, Math.random() * W, Math.random() * H, 10 + Math.random() * 26, Math.random() < .5 ? 'rgba(242,207,120,.55)' : 'rgba(255,255,255,.35)');
+  x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+  x.fillStyle = '#f2cf78'; x.font = `800 30px ${F.body}`; spaced(x, `${TO.toUpperCase()}'S ADVENT CALENDAR · ${YEAR}`, W / 2, 110, 7);
+  const L = 110, T = 160, TW = W - 220, TH = 1010, cut = T + Math.round(TH * .71);
+  x.save(); x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = 50; x.shadowOffsetY = 20;
+  const gg = x.createLinearGradient(L, T, L + TW, T + TH); gg.addColorStop(0, '#f7dd93'); gg.addColorStop(.45, '#e0ad4a'); gg.addColorStop(.7, '#f5d585'); gg.addColorStop(1, '#cf9a35');
+  x.fillStyle = gg; ticketShape(x, L, T, TW, TH, 28, cut, 34); x.fill(); x.restore();
+  x.strokeStyle = 'rgba(92,60,8,.55)'; x.lineWidth = 3; roundRect(x, L + 30, T + 30, TW - 60, cut - T - 60, 18); x.stroke();
+  x.setLineDash([14, 12]); x.strokeStyle = 'rgba(92,60,8,.6)'; x.lineWidth = 4; x.beginPath(); x.moveTo(L + 50, cut); x.lineTo(L + TW - 50, cut); x.stroke(); x.setLineDash([]);
+  /* everything above the tear line, centred and shrunk to fit */
+  const top = T + 48, bottom = cut - 44, kick = (c.kick || "You're going to").toUpperCase();
+  let ef = c.emoji ? 110 : 0, tf = 80, tl, dl, total;
+  const fit = () => {
+    x.font = `italic 600 ${tf}px ${F.serif}`; tl = wrapLines(x, c.title, TW - 160);
+    x.font = `700 36px ${F.body}`; dl = c.detail ? wrapLines(x, c.detail, TW - 200) : [];
+    total = (ef ? ef * 1.2 + 18 : 0) + 44 + tl.length * tf * 1.1 + (dl.length ? 16 + dl.length * 47 : 0) + (c.venue ? 20 + 72 : 0);
+  };
+  fit(); while (total > bottom - top && tf > 56) { tf -= 6; if (ef) ef = Math.max(80, ef - 8); fit(); }
+  let y = top + Math.max(0, (bottom - top - total) / 2);
+  if (ef) { x.font = `${ef}px ${F.emoji}`; x.fillText(c.emoji, W / 2, y + ef * .92); y += ef * 1.2 + 18; }
+  x.fillStyle = '#8c1a2b'; x.font = `800 30px ${F.body}`; spaced(x, kick, W / 2, y + 30, 6); y += 44;
+  x.fillStyle = P.ink; x.font = `italic 600 ${tf}px ${F.serif}`; tl.forEach(l => { x.fillText(l, W / 2, y + tf * .88); y += tf * 1.1; });
+  if (dl.length) { y += 16; x.fillStyle = '#3a2a1c'; x.font = `700 36px ${F.body}`; dl.forEach(l => { x.fillText(l, W / 2, y + 36); y += 47; }); }
+  if (c.venue) { y += 20; x.fillStyle = '#8c1a2b'; x.font = `400 62px ${F.hand}`; x.fillText(c.venue, W / 2, y + 56); }
+  x.fillStyle = '#5c3c08'; x.font = `800 30px ${F.body}`; spaced(x, weekday(d).toUpperCase(), W / 2, cut + 82, 6);
+  x.fillStyle = P.ink; x.font = `italic 600 86px ${F.serif}`; x.fillText(ord(d) + ' December', W / 2, cut + 176);
+  x.fillStyle = '#8c1a2b'; x.font = `800 44px ${F.body}`; x.fillText(c.time || c.stub || '', W / 2, cut + 246);
+  x.fillStyle = '#f2cf78'; x.font = `400 52px ${F.hand}`; x.fillText('Made for ' + TO + ' by ' + FROM + ' x', W / 2, H - 70);
+}
+
+/* ---------- keepsakes: love notes and cracker jokes ---------- */
 function openNotes() {
   const list = $('#nbList'); list.innerHTML = '';
   const days = []; for (let d = 1; d <= 25; d++) if (state.opened[d]) days.push(d);
   if (!days.length) list.innerHTML = `<p class="nb-empty">No notes yet. Open today's door and your first one will be kept safe here.</p>`;
   days.forEach(d => {
     const item = document.createElement('div'); item.className = 'nb-item';
-    item.innerHTML = `<p class="kick">${weekday(d)} ${d} December</p>` + noteHTML(DAYS[d]);
+    item.innerHTML = `<p class="kick">${longDate(d)}</p>` + noteHTML(DAYS[d]);
     const n = item.querySelector('.note'); n.classList.add('sealed', 'still'); fillNote(n, DAYS[d]);
     list.append(item);
   });
-  if (!notesDlg.open) notesDlg.showModal();
+  showDlg(notesDlg);
   notesDlg.scrollTop = 0; sfx.click();
 }
+function openJokes() {
+  const list = $('#jkList'); list.innerHTML = '';
+  const days = []; for (let d = 1; d <= 25; d++) if (state.cr[d]) days.push(d);
+  if (!days.length) list.innerHTML = `<p class="nb-empty">No jokes yet. Pull today's cracker and the joke will be kept safe here.</p>`;
+  days.forEach((d, i) => {
+    const c = DAYS[d];
+    list.insertAdjacentHTML('beforeend', `<div class="jk-item"><p class="kick">${longDate(d)}</p><div class="jk-w"><div class="jk-slip" style="--r:${i % 2 ? 1.2 : -1.2}deg"><b>${c.joke[0]}</b><i>${c.joke[1]}</i></div></div></div>`);
+  });
+  showDlg(jokesDlg);
+  jokesDlg.scrollTop = 0; sfx.click();
+}
 $('#notesBtn').onclick = openNotes;
+$('#jokesBtn').onclick = openJokes;
 $('#notesClose').onclick = () => notesDlg.close();
-notesDlg.addEventListener('click', e => { if (e.target === notesDlg) notesDlg.close(); });
+$('#jokesClose').onclick = () => jokesDlg.close();
+[notesDlg, jokesDlg].forEach(dl => dl.addEventListener('click', e => { if (e.target === dl) dl.close(); }));
 
 /* ---------- mini-games: run(stage, cfg, win, lose) returns a cleanup function ---------- */
 const GAMES = {
@@ -1275,7 +1672,9 @@ const GAMES = {
   run(stage, c, win) {
     const word = c.word; let letters = shuffle(word.split('')); while (letters.join('') === word) letters = shuffle(letters);
     let picked = [], t;
-    stage.innerHTML = `<p class="outcome">${c.clue}</p><div class="slots"></div><div class="tiles"></div><button class="btn ghost" type="button" id="clr">Clear</button>`;
+    stage.innerHTML = `<div class="clue"><small>Clue</small><p class="outcome">${c.clue}</p></div><div class="slots"></div><div class="tiles"></div><button class="btn ghost" type="button" id="clr">Clear</button>`;
+    const n = word.length, gap = n > 9 ? 3 : 5, cell = Math.max(18, Math.min(34, Math.floor(((stage.clientWidth || 300) - gap * (n - 1)) / n)));
+    stage.style.setProperty('--cell', cell + 'px'); stage.style.setProperty('--gap', gap + 'px');
     const slots = stage.querySelector('.slots'), tiles = stage.querySelector('.tiles');
     const draw = () => {
       slots.innerHTML = word.split('').map((_, i) => `<span class="slot">${picked[i] != null ? letters[picked[i]] : ''}</span>`).join('');
@@ -1285,7 +1684,7 @@ const GAMES = {
             else { sfx.wrong(); slots.classList.add('shake'); t = setTimeout(() => { slots.classList.remove('shake'); picked = []; draw(); }, 600); } } };
         tiles.append(b); });
     };
-    $('#clr').onclick = () => { picked = []; draw(); }; draw();
+    stage.querySelector('#clr').onclick = () => { picked = []; draw(); }; draw();
     return () => clearTimeout(t);
   }},
  pop: { title:'Pop the baubles', how: c => `Pop ${c.goal} baubles in ${c.secs} seconds. They don't hang about.`,
@@ -1364,29 +1763,29 @@ const GAMES = {
   }},
  five: { title:'Festive five', how: () => "Guess the five-letter word in six goes. Green means right letter, right place. Gold means it's in the word but somewhere else.",
   run(stage, c, win, lose) {
-    const ans = c.word; let row = 0, cur = '', done = false, t;
+    const ans = c.word; let row = 0, cur5 = '', done = false, t;
     stage.innerHTML = `<div class="five">${'<div class="frow">' + '<span class="fc"></span>'.repeat(5) + '</div>'}</div><p class="meta" id="fm">Type a word, then press Enter.</p><div class="kb"></div>`;
     const five = stage.querySelector('.five'); five.innerHTML = five.innerHTML.repeat(6);
     const rows = [...five.querySelectorAll('.frow')], kb = stage.querySelector('.kb'), keys = {};
-    ['QWERTYUIOP', 'ASDFGHJKL', '↵ZXCVBNM⌫'].forEach(r => { const d = document.createElement('div'); d.className = 'krow';
+    ['QWERTYUIOP', 'ASDFGHJKL', '↵ZXCVBNM⌫'].forEach(r => { const dv = document.createElement('div'); dv.className = 'krow';
       r.split('').forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'key' + (k === '↵' || k === '⌫' ? ' big' : ''); b.textContent = k === '↵' ? 'Enter' : k;
-        b.setAttribute('aria-label', k === '↵' ? 'Enter' : k === '⌫' ? 'Delete' : k); b.onclick = () => press(k); keys[k] = b; d.append(b); });
-      kb.append(d); });
-    const paintRow = () => [...rows[row].children].forEach((cell, i) => cell.textContent = cur[i] || '');
+        b.setAttribute('aria-label', k === '↵' ? 'Enter' : k === '⌫' ? 'Delete' : k); b.onclick = () => press(k); keys[k] = b; dv.append(b); });
+      kb.append(dv); });
+    const paintRow = () => [...rows[row].children].forEach((cell, i) => cell.textContent = cur5[i] || '');
     function press(k) { if (done) return;
-      if (k === '⌫') cur = cur.slice(0, -1);
+      if (k === '⌫') cur5 = cur5.slice(0, -1);
       else if (k === '↵') return submit();
-      else if (cur.length < 5) { cur += k; sfx.flip(); }
+      else if (cur5.length < 5) { cur5 += k; sfx.flip(); }
       paintRow(); }
     function submit() {
-      if (cur.length < 5) { $('#fm').textContent = 'It needs five letters.'; return; }
+      if (cur5.length < 5) { $('#fm').textContent = 'It needs five letters.'; return; }
       const res = Array(5).fill('n'), pool = {};
-      for (let i = 0; i < 5; i++) { if (cur[i] === ans[i]) res[i] = 'g'; else pool[ans[i]] = (pool[ans[i]] || 0) + 1; }
-      for (let i = 0; i < 5; i++) if (res[i] !== 'g' && pool[cur[i]]) { res[i] = 'y'; pool[cur[i]]--; }
-      [...rows[row].children].forEach((cell, i) => { cell.classList.add(res[i]); const k = keys[cur[i]];
+      for (let i = 0; i < 5; i++) { if (cur5[i] === ans[i]) res[i] = 'g'; else pool[ans[i]] = (pool[ans[i]] || 0) + 1; }
+      for (let i = 0; i < 5; i++) if (res[i] !== 'g' && pool[cur5[i]]) { res[i] = 'y'; pool[cur5[i]]--; }
+      [...rows[row].children].forEach((cell, i) => { cell.classList.add(res[i]); const k = keys[cur5[i]];
         if (res[i] === 'g') k.className = 'key g'; else if (res[i] === 'y' && !k.classList.contains('g')) k.className = 'key y'; else if (res[i] === 'n' && k.className === 'key') k.className = 'key n'; });
-      if (cur === ans) { done = true; t = setTimeout(win, 500); return; }
-      row++; cur = ''; sfx.click();
+      if (cur5 === ans) { done = true; t = setTimeout(win, 500); return; }
+      row++; cur5 = ''; sfx.click();
       if (row === 6) { done = true; lose('Out of guesses. Here is a hint: it starts with ' + ans[0] + '.'); }
       else $('#fm').textContent = (6 - row) + (6 - row === 1 ? ' go left.' : ' goes left.');
     }
@@ -1447,7 +1846,7 @@ const GAMES = {
     const sx = W * .28, stars = Array.from({length:22}, () => [Math.random() * W, Math.random() * 150, Math.random() * 1.5 + .5]);
     let houses = [], gifts = [], got = 0, left = c.presents, over = false, last = performance.now(), raf, gap = 0;
     const drop = () => { if (over || left <= 0) return; left--; $('#dp').textContent = left; gifts.push({x:sx, y:60}); sfx.flip(); };
-    cv.addEventListener('pointerdown', drop); $('#dropBtn').onclick = drop;
+    cv.addEventListener('pointerdown', drop); stage.querySelector('#dropBtn').onclick = drop;
     cv.addEventListener('keydown', e => { if (e.key === ' ') { e.preventDefault(); drop(); } });
     function loop(t) { if (over) return; const dt = Math.min(.05, (t - last) / 1000); last = t; const speed = 105 + got * 7;
       houses.forEach(h => h.x -= speed * dt); houses = houses.filter(h => h.x > -80);
