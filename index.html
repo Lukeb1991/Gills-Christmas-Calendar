@@ -120,6 +120,11 @@ header{position:relative;display:flex;flex-direction:column;align-items:center;t
 .eyebrow{margin:0;text-transform:uppercase;letter-spacing:.18em;font-size:.75rem;font-weight:800;color:var(--gold)}
 h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,3.4rem);line-height:1.05;text-wrap:balance}
 .sub{margin:0;max-width:34ch;color:color-mix(in srgb,var(--cream) 80%,transparent)}
+/* the countdown: "18 sleeps till Christmas" */
+.sleeps{margin:4px 0 0;display:inline-flex;align-items:center;gap:7px;padding:4px 15px 4px 11px;border-radius:999px;background:color-mix(in srgb,var(--gold) 11%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 42%,transparent);font-family:var(--hand);font-size:1.05rem;line-height:1.3;color:color-mix(in srgb,var(--cream) 88%,var(--gold))}
+.sleeps b{font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.22em;line-height:1;color:var(--gold)}
+.sleeps svg{flex:none;width:15px;height:15px;color:var(--gold)}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
   background:var(--spruce);border-radius:14px;padding:10px 14px}
 .bar p{margin:0;min-width:0;flex:1 1 200px;font-weight:700}
@@ -490,7 +495,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .psave span{display:block;margin:2px 0 8px;font-size:.85rem;line-height:1.3;color:var(--sh-muted)}
 .psave .btn{align-self:flex-start}
 .viewer .vbox{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;color:var(--cream)}
-.viewer img{display:block;width:min(360px,100%);border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.viewer img{display:block;width:auto;height:auto;max-width:min(360px,100%);max-height:70vh;max-height:70dvh;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
 .vhelp{margin:0;font-size:.9rem;color:color-mix(in srgb,var(--cream) 80%,transparent)}
 
 /* Naughty or Nice (Grinch green) */
@@ -776,6 +781,34 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
 .dec-btns{display:flex;flex-direction:column;gap:10px;align-items:center}
 .dec-btns .btn{width:min(250px,100%);text-decoration:none;text-align:center}
 .dec-end{font-family:var(--hand);font-size:1.3rem;line-height:1.3;color:var(--sh-accent);text-wrap:balance}
+/* the photo booth: it prints "Our December" out of its slot */
+.booth{--pw:min(212px,62vw);display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:14px;border-top:1.5px dashed var(--sh-dash)}
+.b-line{max-width:30ch;font-family:var(--hand);font-size:1.15rem;line-height:1.3;color:var(--sh-hand);text-wrap:balance}
+.bwrap{display:flex;flex-direction:column;align-items:center;width:100%;padding-top:4px}
+.bm{position:relative;z-index:2;width:min(268px,100%);padding:12px 12px 32px;border-radius:22px 22px 10px 10px;
+  background:linear-gradient(180deg,#d63c4b,#aa2130 60%,#8e1828);box-shadow:inset 0 2px 0 rgba(255,255,255,.28),inset 0 -4px 0 rgba(0,0,0,.22),0 12px 26px rgba(0,0,0,.4)}
+.bm-sign{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 10px 8px;border-radius:13px;background:#fbf1dc;
+  box-shadow:inset 0 0 0 3px #e2b659,inset 0 0 0 6px #fbf1dc,inset 0 0 0 7px rgba(170,33,48,.28),0 2px 0 rgba(0,0,0,.2)}
+.bm-sign b{font-family:var(--display);font-weight:400;font-size:2.15rem;line-height:1;letter-spacing:.07em;color:#aa2130}
+.bm-sign small{font-size:.6rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#1f5a45}
+.bm-bulbs{display:flex;justify-content:space-between;width:100%;padding:0 5px}
+.bm-bulbs i{width:7px;height:7px;border-radius:50%;background:#e9c77f;box-shadow:0 0 0 1px rgba(150,100,20,.35)}
+.bm.on .bm-bulbs i{animation:bmBulb .56s steps(1) infinite}
+.bm.on .bm-bulbs i:nth-child(odd){animation-delay:-.28s}
+@keyframes bmBulb{0%{background:#fff6cf;box-shadow:0 0 9px 3px #ffd36b}50%{background:#e9c77f;box-shadow:0 0 0 1px rgba(150,100,20,.35)}}
+.bm-slot{position:absolute;left:50%;bottom:13px;width:calc(var(--pw) + 22px);height:9px;transform:translateX(-50%);border-radius:5px;background:#16070a;
+  box-shadow:inset 0 2px 3px #000,0 0 0 3px #d5d9df,0 0 0 4px #7f858f,0 3px 0 3px rgba(255,255,255,.16)}
+/* the tray starts at the slot and hides anything above it; it's wider and deeper than the print so the shadow shows */
+.btray{position:relative;z-index:1;width:calc(var(--pw) + 60px);height:20px;margin-top:-18px;overflow:hidden;transition:height .5s ease}
+.bprint{position:absolute;left:30px;top:8px;display:block;width:var(--pw);border:0;padding:0;background:none;cursor:zoom-in;border-radius:4px;
+  transform:translateY(-110%);transition:transform .24s cubic-bezier(.3,.7,.4,1)}
+.bprint.slow{transition-duration:.55s;transition-timing-function:ease-in-out}
+.bprint img{display:block;width:100%;height:auto;border-radius:4px;transform-origin:50% 0;box-shadow:0 8px 16px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.08)}
+.bprint.land img{animation:bLand .7s cubic-bezier(.3,1.5,.5,1)}
+@keyframes bLand{30%{transform:rotate(-1.6deg)}65%{transform:rotate(.8deg)}}
+.bctl{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;padding-top:6px}
+.bctl .btn{width:min(250px,100%)}
+.bctl.in{animation:fadeUp .45s ease both}
 @media (max-width:360px){.note{padding:18px 16px 14px}.note p{font-size:18px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}.spark,.flake{display:none}}
 </style>
@@ -804,6 +837,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     <p class="eyebrow" id="hello">December 2026</p>
     <h1>Gill's Advent Calendar</h1>
     <p class="sub" id="sub">25 boxes, 25 doors. Tap today's door first, then go and find the box.</p>
+    <p class="sleeps" id="sleeps" hidden></p>
   </header>
   <div class="bar">
     <p id="status"></p>
@@ -998,6 +1032,15 @@ const FINALE = {
   note:"My darling Gilly,\n\nThat's every door opened! Before the boxes go away, here's your favourite song while you have a little look back at your December.\n\nEvery box, every note and every terrible joke was for you. I love you more than any calendar could hold, and next Christmas you'll be my wife.",
   signOff:"Luke x"
 };
+/* On the 26th a photo booth prints a keepsake strip: the five polaroids down one side, the four photo booth shots down the other.
+   top: the small line at the top of the print. title: the big line under it.
+   focus: where to centre each polaroid when it's cut square, as [across, down] from 0 to 1.
+   shots: each booth photo inside photobot.jpg, as [left, top, width, height] from 0 to 1. */
+const STRIP = {
+  top:"Gill's Advent Calendar 2026", title:'Christmas Memories', booth:'photobot.jpg',
+  focus:{1:[.45, .64], 9:[.52, .5], 17:[.5, .62], 21:[.5, .42]},
+  shots:[[.053, .080, .421, .349], [.524, .080, .421, .349], [.053, .548, .421, .349], [.524, .548, .421, .349]]
+};
 /* ============ end of the bit to edit ============ */
 
 const $ = s => document.querySelector(s);
@@ -1013,7 +1056,7 @@ const ord = n => n + ordSfx(n);
 const ordHTML = n => `${n}<sup class="os">${ordSfx(n)}</sup>`;
 const longDate = d => weekday(d) + ' ' + ord(d) + ' December';
 const KEY = 'gill-advent-' + YEAR + '-v2';
-const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, dev:{}, film:false, fin:false, eggs:{}});
+const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, dev:{}, film:false, fin:false, eggs:{}, strip:false});
 let real = blank(), prefs = {music:true, sfx:true};
 try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) { real = Object.assign(blank(), s.state); prefs = Object.assign(prefs, s.prefs); } } catch (e) {}
 let state = real, elf = false;
@@ -1271,7 +1314,14 @@ function paintHeader() {
   const m = mode();
   $('#sub').textContent = m === 'eve' ? "Santa's on his way. One more sleep, " + TO + '.'
     : m === 'after' ? (state.fin ? "Every door's open, and every one was for you." : "Every door's open. But there's one more…") : SUB_TEXT;
+  /* the countdown, until Christmas Day (on Christmas Eve night the line above already says one more sleep) */
+  const n = sleepsLeft(), sl = $('#sleeps');
+  sl.hidden = n < 0 || m === 'after' || m === 'eve';
+  sl.innerHTML = n === 0 ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${SPARK}"/></svg>No more sleeps. It's Christmas!`
+    : MOON_ICON + (n === 1 ? '<b>1</b> more sleep till Christmas!' : `<b>${n}</b> sleeps till Christmas`);
 }
+const MOON_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.6 1.7A6.5 6.5 0 1 0 14.4 12 5.4 5.4 0 0 1 10.6 1.7Z"/></svg>';
+function sleepsLeft() { const t = new Date(); return Math.round((new Date(YEAR, 11, 25) - new Date(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5); }
 
 /* ---------- iPhone: suggest adding it to the home screen, only before the first door is opened ---------- */
 const standalone = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
@@ -1930,6 +1980,7 @@ function decemberHTML() {
     ${verdict ? `<p class="verdict-line">${verdict}</p>` : ''}
     <p class="dec-h">Naughty or Nice prizes</p><div class="dec-list">${nonItems}</div>
     <p class="dec-h">Golden tickets</p><div class="dec-list">${lockItems}</div>
+    ${boothHTML()}
     <div class="dec-btns"><button class="btn" type="button" id="decNotes">Read your love notes</button><button class="btn" type="button" id="decJokes">Your cracker jokes</button>${DAYS[25].video ? `<a class="btn ghost" id="decFilm" href="${DAYS[25].video}" target="_blank" rel="noopener">Watch your film again</a>` : ''}</div>
     <p class="dec-h">Hidden secrets: ${found} of ${EGGS.length} found</p><div class="dec-list">${eggItems}</div>
     <p class="dec-end">Every door, every note, every terrible joke: all for you. ${FROM} x</p>
@@ -1945,6 +1996,161 @@ function wireDecember() {
   });
   $('#decNotes').onclick = openNotes; $('#decJokes').onclick = openJokes;
   const film = $('#decFilm'); if (film) film.onclick = () => Object.keys(players).forEach(k => players[k].pause());
+  wireBooth();
+}
+
+/* ---------- the photo booth: it prints every photo from December as one strip she can keep ---------- */
+const boothHTML = () => `<section class="booth" id="booth">
+    <p class="kick">The photo booth</p>
+    <p class="b-line">Every photo from your calendar, printed on one strip for you to keep.</p>
+    <div class="bwrap"><div class="bm" id="bm"><div class="bm-sign"><span class="bm-bulbs">${'<i></i>'.repeat(8)}</span><b>PHOTOS</b><small>One print · all of December</small><span class="bm-bulbs">${'<i></i>'.repeat(8)}</span></div><span class="bm-slot"></span></div>
+      <div class="btray" id="btray"><button class="bprint" id="bprint" type="button" tabindex="-1" aria-label="See your photo strip"><img alt="${STRIP.title}: every photo from your calendar on one photo booth strip"></button></div></div>
+    <div class="bctl" id="bctl"><button class="btn" type="button" id="bGo" disabled>Warming up the booth…</button></div>
+  </section>`;
+function wireBooth() {
+  const bm = $('#bm'), tray = $('#btray'), pr = $('#bprint'), img = pr.querySelector('img'), ctl = $('#bctl');
+  let cp = null, out = false;
+  /* the tray opens once to make room; the strip then slides out of the slot (v = how much of it shows) */
+  const hp = () => pr.offsetHeight, full = () => hp() + 8;   /* +8: at the end it drops just clear of the slot */
+  const setOut = (v, slow) => { pr.classList.toggle('slow', !!slow); pr.style.transform = `translateY(${(v - full()).toFixed(1)}px)`; };
+  const openTray = () => { tray.style.height = full() + 20 + 'px'; };   /* +20: room for its shadow */
+  const snap = fn => { pr.style.transition = tray.style.transition = 'none'; fn(); void pr.offsetHeight; pr.style.transition = tray.style.transition = ''; };
+  boothFit = () => { if (!pr.isConnected) return (boothFit = null); if (out) snap(() => { openTray(); setOut(full()); }); };
+  const controls = fresh => {
+    ctl.innerHTML = `<button class="btn" type="button" id="bSave">Save to your phone</button><button class="btn ghost small" type="button" id="bAgain">Print it again</button>`;
+    ctl.classList.remove('in'); if (fresh) { void ctl.offsetWidth; ctl.classList.add('in'); }
+    pr.tabIndex = 0;
+    ctl.querySelector('#bSave').onclick = () => saveCoupon(cp);
+    ctl.querySelector('#bAgain').onclick = () => print();
+  };
+  const print = () => {
+    if (!cp) return;
+    ctl.innerHTML = ''; pr.tabIndex = -1; out = false; pr.classList.remove('land');
+    snap(() => setOut(0)); openTray();
+    bm.classList.add('on'); sfx.chime();
+    const top = bm.getBoundingClientRect().top - dlg.getBoundingClientRect().top - 14;
+    if (Math.abs(top) > 40) dlg.scrollTo({top: dlg.scrollTop + top, behavior: reduced ? 'auto' : 'smooth'});
+    const done = () => {
+      out = true; bm.classList.remove('on'); setOut(full()); pr.classList.add('land'); sfx.stamp(); later(sfx.sparkle, 120); later(() => sparkAt(pr, 26), 80);
+      if (!state.strip) { state.strip = true; save(); }
+      controls(true); later(() => ctl.scrollIntoView({block:'nearest', behavior: reduced ? 'auto' : 'smooth'}), 450);
+    };
+    if (reduced) return done();
+    /* like a real dye printer, the paper pokes out and goes back in for each colour, then it comes out for good */
+    [[.07, 600], [0, 1200], [.13, 1950], [0, 2600]].forEach(([k, t]) => later(() => { setOut(hp() * k, true); printMotor(.5); }, t));
+    const steps = 13, t0 = 3350, dt = 230;
+    for (let i = 1; i <= steps; i++) later(() => { setOut(hp() * i / steps); printMotor(.16); fx([1500], 0, {raw:true, dur:.03, vol:.05, type:'triangle'}); }, t0 + i * dt);
+    later(done, t0 + steps * dt + 380);
+  };
+  pr.onclick = () => cp && openViewer(cp);
+  later(() => makeStrip().then(c => {
+    if (!pr.isConnected) return;
+    cp = c; img.onload = () => {
+      if (!pr.isConnected) return;
+      if (state.strip) { out = true; snap(() => { openTray(); setOut(full()); }); controls(false); return; }
+      ctl.innerHTML = `<button class="btn" type="button" id="bGo">Print our December</button>`;
+      ctl.querySelector('#bGo').onclick = print;
+    };
+    img.src = c.url;
+  }).catch(() => { const b = $('#bGo'); if (b) b.textContent = "The booth couldn't find the photos"; }), 900);
+}
+let boothFit = null; addEventListener('resize', () => boothFit && boothFit());
+/* a little motor whirr for the printer */
+function printMotor(dur) {
+  if (!prefs.sfx || !audio()) return;
+  const t = A.ctx.currentTime, o = A.ctx.createOscillator(), f = A.ctx.createBiquadFilter(), g = A.ctx.createGain();
+  o.type = 'sawtooth'; o.frequency.setValueAtTime(92, t); o.frequency.linearRampToValueAtTime(118, t + dur);
+  f.type = 'lowpass'; f.frequency.value = 650;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(.07, t + .04); g.gain.setValueAtTime(.07, t + Math.max(.05, dur - .05)); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(f); f.connect(g); g.connect(A.sfx); o.start(t); o.stop(t + dur + .05);
+  noise(dur, .05, .6, 1800);
+}
+
+/* the print itself: a 1080px-wide photo booth strip drawn on a canvas */
+const loadImg = src => new Promise(res => { if (!src) return res(null); const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+let stripP = null;
+function makeStrip() { return stripP || (stripP = buildStrip().catch(e => { stripP = null; throw e; })); }
+async function buildStrip() {
+  const pol = []; for (let d = 1; d <= 25; d++) if (DAYS[d].t === 'candy' && DAYS[d].photo) pol.push(d);
+  const [pics, sheetImg] = await Promise.all([Promise.all(pol.map(d => loadImg(DAYS[d].photo))), loadImg(STRIP.booth).then(i => i || loadImg(DAYS[25].photo)), canvasFonts()]);
+  const left = pol.map((d, k) => pics[k] && {img:pics[k], d, focus:STRIP.focus[d] || [.5, .45]}).filter(Boolean);
+  const right = sheetImg ? (STRIP.shots || []).map(r => ({img:sheetImg, rect:[r[0] * sheetImg.naturalWidth, r[1] * sheetImg.naturalHeight, r[2] * sheetImg.naturalWidth, r[3] * sheetImg.naturalHeight]})) : [];
+  if (!left.length && !right.length) throw new Error('no photos');
+  const cv = drawStrip(left, right), name = `${TO.toLowerCase()}-${STRIP.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${YEAR}.jpg`;
+  const blob = await new Promise(r => cv.toBlob ? cv.toBlob(r, 'image/jpeg', .9) : r(null));
+  const url = blob ? await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); }) : cv.toDataURL('image/jpeg', .9);
+  const file = blob && typeof File === 'function' ? new File([blob], name, {type:'image/jpeg'}) : null;
+  cv.width = cv.height = 0;
+  return {url, file, name, alt:STRIP.title + ': every photo from your calendar'};
+}
+function drawStrip(left, right) {
+  const W = 1080, m = 56, gap = 44, g = 22, HEAD = 252, FOOT = 196, two = left.length && right.length;
+  const c = two ? (W - 2 * m - gap) / 2 : 470;
+  const nL = left.length, nR = right.length;
+  const colH = nL ? nL * c + (nL - 1) * g : nR * c / .79 + (nR - 1) * g;
+  const H = Math.round(HEAD + colH + FOOT), cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  /* photo paper: warm white, a soft vignette and a fine grain */
+  x.fillStyle = '#f9f1e2'; x.fillRect(0, 0, W, H);
+  const vg = x.createRadialGradient(W / 2, H * .45, W * .3, W / 2, H * .45, H * .62); vg.addColorStop(0, 'rgba(255,255,255,0)'); vg.addColorStop(1, 'rgba(160,110,50,.12)'); x.fillStyle = vg; x.fillRect(0, 0, W, H);
+  const gr = document.createElement('canvas'); gr.width = gr.height = 128; const gx = gr.getContext('2d'), id = gx.createImageData(128, 128);
+  for (let i = 0; i < id.data.length; i += 4) { const v = Math.random() * 255; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 14; }
+  gx.putImageData(id, 0, 0); x.fillStyle = x.createPattern(gr, 'repeat'); x.fillRect(0, 0, W, H);
+  /* the header */
+  x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+  x.fillStyle = P.firD; x.font = `800 25px ${F.body}`; spaced(x, STRIP.top.toUpperCase(), W / 2, 98, 7);
+  /* the big title shrinks to fit if it's long */
+  serifFont(x); const tw0 = x.measureText(STRIP.title).width, tpx = Math.min(112, (W - 2 * m - 130) * SERIF_DS / tw0), tw = tw0 * tpx / SERIF_DS, ty = 204 - (112 - tpx) * .4;
+  x.fillStyle = P.berry; serifFill(x, STRIP.title, W / 2, ty, tpx);
+  sparkleAt(x, W / 2 - tw / 2 - 40, ty - 34, 30, P.gold); sparkleAt(x, W / 2 + tw / 2 + 40, ty - 34, 30, P.gold);
+  sparkleAt(x, W / 2 - tw / 2 - 64, ty - 8, 15, P.gold); sparkleAt(x, W / 2 + tw / 2 + 64, ty - 58, 15, P.gold);
+  /* the photos: polaroids on the left, the booth's own shots on the right */
+  const frame = (img, sx, sy, sw, sh, l, t, w, h) => {
+    x.save(); x.shadowColor = 'rgba(60,35,10,.22)'; x.shadowBlur = 10; x.shadowOffsetY = 3; x.fillStyle = '#2a211a'; roundRect(x, l, t, w, h, 14); x.fill(); x.restore();
+    x.save(); roundRect(x, l, t, w, h, 14); x.clip(); x.drawImage(img, sx, sy, sw, sh, l, t, w, h);
+    const sh2 = x.createLinearGradient(l, t, l + w, t + h); sh2.addColorStop(0, 'rgba(255,255,255,.10)'); sh2.addColorStop(.45, 'rgba(255,255,255,0)'); x.fillStyle = sh2; x.fillRect(l, t, w, h);
+    x.restore();
+  };
+  const fit = (iw, ih, w, h, fx, fy) => { const k = Math.max(w / iw, h / ih), sw = w / k, sh = h / k; return [Math.min(iw - sw, Math.max(0, fx * iw - sw / 2)), Math.min(ih - sh, Math.max(0, fy * ih - sh / 2)), sw, sh]; };
+  const xL = two ? m : (W - c) / 2, xR = two ? m + c + gap : (W - c) / 2;
+  left.forEach((p, i) => {
+    const t = HEAD + i * (c + g), [sx, sy, sw, sh] = fit(p.img.naturalWidth, p.img.naturalHeight, c, c, p.focus[0], p.focus[1]);
+    frame(p.img, sx, sy, sw, sh, xL, t, c, c);
+  });
+  const hR = nR ? (colH - (nR - 1) * g) / nR : 0;
+  right.forEach((p, i) => {
+    const t = HEAD + i * (hR + g), [rx, ry, rw, rh] = p.rect, [sx, sy, sw, sh] = fit(rw, rh, c, hR, .5, .45);
+    frame(p.img, rx + sx, ry + sy, sw, sh, xR, t, c, hR);
+  });
+  /* the footer: a cheeky booth logo, the details, and a "QR code" that's really a heart */
+  const fy = HEAD + colH, qs = 126, qx = W - m - qs, qy = fy + (FOOT - qs) / 2 + 4;
+  x.textAlign = 'left'; x.fillStyle = P.ink; x.font = `800 60px ${F.body}`; x.fillText(FROM.toUpperCase() + 'BOT', m - 2, fy + 102);
+  const lw = x.measureText(FROM.toUpperCase() + 'BOT').width, zy = fy + 128, mid = m + lw / 2;
+  x.strokeStyle = P.berry; x.lineWidth = 4; x.lineJoin = 'round'; x.lineCap = 'round';
+  [-1, 1].forEach(s => { x.beginPath(); x.moveTo(mid + s * 26, zy); x.lineTo(mid + s * 44, zy - 9); x.lineTo(mid + s * 52, zy + 3); x.lineTo(mid + s * 70, zy - 7); x.stroke(); });
+  x.save(); x.translate(mid, zy - 1); x.scale(1.05, 1.05); x.fillStyle = P.berry; x.fill(new Path2D(HEART)); x.restore();
+  x.textAlign = 'right'; x.fillStyle = P.ink; x.font = `800 21px ${F.body}`;
+  const tx = qx - 26, l1 = `${TO.toUpperCase()}'S ADVENT CALENDAR`, l2 = `1–25/12/${String(YEAR).slice(2)}, SCAN FOR KISSES`;
+  const fitText = (s, y) => { const w = spacedWidth(x, s, 2.4), maxW = tx - (m + lw + 30); x.save(); if (w > maxW) { x.translate(tx, 0); x.scale(maxW / w, 1); x.translate(-tx, 0); } x.textAlign = 'center'; spaced(x, s, tx - w / 2, y, 2.4); x.restore(); };
+  fitText(l1, fy + 92); fitText(l2, fy + 126);
+  heartQR(x, qx, qy, qs);
+  return cv;
+}
+/* looks like a QR code from a distance; up close it's a heart */
+function heartQR(x, l, t, S) {
+  const N = 21, u = S / N; let seed = 20261226; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+  x.fillStyle = '#fffdf8'; roundRect(x, l - u, t - u, S + 2 * u, S + 2 * u, u * 1.2); x.fill();
+  const HP = ['.XXX...XXX.', 'XXXXX.XXXXX', 'XXXXXXXXXXX', 'XXXXXXXXXXX', 'XXXXXXXXXXX', '.XXXXXXXXX.', '..XXXXXXX..', '...XXXXX...', '....XXX....', '.....X.....'], hx = 9, hy = 8;
+  const heart = (i, j) => (HP[j - hy] || '')[i - hx] === 'X', nearHeart = (i, j) => i >= hx - 1 && i <= hx + 11 && j >= hy - 1 && j <= hy + 10;
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const fi = i < 7 ? i : i >= N - 7 ? i - N + 7 : -1, fj = j < 7 ? j : j >= N - 7 ? j - N + 7 : -1;
+    let col = null;
+    if (fi >= 0 && fj >= 0 && !(i >= N - 7 && j >= N - 7)) { const r = Math.max(Math.abs(fi - 3), Math.abs(fj - 3)); if (r === 3 || r <= 1) col = P.ink; }
+    else if ((i <= 7 && j <= 7) || (i >= N - 8 && j <= 7) || (i <= 7 && j >= N - 8)) col = null;
+    else if (heart(i, j)) col = P.berry;
+    else if (!nearHeart(i, j) && rnd() < .5) col = P.ink;
+    if (col) { x.fillStyle = col; x.fillRect(l + i * u, t + j * u, u + .5, u + .5); }
+  }
 }
 
 /* ---------- prizes she can save to her phone as a picture ---------- */
@@ -1969,7 +2175,7 @@ function saveCoupon(cp) {
   toast('Saved to your downloads');
 }
 function openViewer(cp) {
-  $('#vImg').src = cp.url;
+  $('#vImg').src = cp.url; $('#vImg').alt = cp.alt || 'Your prize';
   const canShare = !isIOS() || (cp.file && navigator.canShare && navigator.canShare({files:[cp.file]}));
   const b = $('#vSave'); b.hidden = !canShare; b.onclick = () => saveCoupon(cp);
   showDlg(viewer);
@@ -1981,10 +2187,7 @@ const coupons = {};
 async function makeCoupon(d, c) {
   const key = d + ':' + (c.t === 'non' ? state.non[d].r : 'ticket');
   if (coupons[key]) return coupons[key];
-  if (document.fonts && document.fonts.load) {
-    const loads = ['italic 700 80px "Bodoni Moda"', '400 60px Kalam', '800 40px "Nunito Sans"', '700 40px "Nunito Sans"'].map(f => document.fonts.load(f).catch(() => {}));
-    await Promise.race([Promise.all(loads), new Promise(r => setTimeout(r, 2500))]);
-  }
+  await canvasFonts();
   const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
   if (c.t === 'non') drawNonCoupon(x, W, H, d, c); else drawTicketCoupon(x, W, H, d, c);
   const url = cv.toDataURL('image/jpeg', .92);
@@ -1992,6 +2195,12 @@ async function makeCoupon(d, c) {
   const name = `${TO.toLowerCase()}-advent-day-${d}.jpg`;
   const file = blob && typeof File === 'function' ? new File([blob], name, {type:'image/jpeg'}) : null;
   return coupons[key] = {url, file, name};
+}
+/* canvas text needs the web fonts loaded first (but don't wait forever) */
+async function canvasFonts() {
+  if (!document.fonts || !document.fonts.load) return;
+  const loads = ['italic 700 80px "Bodoni Moda"', '400 60px Kalam', '800 40px "Nunito Sans"', '700 40px "Nunito Sans"'].map(f => document.fonts.load(f).catch(() => {}));
+  await Promise.race([Promise.all(loads), new Promise(r => setTimeout(r, 2500))]);
 }
 function spacedWidth(x, text, sp) { return [...text].reduce((w, ch) => w + x.measureText(ch).width, 0) + sp * ([...text].length - 1); }
 function spaced(x, text, cx, y, sp) {
