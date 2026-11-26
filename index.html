@@ -686,7 +686,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
 .jk-slip i{display:block;margin-top:10px;font-family:var(--hand);font-style:normal;font-size:1.3rem;line-height:1.22;color:var(--berry);text-wrap:balance}
 
 /* sparkles and snow bursts */
-.spark,.flake{position:fixed;opacity:0}
+.spark,.flake{position:fixed;z-index:9;opacity:0;pointer-events:none}
 .spark svg,.flake svg{width:100%;height:100%;display:block}
 .spark{width:var(--s);height:var(--s);animation:spark var(--dur) cubic-bezier(.15,.7,.3,1) var(--delay) forwards}
 @keyframes spark{0%{transform:translate(-50%,-50%) scale(.2);opacity:1}70%{opacity:1}100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1) rotate(var(--rot));opacity:0}}
@@ -709,6 +709,40 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
   background:radial-gradient(circle at 38% 30%,var(--sh-btn-hi),var(--sh-btn) 60%,var(--sh-btn-lo))}
 .npb svg{width:16px;height:16px}
 .np-miss{font-size:.8rem;color:var(--sh-muted)}
+/* game clues stay hidden until she asks */
+.clue-reveal{align-self:center;display:flex;flex-direction:column;align-items:center;gap:3px;width:min(270px,100%);padding:10px 16px 11px;border:1.5px dashed var(--sh-dash);border-radius:12px;
+  background:color-mix(in srgb,var(--sh-accent) 7%,transparent);color:var(--sh-ink);font:inherit;cursor:pointer;transition:transform .12s}
+.clue-reveal:active{transform:scale(.97)}
+.clue-reveal small{font-size:.66rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--sh-accent)}
+.clue-reveal .cr-hid{font-family:var(--hand);font-size:1.12rem;line-height:1.25;color:var(--sh-muted)}
+.clue-reveal .cr-txt{font-family:var(--hand);font-size:1.35rem;line-height:1.25;color:var(--sh-hand);text-wrap:balance;animation:clueIn .55s ease both}
+.clue-reveal.shown{cursor:default;border-style:solid}
+@keyframes clueIn{from{opacity:0;filter:blur(6px);transform:scale(.9)}}
+
+/* every secret found */
+.allsec{position:fixed;inset:0;z-index:8;display:grid;place-items:center;padding:20px;background:rgba(6,12,30,.88);cursor:pointer;animation:asIn .4s ease both}
+.allsec.out{animation:asOut .4s ease both}
+@keyframes asIn{from{opacity:0}}
+@keyframes asOut{to{opacity:0}}
+.as-card{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:340px;text-align:center;color:var(--cream);animation:asPop .75s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes asPop{from{transform:scale(.6) translateY(24px);opacity:0}}
+.as-kick{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.as-title{margin:0;font-family:var(--serif);font-style:italic;font-weight:700;font-size:2.1rem;line-height:1.1;text-wrap:balance}
+.as-line{margin:0;font-family:var(--hand);font-size:1.25rem;line-height:1.3;color:#ffe9b8}
+.as-tap{margin:10px 0 0;font-size:.8rem;color:rgba(246,236,217,.6)}
+.lights.party .bulb{animation:party .5s steps(1) calc(var(--k) * -.06s) infinite!important}
+@keyframes party{0%{background:#ff5a70;box-shadow:0 0 14px 4px #ff5a70}25%{background:#e2b659;box-shadow:0 0 14px 4px #e2b659}50%{background:#5fd39d;box-shadow:0 0 14px 4px #5fd39d}75%{background:#6ab8ff;box-shadow:0 0 14px 4px #6ab8ff}}
+
+/* the wish: a shooting star right across the screen */
+.shooter{position:fixed;left:0;top:0;z-index:7;width:0;height:0;pointer-events:none}
+.sh-tail{position:absolute;right:0;top:-2px;width:min(340px,70vw);height:4px;border-radius:4px;background:linear-gradient(90deg,transparent,rgba(255,236,190,.35) 40%,rgba(255,250,235,.95));filter:drop-shadow(0 0 6px rgba(255,220,150,.9))}
+.sh-head{position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,#fff 0 30%,#ffe7a3 55%,transparent 72%);box-shadow:0 0 22px 8px rgba(255,231,163,.85)}
+
+/* Grinch baubles: don't pop these */
+.bauble.splat{animation:splat .3s ease forwards}
+@keyframes splat{to{transform:scale(1.5);opacity:0}}
+.arena.hit{animation:arenaHit .4s ease}
+@keyframes arenaHit{30%{box-shadow:inset 0 0 0 3px var(--ink),inset 0 0 50px rgba(90,163,39,.7)}}
 .dec{display:flex;flex-direction:column;gap:14px;padding-top:12px;border-top:1.5px dashed var(--sh-dash)}
 .heart{position:relative;align-self:center;width:min(300px,100%)}
 .heart svg{display:block;width:100%;height:auto;overflow:visible}
@@ -908,7 +942,7 @@ const DAYS = [null,
  /* 12 */ {t:'candy', photo:'pic3.jpg',
    note:"Squtternut Bosh, is it day 12 already! Go open box 12.",
    joke:["Jesus was gonna be called James…", "…until Mary stubbed her toe."]},
- /* 13 */ {t:'game', g:'catch', goal:10,
+ /* 13 */ {t:'game', g:'catch', goal:20,
    note:"Ohhhh the weather outside is weather. You have the cutest patootiest smile xoxoxox",
    joke:["What did the reindeer say to Santa?", "Nothing, they can't talk you idiot."]},
  /* 14 */ {t:'lock', code:'CELLO', emoji:'🎼🎄', title:"Christmas Orchestra", detail:"A live Christmas orchestra", venue:"Albert Hall", time:"8.45pm",
@@ -917,7 +951,7 @@ const DAYS = [null,
  /* 15 */ {t:'lock', code:'DISCO', emoji:'🎷🍸🍕', title:"Matt & Phred's Christmas Party", detail:"Happy hour on cocktails and pizza!", venue:"Matt & Phred's Jazz Club", time:"7.45pm",
    note:"Ok now this one's defo more for me, but also it's Christmas, let's go get our merry on…",
    joke:["What is E.T. short for?", "Because he's got little legs."]},
- /* 16 */ {t:'game', g:'pop', goal:12, secs:20,
+ /* 16 */ {t:'game', g:'pop', goal:15, secs:22,
    note:"Have I told you how much I bloody love you? You're my princess forever and always.",
    joke:["Why did the gingerbread man go to the doctor?", "Because he felt crumby."]},
  /* 17 */ {t:'candy', photo:'pic4.jpg',
@@ -1047,6 +1081,13 @@ const sfx = {
 /* ---------- music: three mp3 files next to this page, one at a time ---------- */
 const TRACKS = {bg:'background.mp3', naughty:'naughty.mp3', xmas:'xmasday.mp3', song:FINALE.song};
 const FIN = Object.assign({t:'finale'}, FINALE);
+/* the hidden secrets: key, name, clue */
+const EGGS = [
+  ['blizzard', 'Blizzard', 'Try shaking things up on the homepage'],
+  ['hoho', 'Ho ho ho', 'Someone lives on the moon…'],
+  ['wish', 'Wish upon a star', 'Star light, star bright… keep tapping'],
+  ['hearts', 'Love hearts', 'Who made all this? Give him a tap'],
+  ['tink', 'Tink', 'The fairy lights like a little poke']];
 const players = {}; let track = 'bg';
 function player(n) { if (!players[n]) { const a = new Audio(TRACKS[n]); a.loop = true; a.preload = 'auto'; a.volume = n === 'bg' ? .5 : .7; if (n === 'song') a.addEventListener('error', songMissing); players[n] = a; } return players[n]; }
 function syncMusic() {
@@ -1081,13 +1122,15 @@ const BANG = `<svg viewBox="0 0 124 124" aria-hidden="true"><path d="${burstPts(
 const CROWN = '<svg viewBox="0 0 64 34" aria-hidden="true"><path d="M3 31V9l10 10 9-15 10 13 10-13 9 15 10-10v22z" fill="currentColor" stroke="rgba(0,0,0,.2)" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 25h56" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/><path d="M14 19v12M32 17v14M50 19v12" stroke="rgba(0,0,0,.12)" stroke-width="1"/></svg>';
 const CROWN_COLS = [P.gold, P.berry, P.fir, P.plum, P.sky];
 const TASSEL = `<svg viewBox="0 0 24 50" aria-hidden="true"><path d="M12 0v15" stroke="${P.gold}" stroke-width="3"/><circle cx="12" cy="18" r="5" fill="${P.gold}"/><path d="M7.5 22h9l3.5 26H4z" fill="${P.gold}"/><path d="M8 25v21M10.7 25v22M13.3 25v22M16 25v21" stroke="${P.goldD}" stroke-width="1"/></svg>`;
-const ROSETTE = `<svg viewBox="0 0 120 132" aria-hidden="true"><path d="M45 82 33 127l14-8 9 12 8-41Z" fill="${P.berry}"/><path d="M75 82l12 45-14-8-9 12-8-41Z" fill="${P.berryD}"/><path d="${burstPts(18, 52, 44, 60, 56)}" fill="${P.gold}" stroke="${P.goldD}" stroke-width="2" stroke-linejoin="round"/><circle cx="60" cy="56" r="35" fill="#fff6dd" stroke="${P.goldD}" stroke-width="2"/><circle cx="60" cy="56" r="29" fill="none" stroke="${P.gold}" stroke-width="1.6" stroke-dasharray="3 3"/><path d="${starPts(60, 51, 17, 7.4)}" fill="${P.berry}"/><text x="60" y="80" text-anchor="middle" font-family="'Nunito Sans', system-ui, sans-serif" font-weight="800" font-size="8.6" letter-spacing="1.7" fill="${P.goldD}">WINNER</text></svg>`;
+const rosette = (label = 'WINNER') => `<svg viewBox="0 0 120 132" aria-hidden="true"><path d="M45 82 33 127l14-8 9 12 8-41Z" fill="${P.berry}"/><path d="M75 82l12 45-14-8-9 12-8-41Z" fill="${P.berryD}"/><path d="${burstPts(18, 52, 44, 60, 56)}" fill="${P.gold}" stroke="${P.goldD}" stroke-width="2" stroke-linejoin="round"/><circle cx="60" cy="56" r="35" fill="#fff6dd" stroke="${P.goldD}" stroke-width="2"/><circle cx="60" cy="56" r="29" fill="none" stroke="${P.gold}" stroke-width="1.6" stroke-dasharray="3 3"/><path d="${starPts(60, 51, 17, 7.4)}" fill="${P.berry}"/><text x="60" y="80" text-anchor="middle" font-family="'Nunito Sans', system-ui, sans-serif" font-weight="800" font-size="8.6" letter-spacing="1.7" fill="${P.goldD}">${label}</text></svg>`;
+const ROSETTE = rosette();
 const PLAY_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>';
 const ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const BELL_MONO = '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="22" y="3" width="4" height="6" rx="2" fill="currentColor"/><path d="M24 8c-7.5 0-11 6-11 13v7l-4 6h30l-4-6v-7c0-7-3.5-13-11-13z" fill="currentColor"/><circle cx="24" cy="38.5" r="3.6" fill="currentColor"/></svg>';
 /* the little tree with that day's present underneath, numbered on its tag */
 const treeArt = d => `<svg viewBox="0 0 64 72" aria-hidden="true"><path d="M26 8 37 24h-5l9 13h-5l10 15H6l10-15h-5l9-13h-5z" fill="${P.fir}" stroke="${P.firD}" stroke-width="1.2" stroke-linejoin="round"/><rect x="23" y="52" width="6" height="7" fill="${P.kraftD}"/><path d="M17 28q9 5 18-1M12 41q13 7 26-1" stroke="${P.gold}" stroke-width="1" fill="none" opacity=".75"/><circle cx="22" cy="22" r="2" fill="${P.berry}"/><circle cx="31" cy="30" r="2" fill="${P.gold}"/><circle cx="19" cy="36" r="2" fill="${P.cream}"/><circle cx="34" cy="44" r="2" fill="${P.berry}"/><circle cx="14" cy="47" r="2" fill="${P.gold}"/><path class="tstar" d="${starPts(26, 7, 6, 2.6)}" fill="${P.gold}"/><g class="pres"><rect x="36" y="50" width="24" height="18" rx="2" style="fill:var(--paper)" stroke="rgba(0,0,0,.25)"/><rect x="46" y="50" width="4" height="18" style="fill:var(--ribbon)"/><rect x="36" y="56.5" width="24" height="4" style="fill:var(--ribbon)"/><path d="M48 50c-2-5-8-6-8-3s5 3 8 3zM48 50c2-5 8-6 8-3s-5 3-8 3z" style="fill:var(--ribbon)" stroke="rgba(0,0,0,.2)" stroke-width=".6"/><g transform="rotate(-12 37 60)"><rect x="28" y="55" width="15" height="10" rx="1.5" fill="#fffaf0" stroke="${P.kraftD}" stroke-width=".8"/><text x="35.5" y="62.6" text-anchor="middle" font-family="'Nunito Sans', sans-serif" font-weight="800" font-size="7" fill="${P.ink}">${d}</text></g></g></svg>`;
 const baubleArt = col => `<rect x="20" y="3" width="8" height="6" rx="1.5" fill="${P.kraftD}"/><circle cx="24" cy="27" r="18" fill="${col}"/><path d="M7 25q17 7 34 0" stroke="${P.cream}" stroke-width="2.5" fill="none" opacity=".7"/><circle cx="17" cy="20" r="4" fill="#fff" opacity=".35"/>`;
+const GRINCH_BAUBLE = `<rect x="20" y="3" width="8" height="6" rx="1.5" fill="${P.kraftD}"/><circle cx="24" cy="27" r="18" fill="#5aa327" stroke="#2a5a0e" stroke-width="1.5"/><path d="M14.5 21.5l6.5 3M33.5 21.5l-6.5 3" stroke="#1f2a0e" stroke-width="2.6" stroke-linecap="round"/><circle cx="19" cy="27.5" r="2.3" fill="#f2d54a"/><circle cx="29" cy="27.5" r="2.3" fill="#f2d54a"/><path d="M15 33q9 6.5 18 0" stroke="#1f2a0e" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M15 33l1.2 2.8M33 33l-1.2 2.8" stroke="#1f2a0e" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="20" r="3.5" fill="#fff" opacity=".3"/>`;
 const ICON = {
   tree: `<path d="M24 5 34 18h-5l8 11h-5l8 11H8l8-11h-5l8-11h-5z" fill="${P.fir}" stroke="${P.firD}" stroke-width="1.2" stroke-linejoin="round"/><rect x="21" y="40" width="6" height="5" fill="${P.kraftD}"/><path d="${starPts(24, 6, 5.5, 2.4)}" fill="${P.gold}"/><circle cx="20" cy="23" r="2" fill="${P.berry}"/><circle cx="28" cy="30" r="2" fill="${P.gold}"/><circle cx="18" cy="35" r="2" fill="${P.cream}"/><circle cx="31" cy="37" r="2" fill="${P.berry}"/>`,
   present: `<rect x="8" y="20" width="32" height="22" rx="2" fill="${P.berry}"/><rect x="6" y="14" width="36" height="8" rx="2" fill="${P.berryD}"/><rect x="21" y="14" width="6" height="28" fill="${P.gold}"/><path d="M24 14c-3-6-11-8-11-3s8 4 11 3zM24 14c3-6 11-8 11-3s-8 4-11 3z" fill="${P.gold}" stroke="${P.goldD}" stroke-width="1"/>`,
@@ -1284,7 +1327,8 @@ function renderGrid() {
   else msg = t === 25 ? 'Merry Christmas, ' + TO : 'Door ' + t + ' done. Back tomorrow for door ' + (t + 1) + '.';
   let nice = 0, naughty = 0;
   for (let d = 1; d <= 25; d++) if (DAYS[d].t === 'non' && state.non[d]) state.non[d].r === 'nice' ? nice++ : naughty++;
-  s.innerHTML = msg + `<small>${n} of 25 opened${waiting ? ` · ${waiting} earlier door${waiting > 1 ? 's' : ''} still to open` : ''}${nice + naughty ? ` · Santa's list: ${nice} nice, ${naughty} naughty` : ''}</small>`;
+  const secrets = EGGS.filter(e => state.eggs[e[0]]).length;
+  s.innerHTML = msg + `<small>${n} of 25 opened${waiting ? ` · ${waiting} earlier door${waiting > 1 ? 's' : ''} still to open` : ''}${nice + naughty ? ` · Santa's list: ${nice} nice, ${naughty} naughty` : ''}${secrets ? ` · ${secrets} of ${EGGS.length} secrets found` : ''}</small>`;
   const jn = Object.keys(state.cr).length;
   $('#notesBtn').textContent = n ? 'Love notes · ' + n : 'Love notes';
   $('#jokesBtn').textContent = jn ? 'Cracker jokes · ' + jn : 'Cracker jokes';
@@ -1533,7 +1577,7 @@ const buzz = pat => { if (!prefs.sfx) return; try { if (navigator.vibrate) navig
 function doCandy(d, c, first, act) {
   const dev = !!state.dev[d] || !c.photo;
   /* iPhones ask permission for motion once (it has to come from a tap); Android phones just work; computers tap */
-  const askFirst = isIOS() && typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function';
+  const askFirst = isIOS() && typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function' && !homeShake;
   const motion = askFirst || ('DeviceMotionEvent' in window && matchMedia('(pointer: coarse)').matches);
   const hint = askFirst ? 'Tap the photo, then shake your phone' : motion ? 'Shake your phone, or tap the photo' : 'Tap the photo to give it a shake';
   act.innerHTML = (c.photo ? `<figure class="polaroid${dev ? '' : ' undev'}" id="pol"><span class="tape t1"></span><img src="${c.photo}" alt="${c.caption || 'A photo of us'}" onerror="photoMissing(this)"><figcaption>${c.caption || ''}</figcaption></figure>
@@ -1580,7 +1624,7 @@ function doCandy(d, c, first, act) {
       asked = true;
       try {
         DeviceMotionEvent.requestPermission()
-          .then(r => { if (r === 'granted') { listen(); homeShakeListen(); say('Now shake your phone!'); } else say('Keep tapping the photo to shake it'); })
+          .then(r => { if (r === 'granted') { listen(); motionGranted(); say('Now shake your phone!'); } else say('Keep tapping the photo to shake it'); })
           .catch(() => say('Keep tapping the photo to shake it'));
       } catch (e) { say('Keep tapping the photo to shake it'); }
     }
@@ -1623,7 +1667,7 @@ function wirePolaroidAuto() {
 function gamePanel(d, c, p) {
   const G = GAMES[c.g];
   p.innerHTML = `<header class="s-head"><p class="s-day" id="gday">Today's game</p><h2 class="s-date" id="gtitle">${G.title}</h2></header>
-    <div class="rules" id="rules"><p class="how">${G.how(c)}</p>${c.hint ? `<p class="hint">${c.hint}</p>` : ''}</div>
+    <div class="rules" id="rules"><p class="how">${G.how(c)}</p>${c.hint ? clueHTML(c.hint, c) : ''}</div>
     <div class="prize" id="prize">${padlock('padlock')}<div><b>Win this game to open Calendar Box ${d}</b><span>It's under the tree, but it stays shut until you've won!</span></div></div>
     <div class="stage game" id="stage"></div><div class="after" id="after"></div>`;
   const stage = p.querySelector('#stage'), after = p.querySelector('#after'), prize = p.querySelector('#prize');
@@ -1650,6 +1694,19 @@ function gameDone(d, c, act) {
   act.innerHTML = `<p class="kick">Today's game: ${GAMES[c.g].title}</p><p class="res nice">You won!</p>` + call(d, "You won it fair and square. It's waiting for you under the tree.") + `<button class="btn ghost small" type="button" id="replay">Play again</button>`;
   act.querySelector('#replay').onclick = () => openPanel(d, c, gamePanel);
 }
+
+/* clues stay hidden behind a tap; once revealed, they stay revealed for that door */
+function clueHTML(text, c) {
+  const t = String(text).replace(/^hint:\s*/i, ''), body = t.charAt(0).toUpperCase() + t.slice(1), shown = !!(c && c._clue);
+  return `<button class="clue-reveal${shown ? ' shown' : ''}" type="button" aria-expanded="${shown}"><small>${shown ? 'Clue' : 'Need a clue?'}</small><span class="cr-hid"${shown ? ' hidden' : ''}>Tap to reveal it</span><span class="cr-txt"${shown ? '' : ' hidden'}>${body}</span></button>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('.clue-reveal'); if (!b || b.classList.contains('shown')) return;
+  b.classList.add('shown'); b.setAttribute('aria-expanded', 'true');
+  b.querySelector('small').textContent = 'Clue'; b.querySelector('.cr-hid').hidden = true; b.querySelector('.cr-txt').hidden = false;
+  if (DAYS[cur]) DAYS[cur]._clue = true;
+  sfx.chime(); sparkAt(b, 10);
+});
 
 /* ---------- Naughty or Nice days ---------- */
 function nonPanel(d, c, p) {
@@ -2101,7 +2158,7 @@ const GAMES = {
   run(stage, c, win) {
     const word = c.word; let letters = shuffle(word.split('')); while (letters.join('') === word) letters = shuffle(letters);
     let picked = [], t;
-    stage.innerHTML = `<div class="clue"><small>Clue</small><p class="outcome">${c.clue}</p></div><div class="slots"></div><div class="tiles"></div><button class="btn ghost" type="button" id="clr">Clear</button>`;
+    stage.innerHTML = `${clueHTML(c.clue, c)}<div class="slots"></div><div class="tiles"></div><button class="btn ghost" type="button" id="clr">Clear</button>`;
     const n = word.length, gap = n > 9 ? 3 : 5, cell = Math.max(18, Math.min(34, Math.floor(((stage.clientWidth || 300) - gap * (n - 1)) / n)));
     stage.style.setProperty('--cell', cell + 'px'); stage.style.setProperty('--gap', gap + 'px');
     const slots = stage.querySelector('.slots'), tiles = stage.querySelector('.tiles');
@@ -2116,18 +2173,32 @@ const GAMES = {
     stage.querySelector('#clr').onclick = () => { picked = []; draw(); }; draw();
     return () => clearTimeout(t);
   }},
- pop: { title:'Pop the baubles', how: c => `Pop ${c.goal} baubles in ${c.secs} seconds. They don't hang about.`,
+ pop: { title:'Pop the baubles', how: c => `Pop ${c.goal} baubles in ${c.secs} seconds, but leave the Grinch's green ones alone. Pop three of his and he wins. It gets faster as you go.`,
   run(stage, c, win, lose) {
-    let n = 0, left = c.secs; const cols = [P.berry, P.gold, P.fir, P.sky, P.plum];
-    stage.innerHTML = `<p class="meta"><strong id="pc">0</strong> / ${c.goal} popped · <strong id="pt">${left}</strong>s left</p><div class="arena"></div>`;
-    const arena = stage.querySelector('.arena');
-    const sp = setInterval(() => { const b = document.createElement('button'); b.type = 'button'; b.className = 'bauble'; b.setAttribute('aria-label', 'Bauble');
-      b.innerHTML = `<svg viewBox="0 0 48 48" aria-hidden="true">${baubleArt(cols[Math.floor(Math.random() * cols.length)])}</svg>`;
+    let n = 0, left = c.secs, bad = 0, over = false, spawnT, tk; const ts = [], cols = [P.berry, P.gold, P.sky, P.plum, '#e2725b'];
+    stage.innerHTML = `<p class="meta"><strong id="pc">0</strong> / ${c.goal} popped · <strong id="pt">${left}</strong>s left · Grinch <strong id="pg">0</strong> / 3</p><div class="arena"></div>`;
+    const arena = stage.querySelector('.arena'), q = id => stage.querySelector(id);
+    const end = (won, msg) => { if (over) return; over = true; clearTimeout(spawnT); clearInterval(tk); arena.querySelectorAll('.bauble').forEach(x => x.disabled = true); won ? win() : lose(msg); };
+    const spawn = () => {
+      if (over) return;
+      const grinch = Math.random() < (c.grinch || .32), b = document.createElement('button'); b.type = 'button'; b.className = 'bauble' + (grinch ? ' grinch' : '');
+      b.setAttribute('aria-label', grinch ? "The Grinch's bauble" : 'Bauble');
+      b.innerHTML = `<svg viewBox="0 0 48 48" aria-hidden="true">${grinch ? GRINCH_BAUBLE : baubleArt(cols[Math.floor(Math.random() * cols.length)])}</svg>`;
       b.style.left = (2 + Math.random() * 78) + '%'; b.style.top = (2 + Math.random() * 74) + '%';
-      b.onclick = () => { b.remove(); sfx.pop(); n++; $('#pc').textContent = n; if (n >= c.goal) win(); };
-      arena.append(b); setTimeout(() => b.remove(), 1200); }, 480);
-    const tk = setInterval(() => { left--; const e = $('#pt'); if (e) e.textContent = left; if (left <= 0) lose('Time up. You popped ' + n + '.'); }, 1000);
-    return () => { clearInterval(sp); clearInterval(tk); arena.querySelectorAll('.bauble').forEach(b => b.disabled = true); };
+      b.onclick = () => {
+        if (over || b.classList.contains('gone')) return; b.classList.add('gone');
+        if (grinch) {
+          bad++; q('#pg').textContent = bad; sfx.cackle(); b.classList.add('splat'); setTimeout(() => b.remove(), 300);
+          arena.classList.remove('hit'); void arena.offsetWidth; arena.classList.add('hit');
+          if (bad >= 3) end(false, 'The Grinch got you. You popped ' + n + ' of ' + c.goal + '.');
+        } else { b.remove(); sfx.pop(); n++; q('#pc').textContent = n; if (n >= c.goal) end(true); }
+      };
+      arena.append(b); ts.push(setTimeout(() => b.remove(), Math.max(720, 1150 - n * 28)));
+      spawnT = setTimeout(spawn, Math.max(270, 470 - n * 14));
+    };
+    spawn();
+    tk = setInterval(() => { left--; const e = q('#pt'); if (e) e.textContent = left; if (left <= 0) end(false, 'Time up. You popped ' + n + ' of ' + c.goal + '.'); }, 1000);
+    return () => { over = true; clearTimeout(spawnT); clearInterval(tk); ts.forEach(clearTimeout); arena.querySelectorAll('.bauble').forEach(x => x.disabled = true); };
   }},
  bells: { title:'Ring the bells', how: c => `Six bells. Listen, then ring them back in the same order. It gets faster every round. Get to ${c.len} in a row. Sounds on helps a lot.`,
   run(stage, c, win, lose) {
@@ -2163,7 +2234,7 @@ const GAMES = {
         box.append(b); }); };
     draw(); return () => clearTimeout(t);
   }},
- catch: { title:'Catch the presents', how: c => `Slide the stocking to catch ${c.goal} presents. Three lumps of coal and you're out.`,
+ catch: { title:'Catch the presents', how: c => `Slide the stocking to catch ${c.goal} presents. It speeds up as you go, there's more coal later on, and three lumps of coal and you're out.`,
   run(stage, c, win, lose) {
     stage.innerHTML = `<p class="meta">Caught <strong id="cc">0</strong> / ${c.goal} · Coal <strong id="cl">0</strong> / 3</p><canvas class="catch" tabindex="0" aria-label="Game area. Drag, or use the arrow keys."></canvas>`;
     const cv = stage.querySelector('canvas'), W = cv.clientWidth || 320, H = 300, dpr = window.devicePixelRatio || 1;
@@ -2175,7 +2246,7 @@ const GAMES = {
     cv.addEventListener('pointerdown', move); cv.addEventListener('pointermove', move);
     cv.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') px = clamp(px - 28); if (e.key === 'ArrowRight') px = clamp(px + 28); });
     function loop(t) { if (over) return; const dt = Math.min(.05, (t - last) / 1000); last = t; acc += dt;
-      if (acc > .65) { acc = 0; items.push({x:24 + Math.random() * (W - 48), y:-20, v:130 + Math.random() * 70 + got * 7, bad:Math.random() < .25}); }
+      if (acc > Math.max(.34, .66 - got * .016)) { acc = 0; items.push({x:24 + Math.random() * (W - 48), y:-20, v:130 + Math.random() * 70 + got * 9, bad:Math.random() < Math.min(.4, .22 + got * .009)}); }
       x.clearRect(0, 0, W, H);
       items = items.filter(it => { it.y += it.v * dt;
         if (it.y > H - 56 && it.y < H - 10 && Math.abs(it.x - px) < 32) {
@@ -2386,22 +2457,52 @@ const hohoSynth = () => fx([55, 52, 48], .24, {dur:.3, vol:.12, type:'triangle'}
 })();
 
 /* ---------- hidden secrets for her to stumble on ---------- */
-const EGGS = [
-  ['blizzard', 'Blizzard', 'Try shaking things up on the homepage'],
-  ['hoho', 'Ho ho ho', 'Someone lives on the moon…'],
-  ['wish', 'Wish upon a star', 'Star light, star bright… keep tapping'],
-  ['hearts', 'Love hearts', 'Who made all this? Give him a tap'],
-  ['tink', 'Tink', 'The fairy lights like a little poke']];
+
 function foundEgg(k) {
   if (state.eggs[k]) return; state.eggs[k] = true; save();
   const n = EGGS.filter(e => state.eggs[e[0]]).length;
-  setTimeout(() => toast(n === EGGS.length ? 'You found every secret!' : `Secret found! ${n} of ${EGGS.length}`), 900);
+  if (!dlg.open) renderGrid();
+  if (n === EGGS.length) setTimeout(allSecrets, 1200);
+  else setTimeout(() => toast(`Secret found! ${n} of ${EGGS.length}`), 900);
+}
+/* the fifth secret: a proper celebration */
+function allSecrets() {
+  if (document.querySelector('.allsec')) return;
+  const o = document.createElement('div'); o.className = 'allsec'; o.setAttribute('role', 'alert');
+  o.innerHTML = `<div class="as-card"><div class="winbadge">${rosette('5 OF 5')}</div><p class="as-kick">Secret keeper</p><h2 class="as-title">You found every secret!</h2><p class="as-line">All five of them. ${FROM}'s very impressed&nbsp;x</p><p class="as-tap">Tap anywhere to carry on</p></div>`;
+  document.body.append(o);
+  lightsEl.classList.add('party'); sfx.win(); setTimeout(() => { sfx.chime(); sfx.sparkle(); }, 750); shower(120);
+  setTimeout(() => sparkAt(o.querySelector('.winbadge'), 40), 500);
+  let shut = false; const close = () => { if (shut) return; shut = true; o.classList.add('out'); setTimeout(() => { o.remove(); lightsEl.classList.remove('party'); }, 400); };
+  o.onclick = close; setTimeout(close, 8000);
+}
+/* little sparkles at a point on the screen */
+function sparkXY(x0, y0, n, spread) {
+  if (reduced) return; const host = fxHost(), cols = [P.gold, P.cream, '#ffffff'];
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span'), a = Math.random() * Math.PI * 2, dist = (spread || 30) * (.4 + Math.random());
+    s.className = 'spark'; s.innerHTML = `<svg viewBox="0 0 24 24"><path fill="currentColor" d="${SPARK}"/></svg>`;
+    s.style.cssText = `left:${x0}px;top:${y0}px;color:${cols[i % 3]};--s:${(5 + Math.random() * 8).toFixed(1)}px;--x:${(Math.cos(a) * dist).toFixed(0)}px;--y:${(Math.sin(a) * dist + 22).toFixed(0)}px;--rot:${(Math.random() * 180).toFixed(0)}deg;--dur:${(.7 + Math.random() * .5).toFixed(2)}s;--delay:0s`;
+    host.append(s); setTimeout(() => s.remove(), 1400);
+  }
+}
+/* a shooting star that crosses the whole screen, dropping sparkles as it goes */
+function shootingStar() {
+  const W = innerWidth, H = innerHeight, el = document.createElement('div'); el.className = 'shooter';
+  el.innerHTML = '<span class="sh-tail"></span><span class="sh-head"></span>'; document.body.append(el);
+  const x0 = W * 1.12, y0 = H * .05, x1 = -W * .3, y1 = H * .72, ang = Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI;
+  const at = (x, y) => `translate(${x.toFixed(0)}px,${y.toFixed(0)}px) rotate(${ang.toFixed(1)}deg)`;
+  if (reduced || !el.animate) { el.remove(); return; }
+  const anim = el.animate([{transform:at(x0, y0), opacity:0}, {transform:at(x0 + (x1 - x0) * .06, y0 + (y1 - y0) * .06), opacity:1, offset:.06}, {transform:at(x1, y1), opacity:.9}], {duration:1800, easing:'cubic-bezier(.35,.05,.65,1)'});
+  const head = el.querySelector('.sh-head'), drop = setInterval(() => { const r = head.getBoundingClientRect(); if (r.left > -20 && r.left < W + 20) sparkXY(r.left + 8, r.top + 8, 2, 26); }, 40);
+  anim.onfinish = () => { clearInterval(drop); el.remove(); };
+  fx([84, 88, 91, 96, 100, 103], .09, {dur:.5, vol:.06});
 }
 /* five quick taps on the star: a shooting star and a wish */
 function wish() {
-  const s = document.createElement('span'); s.className = 'shoot now'; s.style.setProperty('--y', (54 + Math.random() * 36).toFixed(0) + 'px'); document.body.append(s); setTimeout(() => s.remove(), 1700);
-  const w = document.createElement('span'); w.className = 'wish'; w.textContent = 'Make a wish, ' + TO; $('header').append(w); setTimeout(() => w.remove(), 3300);
-  sfx.sparkle(); sparkAt($('#star'), 22); foundEgg('wish');
+  shootingStar(); sparkAt($('#star'), 22);
+  setTimeout(() => { const w = document.createElement('span'); w.className = 'wish'; w.textContent = 'Make a wish, ' + TO; $('header').append(w); setTimeout(() => w.remove(), 3300); sfx.sparkle(); }, 700);
+  foundEgg('wish');
 }
 /* tap the sign-off: hearts float up */
 $('#foot').onclick = () => {
@@ -2446,9 +2547,17 @@ function onHomeMotion(e) {
   if (shakeHits.length >= 3 && Date.now() - blizT > 7000) { shakeHits = []; blizT = Date.now(); snow.blizzard(); sfx.swoosh(); foundEgg('blizzard'); }
 }
 function homeShakeListen() { if (homeShake) return; homeShake = true; addEventListener('devicemotion', onHomeMotion); }
+/* iPhone: Safari forgets motion access every time the page loads. Once she's allowed it (on a photo), the calendar remembers
+   and asks again on her first tap of each visit, which is silent while Safari still remembers. So the blizzard works every visit, day or night. */
+function motionGranted() { if (!prefs.motionOk) { prefs.motionOk = true; save(); } homeShakeListen(); }
+const iosMotion = isIOS() && typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function';
+function askMotion() { try { DeviceMotionEvent.requestPermission().then(r => { if (r === 'granted') motionGranted(); }).catch(() => {}); } catch (e) {} }
 if ('DeviceMotionEvent' in window && matchMedia('(pointer: coarse)').matches) {
-  if (isIOS() && typeof DeviceMotionEvent.requestPermission === 'function') { try { DeviceMotionEvent.requestPermission().then(r => { if (r === 'granted') homeShakeListen(); }).catch(() => {}); } catch (e) {} }
-  else homeShakeListen();
+  if (iosMotion) {
+    askMotion();
+    const reask = () => { if (homeShake) return document.removeEventListener('click', reask, true); if (prefs.motionOk) askMotion(); };
+    document.addEventListener('click', reask, true);
+  } else homeShakeListen();
 }
 
 ['present', 'stocking'].forEach(icoImg); svgImg('sleigh', SLEIGH);
