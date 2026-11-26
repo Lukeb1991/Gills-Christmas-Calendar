@@ -48,7 +48,7 @@ button{font:inherit}
 .os{font-size:.5em;line-height:0;vertical-align:.9em;margin-left:.04em}
 
 /* fairy lights strung across the top: 25 bulbs, one switched on for every door opened */
-.lights{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);height:64px;z-index:0;pointer-events:none;overflow:hidden}
+.lights{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);height:64px;z-index:2;pointer-events:none;overflow:hidden}
 .lights svg{position:absolute;left:0;top:0}
 .bulb{position:absolute;width:9px;height:14px;margin-left:-4.5px;border-radius:50% 50% 46% 46%;transform:rotate(var(--r));transform-origin:50% 0;
   background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.32),transparent 45%),#34443e;box-shadow:inset 0 -2px 3px rgba(0,0,0,.35)}
@@ -59,9 +59,15 @@ button{font:inherit}
 @keyframes flickOn{0%,22%,38%{background:#34443e;box-shadow:none}12%,30%{background:var(--c);box-shadow:0 0 12px 3px var(--c)}55%{background:var(--c);box-shadow:0 0 24px 9px var(--c);transform:rotate(var(--r)) scale(1.6)}100%{background:var(--c);box-shadow:0 0 10px 2px var(--c);transform:rotate(var(--r))}}
 .lights.all .bulb.on{animation:chase 1.4s ease-in-out calc(var(--k) * -.11s) infinite}
 @keyframes chase{0%,100%{opacity:1;box-shadow:0 0 14px 4px var(--c)}50%{opacity:.3;box-shadow:0 0 2px 0 var(--c)}}
+/* secret: lit bulbs can be poked */
+.bulb::after{content:"";position:absolute;inset:-9px -8px}
+.bulb.on{pointer-events:auto;cursor:pointer}
+.bulb.nohit{pointer-events:none!important}
+.lights .bulb.pop{animation:bulbPop .6s ease}
+@keyframes bulbPop{30%{transform:rotate(var(--r)) scale(1.9);box-shadow:0 0 26px 10px var(--c)}}
 
 /* Christmas Eve after dark: night sky, stars, the moon, and Santa crossing it */
-.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sky{position:absolute;left:0;right:0;top:0;height:100vh;z-index:0;pointer-events:none;overflow:hidden}
 html.eve{background:#060b1f}
 html.eve body{background-color:#070d24;background-image:radial-gradient(ellipse at 85% -8%,rgba(120,150,230,.3),transparent 55%),linear-gradient(#060b1f,#0b1734 55%,#0f2a26 130%)}
 html.eve .bar{background:#14224a}
@@ -75,6 +81,23 @@ html.eve .bar{background:#14224a}
 .flyer .trail{position:absolute;right:86%;top:44%;width:170px;height:5px;background:radial-gradient(circle,#ffe7a3 1.4px,transparent 2.1px) 0 50%/9px 5px repeat-x;
   -webkit-mask:linear-gradient(to right,transparent,#000);mask:linear-gradient(to right,transparent,#000);filter:drop-shadow(0 0 3px #ffd36b)}
 @keyframes fly{0%{transform:translate(-190px,var(--y0,70px)) rotate(-8deg);opacity:1}42%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:1}42.01%,100%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:0}}
+.flyer.flyby{animation:flyOnce 4.6s linear both}
+@keyframes flyOnce{0%{transform:translate(-190px,var(--y0,70px)) rotate(-8deg);opacity:1}99%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:1}100%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:0}}
+.moonbtn{position:absolute;right:max(14px, calc(50% - 352px));top:calc(env(safe-area-inset-top,0px) + 8px);z-index:3;width:78px;height:78px;border:0;border-radius:50%;padding:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hoho{position:absolute;z-index:4;right:calc(max(14px, calc(50% - 352px)) + 44px);top:calc(env(safe-area-inset-top,0px) + 80px);padding:6px 13px 5px;border-radius:14px 4px 14px 14px;background:#fff7e2;color:var(--berry);
+  font-family:var(--hand);font-size:1.3rem;line-height:1.1;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.35);pointer-events:none;animation:hoho 2.6s ease both}
+@keyframes hoho{0%{transform:scale(.3) translateY(10px);opacity:0}12%{transform:scale(1.1);opacity:1}20%,80%{transform:none;opacity:1}100%{transform:translateY(-14px);opacity:0}}
+
+/* after Christmas: the night sky stays, with shooting stars, in honour of a certain spaceman */
+html.after{background:#0b0a24}
+html.after body{background-color:#100d2e;background-image:radial-gradient(ellipse at 50% -10%,rgba(150,120,255,.28),transparent 58%),radial-gradient(ellipse at 12% 28%,rgba(90,140,255,.12),transparent 45%),linear-gradient(#0b0a24,#171338 55%,#0f2a26 140%)}
+html.after .bar{background:#221c52}
+html.after .flyer:not(.flyby){animation:none}
+.shoot{position:absolute;left:-12%;top:var(--y);width:130px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#fff 70%,#fff8d8);opacity:0;transform:rotate(-16deg);display:none;pointer-events:none}
+html.after .sky .shoot{display:block;animation:shoot 11s linear var(--dl) infinite}
+.shoot.now{display:block;z-index:3;animation:shootOnce 1.5s ease-in both}
+@keyframes shoot{0%{transform:rotate(-16deg) translateX(0);opacity:0}3%{opacity:1}14%{transform:rotate(-16deg) translateX(130vw);opacity:0}100%{transform:rotate(-16deg) translateX(130vw);opacity:0}}
+@keyframes shootOnce{0%{transform:rotate(-16deg) translateX(0);opacity:0}10%{opacity:1}100%{transform:rotate(-16deg) translateX(130vw);opacity:0}}
 
 /* iPhone tip: add it to the home screen (only shown before the first door) */
 .tip{display:flex;align-items:center;gap:10px;padding:10px 8px 10px 14px;border-radius:14px;background:color-mix(in srgb,var(--gold) 14%,var(--spruce));border:1px dashed color-mix(in srgb,var(--gold) 55%,transparent)}
@@ -85,7 +108,13 @@ html.eve .bar{background:#14224a}
 .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding-block:calc(34px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   display:flex;flex-direction:column;gap:18px}
-header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+header{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+/* secret: the star spins when tapped, and five quick taps make a wish */
+.star.spin{animation:starSpin .7s cubic-bezier(.3,1.4,.5,1)}
+@keyframes starSpin{from{transform:rotate(-200deg) scale(.5)}}
+.wish{position:absolute;left:50%;top:58px;z-index:3;transform:translateX(-50%);padding:6px 15px 5px;border-radius:999px;background:var(--gold);color:var(--ink);font-family:var(--hand);font-size:1.2rem;white-space:nowrap;pointer-events:none;
+  box-shadow:0 6px 18px rgba(0,0,0,.35);animation:wishIn 3.2s ease both}
+@keyframes wishIn{0%{opacity:0;transform:translate(-50%,8px) scale(.6)}12%{opacity:1;transform:translate(-50%,0) scale(1.06)}20%,82%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px)}}
 .star{background:none;border:0;color:var(--gold);font-size:2.2rem;line-height:1;cursor:default;padding:4px 12px;
   text-shadow:0 0 18px color-mix(in srgb,var(--gold) 70%,transparent)}
 .eyebrow{margin:0;text-transform:uppercase;letter-spacing:.18em;font-size:.75rem;font-weight:800;color:var(--gold)}
@@ -111,6 +140,7 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
 .p2{--paper:var(--fir);--ribbon:var(--cream);--pat:radial-gradient(circle,var(--gold) 12%,transparent 13%);--pat-size:18px 18px}
 .p3{--paper:var(--cream);--ribbon:var(--fir);--pat:repeating-linear-gradient(90deg,transparent 0 9px,var(--berry) 9px 13px);--pat-size:auto}
 .p4{--paper:var(--gold);--ribbon:var(--berry);--pat:linear-gradient(color-mix(in srgb,var(--berry) 28%,transparent) 50%,transparent 50%),linear-gradient(90deg,color-mix(in srgb,var(--berry) 28%,transparent) 50%,transparent 50%);--pat-size:16px 16px}
+.p5{--paper:#1f2463;--ribbon:var(--gold);--pat:radial-gradient(circle,#ffe7a3 1.4px,transparent 2px),radial-gradient(circle,rgba(255,255,255,.55) 1px,transparent 1.5px);--pat-size:26px 26px,15px 15px}
 .paper{background-color:var(--paper);background-image:var(--pat);background-size:var(--pat-size)}
 
 /* ---------- the grid ---------- */
@@ -133,6 +163,7 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
 .box.ready{outline:3px solid var(--gold);outline-offset:2px;animation:glow 1.8s ease-in-out infinite}
 @keyframes glow{50%{outline-color:transparent;transform:scale(1.03)}}
 .box.wiggle{animation:wiggle .4s}
+.box.finale:not(.open){outline:3px solid var(--gold);outline-offset:2px;animation:glow 1.8s ease-in-out infinite}
 .box.nudge{animation:nudgeBox 1.1s ease}
 @keyframes nudgeBox{12%{transform:scale(1.09) rotate(-7deg)}26%{transform:scale(1.09) rotate(7deg)}40%{transform:scale(1.07) rotate(-5deg)}54%{transform:scale(1.05) rotate(3deg)}75%{transform:none}}
 @keyframes wiggle{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
@@ -153,6 +184,11 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
 .box.wide .otag b{font-size:1.9rem}
 .box.wide .otag i{font-size:1.25rem}
 footer{text-align:center;font-family:var(--hand);font-size:1.3rem;color:var(--gold)}
+/* secret: tap the sign-off for hearts */
+.foot{border:0;background:none;padding:6px 12px;font:inherit;color:inherit;cursor:pointer}
+.lheart{position:fixed;z-index:6;width:var(--s);height:var(--s);pointer-events:none;opacity:0;animation:lheart var(--dur) ease-out forwards}
+.lheart svg{width:100%;height:100%;display:block}
+@keyframes lheart{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}15%{opacity:1}100%{transform:translate(calc(-50% + var(--x)),calc(-50% - var(--y))) scale(1) rotate(var(--rot));opacity:0}}
 :focus-visible{outline:3px solid var(--cream);outline-offset:3px}
 .sheet :focus-visible{outline-color:var(--sh-accent,var(--berry))}
 dialog:focus,dialog:focus-visible{outline:none}
@@ -657,6 +693,55 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
 .flake{top:-30px;width:var(--s);height:var(--s);animation:flurry var(--dur) cubic-bezier(.3,.4,.5,1) var(--delay) forwards}
 @keyframes flurry{0%{transform:translate(0,0) rotate(0);opacity:0}8%{opacity:1}100%{transform:translate(var(--x),110vh) rotate(var(--rot));opacity:.8}}
 
+/* the 26th door: midnight-blue paper scattered with stars */
+.sheet.t-finale{--sh-bg:#1e1b4e;--sh-ink:#fdf4e3;--sh-muted:#cbc4f0;--sh-accent:#f1c86a;--sh-hand:#fdf4e3;--sh-dash:rgba(241,200,106,.4);--sh-btn:#e2b659;--sh-btn-hi:#f6d888;--sh-btn-lo:#b98a35;--sh-btn-ink:#22183f;
+  background-image:radial-gradient(circle at 22% 31%,rgba(255,231,163,.55) 1px,transparent 1.6px),radial-gradient(circle at 71% 64%,rgba(255,255,255,.34) .8px,transparent 1.3px),radial-gradient(circle at 43% 82%,rgba(255,255,255,.22) .7px,transparent 1.2px),var(--grain);background-size:41px 37px,29px 31px,53px 47px,auto;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.15),0 22px 48px rgba(0,0,0,.45)}
+.np{display:flex;align-items:center;gap:12px;padding:10px 10px 10px 12px;border-radius:16px;background:rgba(255,255,255,.08);text-align:left}
+.np .rec{flex:none;width:54px;height:54px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,.45);animation:raySpin 2.6s linear infinite;animation-play-state:paused;
+  background:radial-gradient(circle,#f1c86a 0 7px,#151515 7.5px 9px,transparent 9.5px),repeating-radial-gradient(circle,#161616 0 1.6px,#2b2b2b 1.6px 3.2px)}
+.np.playing .rec{animation-play-state:running}
+.np div{min-width:0}
+.np small{display:block;font-size:.6rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--sh-accent)}
+.np b{display:block;font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.08rem;line-height:1.15}
+.np span{display:block;font-size:.82rem;color:var(--sh-muted)}
+.npb{margin-left:auto;flex:none;width:42px;height:42px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--sh-btn-ink);
+  background:radial-gradient(circle at 38% 30%,var(--sh-btn-hi),var(--sh-btn) 60%,var(--sh-btn-lo))}
+.npb svg{width:16px;height:16px}
+.np-miss{font-size:.8rem;color:var(--sh-muted)}
+.dec{display:flex;flex-direction:column;gap:14px;padding-top:12px;border-top:1.5px dashed var(--sh-dash)}
+.heart{position:relative;align-self:center;width:min(300px,100%)}
+.heart svg{display:block;width:100%;height:auto;overflow:visible}
+.heart .hl{fill:none;stroke:rgba(241,200,106,.38);stroke-width:1.2;stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.heart.go .hl{animation:drawLine 3.4s ease forwards}
+@keyframes drawLine{to{stroke-dashoffset:0}}
+.heart .st{transform-box:fill-box;transform-origin:center;cursor:pointer}
+.heart .st path{fill:rgba(255,255,255,.22)}
+.heart .st.on path{fill:#f1c86a;filter:drop-shadow(0 0 4px rgba(255,214,120,.85))}
+.heart .st.big.on path{filter:drop-shadow(0 0 10px rgba(255,214,120,.95))}
+.heart .st.on{opacity:0}
+.heart.go .st.on{animation:starOn .55s cubic-bezier(.3,1.6,.5,1) calc(var(--i) * .11s) both}
+.heart.go .st.picked{animation:starPick .5s ease both}
+@keyframes starOn{from{opacity:0;transform:scale(.1) rotate(-60deg)}to{opacity:1;transform:none}}
+@keyframes starPick{0%{opacity:1}40%{transform:scale(1.7);opacity:1}100%{opacity:1;transform:none}}
+.heart-cap{min-height:2.6em;font-family:var(--hand);font-size:1.15rem;line-height:1.3;color:var(--sh-hand)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{padding:12px 8px 10px;border-radius:12px;background:rgba(255,255,255,.07)}
+.stat b{display:block;font-family:var(--serif);font-style:italic;font-weight:700;font-size:2rem;line-height:1;color:var(--sh-accent)}
+.stat b small{font-size:.5em;color:var(--sh-muted)}
+.stat span{display:block;margin-top:4px;font-size:.78rem;line-height:1.25;color:var(--sh-muted)}
+.verdict-line{font-family:var(--hand);font-size:1.22rem;line-height:1.3}
+.dec-h{margin:4px 0 -4px!important;font-size:.68rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--sh-accent)}
+.dec-list{display:flex;flex-direction:column;gap:8px;text-align:left}
+.dec-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.06)}
+.dec-item .em{flex:none;min-width:2.3em;font-size:1.2rem;line-height:1;text-align:center;color:var(--sh-accent)}
+.dec-item div{min-width:0}
+.dec-item b{display:block;font-weight:700;font-size:.92rem;line-height:1.25}
+.dec-item span{display:block;font-family:var(--hand);font-size:1rem;line-height:1.2;color:var(--sh-muted)}
+.dec-item.off{opacity:.55}
+.dec-btns{display:flex;flex-direction:column;gap:10px;align-items:center}
+.dec-btns .btn{width:min(250px,100%);text-decoration:none;text-align:center}
+.dec-end{font-family:var(--hand);font-size:1.3rem;line-height:1.3;color:var(--sh-accent);text-wrap:balance}
 @media (max-width:360px){.note{padding:18px 16px 14px}.note p{font-size:18px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}.spark,.flake{display:none}}
 </style>
@@ -675,13 +760,14 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     </radialGradient>
   </defs>
 </svg>
-<div class="sky" id="sky" hidden aria-hidden="true"><div class="stars" id="stars"></div><span class="moon" id="moon"></span><div class="flyer" id="flyer"><span class="trail"></span></div></div>
+<div class="sky" id="sky" hidden aria-hidden="true"><div class="stars" id="stars"></div><span class="shoot" style="--y:13%;--dl:2s"></span><span class="shoot" style="--y:31%;--dl:7.5s"></span><span class="moon" id="moon"></span><div class="flyer" id="flyer"><span class="trail"></span></div></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="lights" id="lights" aria-hidden="true"></div>
+<button class="moonbtn" id="moonBtn" type="button" hidden aria-label="The moon"></button>
 <div class="wrap">
   <header>
     <button class="star" id="star" type="button" aria-label="Star">★</button>
-    <p class="eyebrow">December 2026</p>
+    <p class="eyebrow" id="hello">December 2026</p>
     <h1>Gill's Advent Calendar</h1>
     <p class="sub" id="sub">25 boxes, 25 doors. Tap today's door first, then go and find the box.</p>
   </header>
@@ -701,7 +787,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     <button class="pill" id="elfOff" type="button">Leave elf mode</button>
   </div>
   <main class="grid" id="grid"></main>
-  <footer>Made for Gill by Luke x</footer>
+  <footer><button class="foot" id="foot" type="button">Made for Gill by Luke x</button></footer>
 </div>
 <div id="toast" role="status" hidden></div>
 
@@ -871,13 +957,20 @@ const QUIPS = ["Terrible, I know.", "Oof, that one was bad.", "Too much of a dad
    Set MIXED to false to put 1 to 24 back in order. ORDER is the wall, left to right, top to bottom. */
 const MIXED = true;
 const ORDER = [22, 9, 4, 7, 2, 14, 17, 12, 19, 23, 20, 6, 8, 5, 16, 10, 15, 11, 21, 13, 1, 24, 3, 18];
+/* The 26th door appears from Boxing Day: her favourite song plays while she looks back at her December.
+   Put the song next to the other music, named spaceman.mp3 (or change the name here). */
+const FINALE = {
+  song:'spaceman.mp3', songTitle:'A Spaceman Came Travelling', songArtist:'Chris de Burgh',
+  note:"My darling Gilly,\n\nThat's every door opened! Before the boxes go away, here's your favourite song while you have a little look back at your December.\n\nEvery box, every note and every terrible joke was for you. I love you more than any calendar could hold, and next Christmas you'll be my wife.",
+  signOff:"Luke x"
+};
 /* ============ end of the bit to edit ============ */
 
 const $ = s => document.querySelector(s);
 const okOrder = ORDER.length === 24 && new Set(ORDER).size === 24 && ORDER.every(n => n >= 1 && n <= 24);
 const WALL = (MIXED && okOrder ? ORDER : Array.from({length:24}, (_, i) => i + 1)).concat(25);
 /* each door's wrapping paper follows its place on the wall, so neighbours never match */
-const pap = d => (WALL.indexOf(d) + 1) % 5;
+const pap = d => d === 26 ? 5 : (WALL.indexOf(d) + 1) % 5;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const weekday = (d, style) => new Date(YEAR, 11, d).toLocaleDateString('en-GB', {weekday: style || 'long'});
@@ -886,7 +979,7 @@ const ord = n => n + ordSfx(n);
 const ordHTML = n => `${n}<sup class="os">${ordSfx(n)}</sup>`;
 const longDate = d => weekday(d) + ' ' + ord(d) + ' December';
 const KEY = 'gill-advent-' + YEAR + '-v2';
-const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, dev:{}, film:false});
+const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, dev:{}, film:false, fin:false, eggs:{}});
 let real = blank(), prefs = {music:true, sfx:true};
 try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) { real = Object.assign(blank(), s.state); prefs = Object.assign(prefs, s.prefs); } } catch (e) {}
 let state = real, elf = false;
@@ -952,9 +1045,10 @@ const sfx = {
 };
 
 /* ---------- music: three mp3 files next to this page, one at a time ---------- */
-const TRACKS = {bg:'background.mp3', naughty:'naughty.mp3', xmas:'xmasday.mp3'};
+const TRACKS = {bg:'background.mp3', naughty:'naughty.mp3', xmas:'xmasday.mp3', song:FINALE.song};
+const FIN = Object.assign({t:'finale'}, FINALE);
 const players = {}; let track = 'bg';
-function player(n) { if (!players[n]) { const a = new Audio(TRACKS[n]); a.loop = true; a.preload = 'auto'; a.volume = n === 'bg' ? .5 : .7; players[n] = a; } return players[n]; }
+function player(n) { if (!players[n]) { const a = new Audio(TRACKS[n]); a.loop = true; a.preload = 'auto'; a.volume = n === 'bg' ? .5 : .7; if (n === 'song') a.addEventListener('error', songMissing); players[n] = a; } return players[n]; }
 function syncMusic() {
   const on = prefs.music && !document.hidden;
   Object.keys(players).forEach(n => { if (!on || n !== track) players[n].pause(); });
@@ -1051,7 +1145,7 @@ function drawLights() {
     const u = (k + .5) / N * swags, i = Math.min(swags - 1, Math.floor(u)), t = u - i, x0 = i * seg, x1 = x0 + seg, cx = x0 + seg / 2, cy = top + sag * 2;
     const x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cx + t * t * x1, y = (1 - t) * (1 - t) * top + 2 * (1 - t) * t * cy + t * t * top;
     const ang = Math.atan2(2 * (1 - t) * (cy - top) + 2 * t * (top - cy), seg) * 180 / Math.PI;
-    html += `<span class="bulb" style="left:${x.toFixed(1)}px;top:${(y + 1).toFixed(1)}px;--c:${LIGHT_COLS[k % 5]};--k:${k};--r:${(ang * .6).toFixed(1)}deg;--t:${(1.2 + Math.random() * 1.8).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`;
+    html += `<span class="bulb${Math.abs(x - W / 2) < 46 ? ' nohit' : ''}" style="left:${x.toFixed(1)}px;top:${(y + 1).toFixed(1)}px;--c:${LIGHT_COLS[k % 5]};--k:${k};--r:${(ang * .6).toFixed(1)}deg;--t:${(1.2 + Math.random() * 1.8).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`;
   }
   lightsEl.innerHTML = `<svg width="${W}" height="64" viewBox="0 0 ${W} 64"><path d="${path}" fill="none" stroke="#2c4038" stroke-width="2"/></svg>` + html;
   litShown = -1; paintLights();
@@ -1069,17 +1163,21 @@ function paintLights() {
 drawLights();
 let lightsRT; addEventListener('resize', () => { clearTimeout(lightsRT); lightsRT = setTimeout(drawLights, 150); });
 
-/* ---------- Christmas Eve after dark: the homepage turns to night and Santa crosses the moon ---------- */
+/* ---------- special skies: Christmas Eve night (from 4pm on the 24th) and after Christmas (from the 26th) ---------- */
 const SUB_TEXT = $('#sub').textContent;
-const evePreview = TESTING && /[?&]eve\b/.test(location.search);   /* testing: add ?eve to the address to see it early */
+/* testing: add ?eve or ?after to the address to see them early */
+const evePreview = TESTING && /[?&]eve\b/.test(location.search), afterPreview = TESTING && /[?&]after\b/.test(location.search);
 function isEve() { if (evePreview) return true; const n = new Date(); return n.getFullYear() === YEAR && n.getMonth() === 11 && n.getDate() === 24 && n.getHours() >= 16; }
+function isAfter() { return afterPreview || today() > 25; }
+const mode = () => isAfter() ? 'after' : isEve() ? 'eve' : '';
 let skyBuilt = false;
-function applyEve() {
-  const on = isEve(), sky = $('#sky');
-  document.documentElement.classList.toggle('eve', on); sky.hidden = !on;
-  document.querySelector('meta[name="theme-color"]').content = on ? '#070d24' : '#0f2a26';
-  $('#sub').textContent = on ? "Santa's on his way. One more sleep, " + TO + '.' : SUB_TEXT;
-  if (!on) return;
+function applyMode() {
+  const m = mode(), root = document.documentElement;
+  root.classList.toggle('eve', m === 'eve'); root.classList.toggle('after', m === 'after');
+  $('#sky').hidden = !m; $('#moonBtn').hidden = !m;
+  document.querySelector('meta[name="theme-color"]').content = m === 'eve' ? '#070d24' : m === 'after' ? '#0b0a24' : '#0f2a26';
+  snow.setMood(moodFor());
+  if (!m) return;
   if (!skyBuilt) {
     skyBuilt = true; let h = '';
     for (let i = 0; i < 60; i++) h += `<span style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 46).toFixed(1)}%;--s:${(1 + Math.random() * 1.8).toFixed(1)}px;--t:${(1.5 + Math.random() * 2.5).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`;
@@ -1089,13 +1187,34 @@ function applyEve() {
 }
 /* line the flight path up so the sleigh passes right across the moon */
 function aimSleigh() {
-  const moon = $('#moon'), fl = $('#flyer'); if (!moon || !fl || $('#sky').hidden) return;
-  const m = moon.getBoundingClientRect(), W = innerWidth, fw = fl.offsetWidth || 96, fh = fl.offsetHeight || 40, top0 = parseFloat(getComputedStyle(fl).top) || 0;
-  const p = Math.min(.92, Math.max(.2, (m.left + m.width / 2 - fw / 2 + 190) / (W + 220)));
-  const yAt = m.top + m.height / 2 - top0 - fh / 2, y0 = yAt + 44, y1 = y0 + (yAt - y0) / p;
+  const moon = $('#moon'), fl = $('#flyer'), sky = $('#sky'); if (!moon || !fl || sky.hidden) return;
+  const k = sky.getBoundingClientRect(), m = moon.getBoundingClientRect(), W = innerWidth, fw = fl.offsetWidth || 96, fh = fl.offsetHeight || 40, top0 = parseFloat(getComputedStyle(fl).top) || 0;
+  const p = Math.min(.92, Math.max(.2, (m.left - k.left + m.width / 2 - fw / 2 + 190) / (W + 220)));
+  const yAt = m.top - k.top + m.height / 2 - top0 - fh / 2, y0 = yAt + 44, y1 = y0 + (yAt - y0) / p;
   fl.style.setProperty('--y0', y0.toFixed(1) + 'px'); fl.style.setProperty('--y1', y1.toFixed(1) + 'px');
 }
 addEventListener('resize', aimSleigh);
+
+/* ---------- the header says hello, depending on the time and the day ---------- */
+function greeting() {
+  const n = new Date(), h = n.getHours(), mo = n.getMonth(), d = n.getDate(), pick = a => a[(d + mo) % a.length];
+  if (mo === 11 && d === 24) return h >= 16 ? "It's Christmas Eve, " + TO : 'Christmas Eve, ' + TO;
+  if (mo === 11 && d === 25) return 'Merry Christmas, ' + TO;
+  if (mo === 11 && d === 26) return 'Happy Boxing Day, ' + TO;
+  if (mo === 11 && d === 31) return "Happy New Year's Eve, " + TO;
+  if (mo === 0 && d === 1) return 'Happy New Year, ' + TO;
+  if (h < 5) return pick(['Late-night door, ' + TO + '?', 'Up past midnight, ' + TO + '?']);
+  if (h < 12) return pick(['Morning, ' + TO, 'Good morning, ' + TO, 'Rise and shine, ' + TO]);
+  if (h < 17) return pick(['Afternoon, ' + TO, 'Hello, ' + TO, 'Good afternoon, ' + TO]);
+  if (h < 22) return pick(['Evening, ' + TO, 'Good evening, ' + TO, 'Cosy evening, ' + TO + '?']);
+  return 'Late-night door, ' + TO + '?';
+}
+function paintHeader() {
+  $('#hello').textContent = greeting();
+  const m = mode();
+  $('#sub').textContent = m === 'eve' ? "Santa's on his way. One more sleep, " + TO + '.'
+    : m === 'after' ? (state.fin ? "Every door's open, and every one was for you." : "Every door's open. But there's one more…") : SUB_TEXT;
+}
 
 /* ---------- iPhone: suggest adding it to the home screen, only before the first door is opened ---------- */
 const standalone = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
@@ -1119,6 +1238,7 @@ function scheduleNudge() {
 let toastT;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
 function label(d) {
+  if (d === 26) return 'your December';
   const c = DAYS[d];
   if (c.t === 'candy') return 'a treat';
   if (c.t === 'game') return state.won[d] ? 'won' : 'to play';
@@ -1129,10 +1249,10 @@ function label(d) {
 const TILT = [-7, 5, -3, 8, -5, 3];
 function renderGrid() {
   const g = $('#grid'); g.innerHTML = '';
-  WALL.forEach(d => {
+  (isAfter() ? [26] : []).concat(WALL).forEach(d => {
     const b = document.createElement('button'); b.type = 'button'; b.dataset.d = d;
-    const open = state.opened[d], un = unlocked(d);
-    b.className = 'box paper p' + pap(d) + (d === 25 ? ' wide' : '') + (open ? ' open' : un && !MIXED ? ' ready' : '');
+    const open = d === 26 ? state.fin : state.opened[d], un = d === 26 || unlocked(d);
+    b.className = 'box paper p' + pap(d) + (d >= 25 ? ' wide' : '') + (d === 26 ? ' finale' : '') + (open ? ' open' : un && !MIXED ? ' ready' : '');
     b.innerHTML = open ? `<span class="rem paper"></span><span class="otagw" style="--rot:${TILT[d % 6]}deg"><span class="otag"><b>${d}</b><i>${label(d)}</i></span></span>` : `<span class="tag">${d}</span>`;
     b.setAttribute('aria-label', 'Door ' + d + (open ? ', opened: ' + label(d) : un ? ', ready to open' : ', locked until ' + ord(d) + ' December'));
     b.onclick = () => {
@@ -1144,7 +1264,7 @@ function renderGrid() {
   const t = today(), n = Object.keys(state.opened).length, s = $('#status'); let msg;
   let waiting = 0; if (t > 1 && t <= 25) for (let d = 1; d < t; d++) if (!state.opened[d]) waiting++;
   if (t === 0) { const now = new Date(); const sl = Math.round((new Date(YEAR, 11, 1) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 864e5); msg = sl + (sl === 1 ? ' sleep' : ' sleeps') + ' until door 1'; }
-  else if (t > 25) msg = 'Every door is open. Merry Christmas.';
+  else if (t > 25) msg = state.fin ? "That's everything, " + TO + '. Merry Christmas.' : 'One more door has appeared, right at the top.';
   else if (isEve() && state.opened[24]) msg = "Santa's on his way. Door 25 opens at midnight.";
   else if (!state.opened[t]) msg = 'Door ' + t + ' is ready' + (MIXED ? '. Can you spot it?' : '');
   else msg = t === 25 ? 'Merry Christmas, ' + TO : 'Door ' + t + ' done. Back tomorrow for door ' + (t + 1) + '.';
@@ -1154,16 +1274,28 @@ function renderGrid() {
   const jn = Object.keys(state.cr).length;
   $('#notesBtn').textContent = n ? 'Love notes · ' + n : 'Love notes';
   $('#jokesBtn').textContent = jn ? 'Cracker jokes · ' + jn : 'Cracker jokes';
-  paintLights(); paintTip(); scheduleNudge();
+  paintLights(); paintTip(); scheduleNudge(); paintHeader();
 }
-let lastDay = today(), lastEve = null;
-/* every minute: a new day re-draws the wall, and 4pm on Christmas Eve turns the sky to night */
-function tick() { const e = isEve(); if (e !== lastEve) { lastEve = e; applyEve(); renderGrid(); } else if (today() !== lastDay) { lastDay = today(); renderGrid(); } }
+let lastDay = today(), lastMode = null, lastHour = -1;
+/* every minute: a new day re-draws the wall and changes the snow, a new hour changes the hello, and the sky changes on Christmas Eve and after Christmas */
+function tick() {
+  const m = mode(), d = today(), h = new Date().getHours();
+  if (m !== lastMode) { lastMode = m; lastDay = d; applyMode(); renderGrid(); }
+  else if (d !== lastDay) { lastDay = d; snow.setMood(moodFor()); renderGrid(); }
+  else if (h !== lastHour) paintHeader();
+  lastHour = h;
+}
 setInterval(tick, 60000);
 
-/* ---------- elf mode: tap the star 5 times ---------- */
+/* ---------- the star: a twinkle when tapped, a wish after five quick taps (and elf mode after seven, while testing) ---------- */
 let taps = 0, tapT;
-$('#star').onclick = () => { taps++; clearTimeout(tapT); tapT = setTimeout(() => taps = 0, 2500); if (taps >= 5) { taps = 0; setElf(!elf); } };
+$('#star').onclick = () => {
+  taps++; clearTimeout(tapT); tapT = setTimeout(() => taps = 0, 2500);
+  const st = $('#star'); st.classList.remove('spin'); void st.offsetWidth; st.classList.add('spin');
+  fx([84 + taps * 2], 0, {dur:.25, vol:.07, type:'triangle'});
+  if (taps === 5) wish();
+  if (TESTING && taps >= 7) { taps = 0; setElf(!elf); }
+};
 $('#elfOff').onclick = () => setElf(false);
 /* testing only: wipe all progress */
 $('#resetBtn').hidden = !TESTING;
@@ -1199,12 +1331,12 @@ $('#backBtn').onclick = () => closePanel();
 [sheet, panel].forEach(el => el.addEventListener('animationend', e => { if (e.target === el) el.classList.remove('rise', 'jolt', 'slidein', 'slideback'); }));
 
 function openDoor(d) {
-  const c = DAYS[d], first = !state.opened[d]; cur = d;
+  const c = d === 26 ? FIN : DAYS[d], first = d === 26 ? !state.fin : !state.opened[d]; cur = d;
   clearLater(); stopGame(); body.innerHTML = ''; pbody.innerHTML = '';
-  setTrack(c.t === 'non' ? 'naughty' : c.t === 'reveal' ? 'xmas' : 'bg');
+  setTrack(c.t === 'non' ? 'naughty' : c.t === 'reveal' ? 'xmas' : c.t === 'finale' ? 'song' : 'bg');
   sheet.hidden = true; panel.hidden = true; unwrap.hidden = true;
   showDlg(dlg);
-  if (first) showGift(d, c); else { sfx.click(); showSheet(d, c, false); }
+  if (first) showGift(d, c); else { sfx.click(); if (d === 26) showFinale(false); else showSheet(d, c, false); }
 }
 /* step one: the present, wrapped in that day's paper */
 function showGift(d, c) {
@@ -1217,11 +1349,12 @@ function showGift(d, c) {
   g.onclick = () => {
     if (g.classList.contains('open')) return;
     g.classList.add('open'); g.disabled = true;
-    state.opened[d] = true; save(); sfx.untie();
+    if (d === 26) state.fin = true; else state.opened[d] = true;
+    save(); sfx.untie();
     later(sfx.ribbon, 320);
     later(sfx.lid, 950);
     later(() => { sparkAt(g.querySelector('.g-box'), 26, -70); sfx.sparkle(); }, 1150);
-    later(() => { unwrap.hidden = true; g.className = 'gift'; showSheet(d, c, true); }, reduced ? 0 : 2400);
+    later(() => { unwrap.hidden = true; g.className = 'gift'; if (d === 26) showFinale(true); else showSheet(d, c, true); }, reduced ? 0 : 2400);
   };
 }
 /* step two: the card. Cracker, love note, then the day's main event */
@@ -1433,7 +1566,7 @@ function doCandy(d, c, first, act) {
       asked = true;
       try {
         DeviceMotionEvent.requestPermission()
-          .then(r => { if (r === 'granted') { listen(); say('Now shake your phone!'); } else say('Keep tapping the photo to shake it'); })
+          .then(r => { if (r === 'granted') { listen(); homeShakeListen(); say('Now shake your phone!'); } else say('Keep tapping the photo to shake it'); })
           .catch(() => say('Keep tapping the photo to shake it'));
       } catch (e) { say('Keep tapping the photo to shake it'); }
     }
@@ -1653,6 +1786,94 @@ function revealPanel(d, c, p) {
     const tick = () => { if (!cin.isConnected) return; cnt.textContent = n; sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go'); sfx.leader(); n--; plater(n >= 1 ? tick : roll, 1000); };
     plater(tick, reduced ? 200 : 1700);
   };
+}
+
+/* ---------- the 26th door: her song, one more note, and everything December held ---------- */
+const PLAY_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5v11l9-5.5z" fill="currentColor"/></svg>';
+const PAUSE_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" rx="1" fill="currentColor"/></svg>';
+function showFinale(first) {
+  sheet.className = 'sheet t-finale';
+  const tape = $('#tape'); tape.className = 'tape t1'; tape.style.setProperty('--tilt', '-2deg');
+  $('#sDay').textContent = 'One more door'; $('#sDate').textContent = 'Your December';
+  sheet.hidden = false; panel.hidden = true; ctaBar.hidden = true; void sheet.offsetWidth; sheet.classList.add('rise');
+  dlg.scrollTop = 0;
+  body.innerHTML = `<div class="np" id="np"><span class="rec" aria-hidden="true"></span><div><small>Now playing</small><b>${FIN.songTitle}</b><span>${FIN.songArtist}</span></div><button class="npb" id="npBtn" type="button" aria-label="Pause"></button></div>
+    <div class="notew"><p class="kick">One last note from ${FROM}…</p>${noteHTML(FIN, 'note')}<p class="skip" id="skip" hidden>Tap the note to skip ahead</p></div>
+    ${decemberHTML()}`;
+  startNote(FIN, first);
+  wireSong(); wireDecember();
+  if (first) later(() => { sfx.win(); shower(70); }, 400);
+}
+function wireSong() {
+  const np = $('#np'), btn = $('#npBtn'), a = player('song');
+  const paint = () => { if (!np.isConnected) return; const on = prefs.music && !a.paused && track === 'song'; np.classList.toggle('playing', on); btn.innerHTML = on ? PAUSE_SVG : PLAY_SVG; btn.setAttribute('aria-label', on ? 'Pause' : 'Play'); };
+  ['play', 'pause', 'playing'].forEach(ev => a.addEventListener(ev, paint));
+  btn.onclick = () => { if (track !== 'song') setTrack('song'); prefs.music = !(prefs.music && !a.paused); save(); paintToggles(); syncMusic(); setTimeout(paint, 80); };
+  if (a.error) songMissing(); paint();
+}
+/* no song file yet: carry on with the usual music, and (while testing) say what's missing */
+function songMissing() {
+  if (track === 'song') { track = 'bg'; syncMusic(); }
+  const np = document.getElementById('np'); if (!np) return;
+  if (!TESTING) { np.hidden = true; return; }
+  if (!document.getElementById('npMiss')) np.insertAdjacentHTML('afterend', `<p class="np-miss" id="npMiss">Add ${FIN.song} next to the other music and her song plays here.</p>`);
+}
+function gotLine(d) {
+  const c = DAYS[d];
+  if (!state.opened[d]) return 'still wrapped up';
+  if (c.t === 'candy') return 'a sweet treat and a photo of us';
+  if (c.t === 'game') return GAMES[c.g].title + (state.won[d] ? ', won, and a little gift' : ', not won yet');
+  if (c.t === 'non') return state.non[d] ? `${c.prize}, ${c[state.non[d].r]}` : c.prize + ', not spun yet';
+  if (c.t === 'lock') return state.ev[d] === 2 ? c.title + (c.venue ? ', ' + c.venue : '') : 'a locked present';
+  return 'your world premiere';
+}
+/* 24 stars round a heart for doors 1 to 24, and one big star in the middle for Christmas Day */
+function heartSVG() {
+  const N = 1200, F = t => [16 * Math.pow(Math.sin(t), 3), -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))];
+  const smp = Array.from({length:N + 1}, (_, i) => F(i / N * 2 * Math.PI)), L = [0];
+  for (let i = 1; i <= N; i++) L.push(L[i - 1] + Math.hypot(smp[i][0] - smp[i - 1][0], smp[i][1] - smp[i - 1][1]));
+  const S = 8.6, pts = [];
+  for (let k = 0; k < 24; k++) { const want = k / 24 * L[N]; let i = 0; while (L[i] < want) i++; pts.push([smp[i][0] * S, smp[i][1] * S]); }
+  let len = 0; pts.forEach((p, i) => { const q = pts[(i + 1) % 24]; len += Math.hypot(p[0] - q[0], p[1] - q[1]); });
+  const path = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('') + 'Z';
+  const star = (d, x, y, k, big) => `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><g class="st${state.opened[d] ? ' on' : ''}${big ? ' big' : ''}" data-d="${d}" style="--i:${k}"><circle r="${big ? 24 : 13}" fill="transparent"/><path d="${SPARK}" transform="translate(${big ? -16 : -7.5} ${big ? -16 : -7.5}) scale(${big ? 1.33 : .62})"/></g></g>`;
+  return `<svg viewBox="-150 -118 300 280" role="img" aria-label="A heart made of 25 stars, one for every door"><path class="hl" d="${path}" style="--len:${len.toFixed(0)}"/>${pts.map((p, k) => star(k + 1, p[0], p[1], k)).join('')}${star(25, 0, 14, 25, true)}</svg>`;
+}
+function decemberHTML() {
+  const n = Object.keys(state.opened).length, jn = Object.keys(state.cr).length, games = [], nons = [], locks = [];
+  for (let d = 1; d <= 25; d++) { const t = DAYS[d].t; if (t === 'game') games.push(d); if (t === 'non') nons.push(d); if (t === 'lock') locks.push(d); }
+  const won = games.filter(d => state.won[d]).length, tickets = locks.filter(d => state.ev[d] === 2).length;
+  let nice = 0, naughty = 0; nons.forEach(d => { if (state.non[d]) state.non[d].r === 'nice' ? nice++ : naughty++; });
+  const verdict = nice + naughty ? `Santa's verdict: ${nice} nice, ${naughty} naughty. ${nice > naughty ? 'Officially nice.' : naughty > nice ? 'Officially naughty (we knew it).' : 'Perfectly balanced.'}` : '';
+  const item = (em, b, sub, off) => `<div class="dec-item${off ? ' off' : ''}"><span class="em">${em || ''}</span><div><b>${b}</b><span>${sub}</span></div></div>`;
+  const nonItems = nons.map(d => { const c = DAYS[d], r = state.non[d]; return item(c.emoji, c.prize, r ? `${r.r === 'nice' ? 'Nice' : 'Naughty'}: ${c[r.r]}` : 'Not spun yet', !r); }).join('');
+  const lockItems = locks.map(d => { const c = DAYS[d], got = state.ev[d] === 2; return item(got ? c.emoji : '', got ? c.title : 'A locked present', `${ord(d)} December${got ? (c.time ? ' · ' + c.time : '') + (c.venue ? ' · ' + c.venue : '') : ', still to unlock'}`, !got); }).join('');
+  const found = EGGS.filter(e => state.eggs[e[0]]).length;
+  const eggItems = EGGS.map(([k, name, clue]) => state.eggs[k] ? item('★', name, 'Found it!') : item('?', 'Still hidden', clue, true)).join('');
+  return `<section class="dec" id="dec">
+    <p class="kick">25 doors, 25 stars</p>
+    <div class="heart" id="heart">${heartSVG()}</div>
+    <p class="heart-cap" id="hcap">25 doors, and every single one was for you. Tap a star to look back.</p>
+    <div class="stats"><div class="stat"><b>${n}<small>/25</small></b><span>doors opened</span></div><div class="stat"><b>${won}<small>/${games.length}</small></b><span>games won</span></div>
+      <div class="stat"><b>${tickets}<small>/${locks.length}</small></b><span>golden tickets</span></div><div class="stat"><b>${jn}</b><span>terrible jokes</span></div></div>
+    ${verdict ? `<p class="verdict-line">${verdict}</p>` : ''}
+    <p class="dec-h">Naughty or Nice prizes</p><div class="dec-list">${nonItems}</div>
+    <p class="dec-h">Golden tickets</p><div class="dec-list">${lockItems}</div>
+    <div class="dec-btns"><button class="btn" type="button" id="decNotes">Read your love notes</button><button class="btn" type="button" id="decJokes">Your cracker jokes</button>${DAYS[25].video ? `<a class="btn ghost" id="decFilm" href="${DAYS[25].video}" target="_blank" rel="noopener">Watch your film again</a>` : ''}</div>
+    <p class="dec-h">Hidden secrets: ${found} of ${EGGS.length} found</p><div class="dec-list">${eggItems}</div>
+    <p class="dec-end">Every door, every note, every terrible joke: all for you. ${FROM} x</p>
+  </section>`;
+}
+function wireDecember() {
+  const heart = $('#heart'), cap = $('#hcap');
+  whenSeen(heart, () => heart.classList.add('go'), .35);
+  heart.addEventListener('click', e => {
+    const st = e.target.closest('.st'); if (!st) return; const d = +st.dataset.d;
+    st.classList.remove('picked'); void st.getBoundingClientRect(); st.classList.add('picked');
+    cap.textContent = `${ord(d)} December: ${gotLine(d)}.`; fx([79 + (d % 5) * 2], 0, {dur:.3, vol:.07});
+  });
+  $('#decNotes').onclick = openNotes; $('#decJokes').onclick = openJokes;
+  const film = $('#decFilm'); if (film) film.onclick = () => Object.keys(players).forEach(k => players[k].pause());
 }
 
 /* ---------- prizes she can save to her phone as a picture ---------- */
@@ -2081,19 +2302,117 @@ const GAMES = {
   }}
 };
 
-/* ---------- snow ---------- */
-(function snow() {
-  const cv = $('#snow'), x = cv.getContext('2d'); let W, H, flakes = [], raf;
+/* ---------- snow: a different feel each day, and a blizzard if she shakes the phone ---------- */
+const SNOW_MOODS = {
+  steady:  {n:70,  r:[1, 3.4],   v:[.02, .07],  wind:1},
+  flurry:  {n:34,  r:[.8, 2.2],  v:[.015, .04], wind:.8},
+  big:     {n:40,  r:[2.4, 5.2], v:[.012, .03], wind:.7},
+  windy:   {n:95,  r:[1, 3],     v:[.035, .08], wind:1.8, drift:1},
+  heavy:   {n:160, r:[1, 3.6],   v:[.03, .09],  wind:1.1},
+  sparkly: {n:62,  r:[1, 2.6],   v:[.018, .05], wind:.9, twinkle:true},
+  calm:    {n:22,  r:[1, 2.6],   v:[.012, .03], wind:.5}
+};
+/* never the same two days running; Christmas Day is heavy, the special skies sparkle */
+function moodFor() {
+  const n = new Date(); if (mode()) return 'sparkly';
+  if (n.getMonth() === 11 && n.getDate() === 25) return 'heavy';
+  const seq = ['steady', 'flurry', 'big', 'windy', 'heavy', 'sparkly', 'calm'], k = Math.floor(new Date(n.getFullYear(), n.getMonth(), n.getDate()) / 864e5);
+  return seq[(k * 3) % seq.length];
+}
+const snow = (() => {
+  const cv = $('#snow'), x = cv.getContext('2d'); let W, H, flakes = [], raf, mood = SNOW_MOODS.steady, gust = 0, last = 0;
   const size = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; };
   size(); addEventListener('resize', size);
-  for (let i = 0; i < 70; i++) flakes.push({x:Math.random(), y:Math.random(), r:1 + Math.random() * 2.4, v:.02 + Math.random() * .05, s:Math.random() * 6});
-  function draw(t) { x.clearRect(0, 0, W, H); x.fillStyle = P.cream;
-    flakes.forEach(f => { if (!reduced) { f.y += f.v / 60; if (f.y > 1.02) { f.y = -.02; f.x = Math.random(); } }
-      x.globalAlpha = .25 + f.r / 6; x.beginPath(); x.arc(f.x * W + Math.sin(t / 1400 + f.s) * 12, f.y * H, f.r, 0, 7); x.fill(); });
-    if (!reduced && !document.hidden) raf = requestAnimationFrame(draw); }
-  draw(0);
-  document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden && !reduced) raf = requestAnimationFrame(draw); });
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const make = (m, extra) => ({x:Math.random(), y:extra ? -Math.random() * .6 : Math.random(), r:rnd(m.r[0], m.r[1]), v:rnd(m.v[0], m.v[1]), s:Math.random() * 6, tw:m.twinkle ? Math.random() * 6 : -1, extra:!!extra});
+  function draw(t) {
+    const dt = last ? Math.min(3, (t - last) / 16.7) : 1; last = t;
+    gust = Math.max(0, gust - .0026 * dt);
+    x.clearRect(0, 0, W, H); x.fillStyle = P.cream;
+    const sway = 12 * (mood.wind || 1) + gust * 40, push = ((mood.drift || 0) * .0012 + gust * .009) * dt;
+    flakes = flakes.filter(f => {
+      if (!reduced) { f.y += f.v / 60 * dt * (1 + gust * 2.2); f.x += push; }
+      if (f.y > 1.03) { if (f.extra) return false; f.y = -.03; f.x = Math.random(); }
+      if (f.x > 1.06) f.x -= 1.12;
+      let a = .25 + f.r / 6; if (f.tw >= 0) a *= .5 + .5 * Math.sin(t / 360 + f.tw);
+      x.globalAlpha = Math.min(1, a); x.beginPath(); x.arc(f.x * W + Math.sin(t / 1400 + f.s) * sway, f.y * H, f.r, 0, 7); x.fill();
+      return true;
+    });
+    if (!reduced && !document.hidden) raf = requestAnimationFrame(draw);
+  }
+  document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden && !reduced) { last = 0; raf = requestAnimationFrame(draw); } });
+  if (!reduced) raf = requestAnimationFrame(draw);
+  return {
+    setMood(name) { mood = SNOW_MOODS[name] || SNOW_MOODS.steady; flakes = flakes.filter(f => f.extra); for (let i = 0; i < mood.n; i++) flakes.push(make(mood)); cv.dataset.mood = name; if (reduced) draw(0); },
+    blizzard() { gust = 1; for (let i = 0; i < 260; i++) flakes.push(make({r:[1, 3.8], v:[.05, .12]}, true)); },
+    get count() { return flakes.length; }
+  };
 })();
+
+/* ---------- hidden secrets for her to stumble on ---------- */
+const EGGS = [
+  ['blizzard', 'Blizzard', 'Try shaking things up on the homepage'],
+  ['hoho', 'Ho ho ho', 'Someone lives on the moon…'],
+  ['wish', 'Wish upon a star', 'Star light, star bright… keep tapping'],
+  ['hearts', 'Love hearts', 'Who made all this? Give him a tap'],
+  ['tink', 'Tink', 'The fairy lights like a little poke']];
+function foundEgg(k) {
+  if (state.eggs[k]) return; state.eggs[k] = true; save();
+  const n = EGGS.filter(e => state.eggs[e[0]]).length;
+  setTimeout(() => toast(n === EGGS.length ? 'You found every secret!' : `Secret found! ${n} of ${EGGS.length}`), 900);
+}
+/* five quick taps on the star: a shooting star and a wish */
+function wish() {
+  const s = document.createElement('span'); s.className = 'shoot now'; s.style.setProperty('--y', (54 + Math.random() * 36).toFixed(0) + 'px'); document.body.append(s); setTimeout(() => s.remove(), 1700);
+  const w = document.createElement('span'); w.className = 'wish'; w.textContent = 'Make a wish, ' + TO; $('header').append(w); setTimeout(() => w.remove(), 3300);
+  sfx.sparkle(); sparkAt($('#star'), 22); foundEgg('wish');
+}
+/* tap the sign-off: hearts float up */
+$('#foot').onclick = () => {
+  const r = $('#foot').getBoundingClientRect(), cols = [P.berry, '#ff5a70', P.gold, '#ffd9de'];
+  for (let i = 0; i < 16; i++) {
+    const h = document.createElement('span'); h.className = 'lheart';
+    h.innerHTML = `<svg viewBox="-12 -12 24 22"><path d="${HEART}" fill="${cols[i % 4]}"/></svg>`;
+    h.style.cssText = `left:${(r.left + r.width / 2 + (Math.random() - .5) * r.width).toFixed(0)}px;top:${(r.top + r.height / 2).toFixed(0)}px;--s:${(12 + Math.random() * 14).toFixed(0)}px;--x:${((Math.random() - .5) * 150).toFixed(0)}px;--y:${(120 + Math.random() * 170).toFixed(0)}px;--rot:${((Math.random() - .5) * 60).toFixed(0)}deg;--dur:${(1.4 + Math.random()).toFixed(2)}s;animation-delay:${(Math.random() * .25).toFixed(2)}s`;
+    document.body.append(h); setTimeout(() => h.remove(), 3200);
+  }
+  fx([76, 79, 84, 88], .08, {dur:.4, vol:.08}); foundEgg('hearts');
+};
+/* poke a lit fairy light: it flashes and changes colour */
+lightsEl.addEventListener('click', e => {
+  const b = e.target.closest('.bulb.on'); if (!b) return;
+  const i = (LIGHT_COLS.indexOf(b.style.getPropertyValue('--c').trim()) + 1) % LIGHT_COLS.length;
+  b.style.setProperty('--c', LIGHT_COLS[i]); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  b.addEventListener('animationend', () => b.classList.remove('pop'), {once:true});
+  fx([96 + (+b.style.getPropertyValue('--k') % 5) * 2], 0, {dur:.22, vol:.08, type:'triangle'}); foundEgg('tink');
+});
+/* tap the moon (Christmas Eve, or after Christmas): Ho ho ho, sleigh bells, and Santa flies past */
+$('#moonBtn').onclick = () => {
+  const bub = document.createElement('span'); bub.className = 'hoho'; bub.textContent = 'Ho ho ho!'; document.body.append(bub); setTimeout(() => bub.remove(), 2700);
+  for (let i = 0; i < 8; i++) setTimeout(() => { noise(.05, .1, 2.4, 9000); fx([2093 + (i % 2) * 330], 0, {raw:true, dur:.14, vol:.05}); }, i * 75);
+  setTimeout(() => fx([55, 52, 48], .24, {dur:.3, vol:.12, type:'triangle'}), 650);
+  const fl = $('#flyer'); aimSleigh(); fl.classList.remove('flyby'); void fl.offsetWidth; fl.classList.add('flyby');
+  fl.addEventListener('animationend', e => { if (e.animationName === 'flyOnce') fl.classList.remove('flyby'); }, {once:true});
+  foundEgg('hoho');
+};
+/* shake the phone on the homepage: blizzard. iPhones only once motion's been allowed (that happens on the first photo day) */
+let homeShake = false, shakeHits = [], blizT = 0;
+function onHomeMotion(e) {
+  if (dlg.open || document.hidden) return;
+  const a = e.acceleration, g = e.accelerationIncludingGravity; let mag;
+  if (a && a.x != null) mag = Math.hypot(a.x || 0, a.y || 0, a.z || 0);
+  else if (g && g.x != null) mag = Math.abs(Math.hypot(g.x || 0, g.y || 0, g.z || 0) - 9.81);
+  else return;
+  if (mag < 13) return;
+  const now = performance.now(); shakeHits = shakeHits.filter(h => now - h < 1200);
+  if (!shakeHits.length || now - shakeHits[shakeHits.length - 1] > 140) shakeHits.push(now);
+  if (shakeHits.length >= 3 && Date.now() - blizT > 7000) { shakeHits = []; blizT = Date.now(); snow.blizzard(); sfx.swoosh(); foundEgg('blizzard'); }
+}
+function homeShakeListen() { if (homeShake) return; homeShake = true; addEventListener('devicemotion', onHomeMotion); }
+if ('DeviceMotionEvent' in window && matchMedia('(pointer: coarse)').matches) {
+  if (isIOS() && typeof DeviceMotionEvent.requestPermission === 'function') { try { DeviceMotionEvent.requestPermission().then(r => { if (r === 'granted') homeShakeListen(); }).catch(() => {}); } catch (e) {} }
+  else homeShakeListen();
+}
 
 ['present', 'stocking'].forEach(icoImg); svgImg('sleigh', SLEIGH);
 paintToggles(); tick();
