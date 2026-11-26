@@ -8,7 +8,7 @@
 <title>Gill's Advent Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,500..600&family=Kalam:wght@400&family=Nunito+Sans:wght@400;700;800&family=Yeseva+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,500..800&family=Kalam:wght@400&family=Nunito+Sans:wght@400;700;800&family=Yeseva+One&display=swap">
 <style>
 /* Homepage: a wall of wrapped presents on deep spruce, under fairy lights.
    Behind each door: the present unwraps into a card coloured by the kind of day,
@@ -26,12 +26,14 @@
   --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .3 0 0 0 0 .15 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   --mottle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .02' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .38 0 0 0 0 .2 0 0 0 .2 -.04'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;touch-action:manipulation}
+button{-webkit-tap-highlight-color:transparent}
+.stage.game,.slip,.cracker,.polaroid,.gift,.box,.wheelbox,.tile,.key,.memcard,.cup,.bell,.opt{-webkit-user-select:none;user-select:none}
 [hidden]{display:none!important}
 img{max-width:100%}
 html{-webkit-text-size-adjust:100%;background:var(--night)}
 html,body{min-height:100%}
-body{position:relative;margin:0;background:var(--night);color:var(--cream);font-family:var(--body);font-size:16px;line-height:1.5;
+body{position:relative;margin:0;background:var(--night);color:var(--cream);font-family:var(--body);font-size:16px;line-height:1.5;font-variation-settings:"opsz" 18;
   background-image:radial-gradient(ellipse at 50% -10%, var(--spruce), transparent 60%)}
 button{font:inherit}
 .defs{position:absolute;width:0;height:0;overflow:hidden}
@@ -135,7 +137,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .unwrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding-block:18px 6px;color:var(--cream);text-align:center}
 .unwrap.in{animation:fadeUp .45s ease both}
 @keyframes fadeUp{from{transform:translateY(16px);opacity:0}}
-.u-date{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:2.1rem;line-height:1.05}
+.u-date{margin:0;font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.1rem;line-height:1.05}
 .u-date span{display:block;margin-bottom:6px;font-family:var(--body);font-style:normal;font-size:.75rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
 .u-help{margin:0;color:color-mix(in srgb,var(--cream) 82%,transparent);transition:opacity .3s}
 .u-later{background:none;border:0;padding:6px;font-size:.85rem;color:color-mix(in srgb,var(--cream) 60%,transparent);text-decoration:underline;text-underline-offset:3px;cursor:pointer;transition:opacity .3s}
@@ -159,7 +161,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .g-bow svg{width:100%;height:100%;display:block}
 .g-card{position:absolute;left:34px;right:34px;bottom:20px;height:124px;z-index:1;display:flex;flex-direction:column;align-items:center;padding-top:14px;
   background-color:var(--paperc);background-image:var(--grain);border-radius:3px;outline:1px solid color-mix(in srgb,var(--gold) 70%,transparent);outline-offset:-6px;color:var(--berry)}
-.g-card b{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.6rem;line-height:1.05}
+.g-card b{font-family:var(--serif);font-style:italic;font-weight:700;font-size:2.6rem;line-height:1.05}
 .g-card span{font-family:var(--hand);font-size:1rem;color:var(--inkh)}
 .g-tagw{position:absolute;right:-16px;bottom:50px;z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));transform:rotate(11deg);transform-origin:0 50%}
 .g-tag{position:relative;display:block;padding:7px 12px 7px 22px;background-color:var(--paperc);background-image:var(--grain);
@@ -215,19 +217,29 @@ dialog:focus,dialog:focus-visible{outline:none}
 .tape.tn{background:repeating-linear-gradient(135deg,rgba(63,127,23,.82) 0 7px,rgba(200,16,46,.78) 7px 14px)}
 .x{position:absolute;right:8px;top:8px;z-index:4;border:0;background:none;padding:8px 10px;font-size:.85rem;font-weight:700;color:var(--sh-muted);cursor:pointer;border-radius:999px}
 .x:hover{color:var(--sh-ink)}
-.back{position:absolute;left:8px;top:8px;z-index:4;display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:8px 10px;font-size:.85rem;font-weight:800;color:var(--sh-accent);cursor:pointer;border-radius:999px}
-.back svg{width:14px;height:14px}
+.backbtn{position:absolute;left:8px;top:8px;z-index:4;display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:8px 10px;font-size:.85rem;font-weight:800;color:var(--sh-accent);cursor:pointer;border-radius:999px}
+.backbtn svg{width:14px;height:14px}
 .panel{padding-top:54px}
 .s-head{display:flex;flex-direction:column;align-items:center;gap:2px}
 .s-day{margin:0;font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--sh-accent)}
-.s-date{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:2.2rem;line-height:1.05;color:var(--sh-ink);text-wrap:balance}
+.s-date{margin:0;font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.2rem;line-height:1.05;color:var(--sh-ink);text-wrap:balance}
 .panel .s-date{font-size:1.9rem}
 .s-head::after{content:"";width:64px;height:7px;margin-top:8px;background:radial-gradient(circle,var(--gold) 2.4px,transparent 3px) center/14px 7px repeat-x}
 .s-body,.act{display:flex;flex-direction:column;gap:14px;align-items:stretch}
 .s-body p{margin:0}
-.kick{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.1rem;color:var(--sh-accent)}
-.s-body h3{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.75rem;line-height:1.12;text-wrap:balance}
+.kick{font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.1rem;color:var(--sh-accent)}
+.s-body h3{margin:0;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.75rem;line-height:1.12;text-wrap:balance}
 .how,.meta,.skip{color:var(--sh-muted);font-size:.95rem}
+.rules{display:flex;flex-direction:column;gap:10px}
+.winbadge{position:relative;align-self:center;width:124px;height:136px;margin:16px 0 4px}
+.winbadge::before{content:"";position:absolute;left:50%;top:42%;width:236px;height:236px;margin:-118px 0 0 -118px;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--gold) 55%,transparent) 0 9deg,transparent 9deg 22deg);
+  -webkit-mask:radial-gradient(circle,#000 22%,transparent 68%);mask:radial-gradient(circle,#000 22%,transparent 68%);animation:raySpin 14s linear infinite}
+.winbadge svg{position:relative;width:100%;height:100%;display:block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.22));animation:badgePop .8s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes raySpin{to{transform:rotate(360deg)}}
+@keyframes badgePop{from{transform:scale(.2) rotate(-25deg);opacity:0}}
+.h-emoji{font-size:1.9rem;line-height:1.15;letter-spacing:.06em}
+.s-head .h-emoji,.act .h-emoji{margin:4px 0 2px}
 .skip{font-size:.8rem}
 .hint{font-family:var(--hand);font-size:1.15rem;color:var(--sh-accent)}
 .stage,.after{display:flex;flex-direction:column;gap:12px;align-items:stretch}
@@ -238,7 +250,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .btn:disabled{opacity:.6;cursor:default}
 .btn.ghost{background:transparent;color:var(--sh-accent,#b3263a);box-shadow:inset 0 0 0 1.5px var(--sh-accent,#b3263a)}
 .btn.small{padding:8px 16px;font-size:.9rem}
-.res{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2rem;line-height:1.1}
+.res{font-family:var(--serif);font-style:italic;font-weight:700;font-size:2rem;line-height:1.1}
 .res.nice{color:var(--fir)}
 .outcome{font-family:var(--hand);font-size:1.45rem;line-height:1.25;color:var(--sh-hand)}
 .lost{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:8px;background:color-mix(in srgb,var(--berry) 9%,transparent)}
@@ -262,8 +274,8 @@ dialog:focus,dialog:focus-visible{outline:none}
 .call{display:flex;align-items:center;gap:12px;text-align:left;margin-top:4px;padding:14px 2px 2px;border-top:1.5px dashed var(--sh-dash)}
 .call .tree{flex:none;width:64px;height:72px}
 .call .tree svg{width:100%;height:100%;display:block;overflow:visible}
-.call b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.3rem;line-height:1.12;color:var(--sh-ink);text-wrap:balance}
-.call span.line{display:block;margin-top:3px;font-family:var(--hand);font-size:1.08rem;line-height:1.25;color:var(--sh-hand)}
+.call b{display:block;font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.3rem;line-height:1.16;color:var(--sh-ink);text-wrap:balance}
+.call span.line{display:block;margin-top:8px;font-family:var(--hand);font-size:1.08rem;line-height:1.25;color:var(--sh-hand)}
 .call .pres{transform-box:fill-box;transform-origin:50% 100%;animation:presHop 3s ease-in-out 1.2s infinite}
 @keyframes presHop{0%,68%,100%{transform:none}76%{transform:translateY(-6px) rotate(-6deg)}84%{transform:translateY(0) rotate(4deg)}91%{transform:rotate(-2deg)}}
 .call .tstar{transform-box:fill-box;transform-origin:center;animation:starTw 1.6s ease-in-out infinite alternate}
@@ -320,21 +332,23 @@ dialog:focus,dialog:focus-visible{outline:none}
 .slipin{min-height:0;overflow:hidden}
 .slipbox.done .slipin{overflow:visible}
 .slippad{display:flex;justify-content:center;padding:28px 0 10px}
-.slipw{position:relative;filter:drop-shadow(0 6px 10px rgba(60,40,20,.22))}
+.slipw{position:relative;width:min(300px,100%);filter:drop-shadow(0 6px 10px rgba(60,40,20,.22))}
 .slipw.in{animation:slipUp .6s cubic-bezier(.2,1.25,.4,1) both}
 @keyframes slipUp{from{transform:translateY(-36px) scale(.5);opacity:0}}
-.slip{display:grid;max-width:290px;border:0;padding:16px 30px 14px;cursor:pointer;font:inherit;color:#1f1c17;text-align:center;
+.slip{display:block;width:100%;border:0;padding:18px 28px 16px;cursor:pointer;font:inherit;color:#1f1c17;text-align:center;
   background-color:#fffdf8;background-image:var(--grain);transform:rotate(-1.2deg);
   clip-path:polygon(0 0,100% 0,95% 12%,100% 25%,95% 37%,100% 50%,95% 62%,100% 75%,95% 87%,100% 100%,0 100%,5% 87%,0 75%,5% 62%,0 50%,5% 37%,0 25%,5% 12%)}
 .slip.flip{animation:flipX .44s ease-in-out}
 @keyframes flipX{50%{transform:rotate(-1.2deg) scaleX(0)}}
-.sf{grid-area:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.slipgrid{display:grid;width:100%}
+.sf{grid-area:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0}
 .sf.off{visibility:hidden}
 .sf small{font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--berry)}
-.sf b{font-weight:700;font-size:1.06rem;line-height:1.35}
-.sf.back b{font-family:var(--hand);font-weight:400;font-size:1.6rem;line-height:1.2;color:var(--berry)}
-.sf em{font-family:var(--hand);font-style:normal;font-size:1.05rem;line-height:1.2;color:var(--inkh)}
-.sf i{font-style:normal;font-size:.72rem;color:#6b6254}
+.sf b{display:block;max-width:100%;font-weight:700;font-size:1.06rem;line-height:1.35;text-wrap:balance;overflow-wrap:break-word}
+.sf.back b{font-family:var(--hand);font-weight:400;font-size:1.45rem;line-height:1.22;color:var(--berry)}
+.sf .rule{display:block;width:46px;margin:4px 0 2px;border-top:1.5px dashed rgba(122,90,60,.42)}
+.sf em{display:block;font-family:var(--hand);font-style:normal;font-size:1rem;line-height:1.25;color:#7a6650;text-wrap:balance}
+.sf i{display:block;margin-top:2px;font-style:normal;font-size:.72rem;color:#6b6254}
 .crown{position:absolute;left:-8px;top:-24px;z-index:2;width:58px;height:31px;transform:rotate(-14deg);pointer-events:none}
 .crown svg{width:100%;height:100%;display:block}
 .slipw.in .crown{animation:crownPop .9s cubic-bezier(.2,1.5,.4,1) .2s both}
@@ -391,7 +405,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 /* game premise: win it to open the box */
 .prize{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border:1.5px dashed var(--sh-dash);border-radius:10px;background:color-mix(in srgb,var(--sh-accent) 8%,transparent)}
 .prize .padlock{flex:none;width:34px;height:40px}
-.prize b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.15rem;line-height:1.15;color:var(--sh-ink);text-wrap:balance}
+.prize b{display:block;font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.15rem;line-height:1.15;color:var(--sh-ink);text-wrap:balance}
 .prize span{display:block;margin-top:2px;font-family:var(--hand);font-size:1.05rem;line-height:1.25;color:var(--sh-hand)}
 
 /* save your prize as a picture */
@@ -399,7 +413,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .psave .thumb{flex:none;width:72px;aspect-ratio:4/5;border:0;padding:0;border-radius:6px;overflow:hidden;cursor:zoom-in;background:var(--goldwash);
   box-shadow:0 6px 14px rgba(0,0,0,.25);transform:rotate(-4deg)}
 .psave .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.psave b{display:block;font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.1rem;line-height:1.15;color:var(--sh-ink)}
+.psave b{display:block;font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.1rem;line-height:1.15;color:var(--sh-ink)}
 .psave span{display:block;margin:2px 0 8px;font-size:.85rem;line-height:1.3;color:var(--sh-muted)}
 .psave .btn{align-self:flex-start}
 .viewer .vbox{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;color:var(--cream)}
@@ -442,7 +456,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .padlock .shackle{transform-origin:40px 28px;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
 .padlock.open .shackle{transform:translateY(-6px) rotate(34deg)}
 .code{width:100%;padding:10px 0 10px .35em;border:3px dashed var(--kraft);border-radius:12px;background:#fffcf6;color:var(--ink);
-  font-family:var(--serif);font-style:italic;font-weight:600;font-size:2rem;text-align:center;text-transform:uppercase;letter-spacing:.35em}
+  font-family:var(--serif);font-style:italic;font-weight:700;font-size:2rem;text-align:center;text-transform:uppercase;letter-spacing:.35em}
 .code:focus{outline:none;border-color:var(--sh-accent)}
 .code.good{border-style:solid;border-color:var(--fir);background:var(--fir);color:var(--cream)}
 .code.shake{animation:wiggle .4s}
@@ -454,7 +468,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .t-main{display:flex;flex-direction:column;gap:4px;min-width:0;padding:16px 16px 16px}
 .t-emoji{font-size:1.8rem;line-height:1.1;letter-spacing:.08em}
 .t-kick{font-size:.64rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--berry)}
-.t-title{font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.5rem;line-height:1.1;color:var(--ink);text-wrap:balance}
+.t-title{font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.5rem;line-height:1.1;color:var(--ink);text-wrap:balance}
 .t-detail{font-size:.88rem;line-height:1.35;color:var(--inkh)}
 .t-venue{font-family:var(--hand);font-size:1.3rem;line-height:1.2;color:var(--inkh)}
 .t-stub{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:84px;padding:14px 12px;
@@ -462,7 +476,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .t-stub::before,.t-stub::after{content:"";position:absolute;left:-10px;width:18px;height:18px;border-radius:50%;background:var(--sh-bg,var(--paperc))}
 .t-stub::before{top:-9px}.t-stub::after{bottom:-9px}
 .t-stub small{font-size:.64rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
-.t-stub b{font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.3rem;line-height:1.05}
+.t-stub b{font-family:var(--serif);font-style:italic;font-weight:700;font-size:2.3rem;line-height:1.05}
 .t-stub span{margin-top:6px;font-weight:800;font-size:.9rem;white-space:nowrap}
 
 /* Christmas Day: the premiere */
@@ -477,7 +491,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .marquee::after{background-position:6px 0,6px 100%,0 6px,100% 6px;animation-delay:-.5s}
 @keyframes chase{50%{opacity:.12}}
 .mq-small{font-size:.6rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
-.mq-title{font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.7rem;line-height:1.1;color:#fff4dc;text-shadow:0 0 12px rgba(255,200,120,.45)}
+.mq-title{font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.7rem;line-height:1.1;color:#fff4dc;text-shadow:0 0 12px rgba(255,200,120,.45)}
 .screen{position:relative;aspect-ratio:3/2;border-radius:6px;overflow:hidden;background:#0a0a0a;box-shadow:0 0 0 3px #050505,0 0 26px rgba(255,214,150,.18)}
 .leader{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,#d6cfbf 0,#a39b8a 70%,#5d574c 100%);color:#1a1712}
 @property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
@@ -494,7 +508,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 .titlecard.in{animation:fadeUp 1s ease both}
 .tc-small{font-size:.58rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
 .tc-star{font-family:var(--hand);font-size:.95rem;color:#f2e6cc;margin-top:4px!important}
-.tc-title{font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(1.9rem,9vw,2.5rem);line-height:1;
+.tc-title{font-family:var(--serif);font-style:italic;font-weight:700;font-size:clamp(1.9rem,9vw,2.5rem);line-height:1;
   background:linear-gradient(180deg,#fff3cf,#e2b659 55%,#b98a35);-webkit-background-clip:text;background-clip:text;color:transparent}
 .tc-sub{font-family:var(--hand);font-size:.95rem;color:#f2e6cc}
 .play{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:9px 18px;border-radius:999px;background:linear-gradient(180deg,#f3d27a,#d29f3c);
@@ -554,19 +568,28 @@ dialog:focus,dialog:focus-visible{outline:none}
 .opt.right{background:var(--fir);color:var(--cream);opacity:1;text-decoration:none}
 canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background:var(--spruce);touch-action:none;box-shadow:inset 0 0 0 3px var(--ink)}
 .five{display:grid;gap:5px;justify-content:center}
-.frow{display:grid;grid-template-columns:repeat(5,40px);gap:5px}
-.fc{height:40px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:1.15rem;background:#fffcf6;color:var(--ink);box-shadow:inset 0 0 0 2px var(--kraft)}
+.frow{display:grid;grid-template-columns:repeat(5,40px);gap:5px;perspective:420px}
+.fc{height:40px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:1.15rem;background:#fffcf6;color:var(--ink);box-shadow:inset 0 0 0 2px var(--kraft);transition:box-shadow .12s}
+.fc.filled{box-shadow:inset 0 0 0 2px var(--inkh)}
+.fc.pop{animation:fcPop .15s ease-out}
+@keyframes fcPop{45%{transform:scale(1.16)}}
+.fc.flip{animation:fcFlip .5s ease-in-out}
+@keyframes fcFlip{50%{transform:rotateX(90deg)}}
+.fc.hop{animation:fcHop .55s cubic-bezier(.3,.7,.4,1)}
+@keyframes fcHop{35%{transform:translateY(-14px)}60%{transform:translateY(2px)}80%{transform:translateY(-3px)}}
+.frow.shake{animation:wiggle .4s}
+.key:active{transform:scale(.92)}
 .fc.g,.key.g{background:var(--fir);color:var(--cream);box-shadow:none}
 .fc.y,.key.y{background:var(--gold);color:var(--ink);box-shadow:none}
 .fc.n,.key.n{background:var(--muted);color:var(--cream);box-shadow:none}
 .kb{display:flex;flex-direction:column;gap:5px}
 .krow{display:flex;gap:4px;justify-content:center}
-.key{flex:1 1 0;min-width:0;max-width:38px;height:42px;border:0;border-radius:6px;padding:0;font-weight:800;font-size:.9rem;cursor:pointer;
+.key{transition:background .2s,color .2s;flex:1 1 0;min-width:0;max-width:38px;height:42px;border:0;border-radius:6px;padding:0;font-weight:800;font-size:.9rem;cursor:pointer;
   background:color-mix(in srgb,var(--kraft) 40%,#fffcf6);color:var(--ink)}
 .key.big{flex:1.6 1 0;max-width:60px}
 .cups{position:relative;height:130px}
 .cup{position:absolute;top:22px;width:28%;height:96px;display:grid;place-items:center;border:0;border-radius:12px;padding:0;cursor:pointer;
-  background-color:var(--berry);color:var(--cream);font-family:var(--serif);font-style:italic;font-weight:600;font-size:2.4rem;
+  background-color:var(--berry);color:var(--cream);font-family:var(--serif);font-style:italic;font-weight:700;font-size:2.4rem;
   background-image:repeating-linear-gradient(45deg,transparent 0 10px,color-mix(in srgb,var(--cream) 14%,transparent) 10px 14px);
   box-shadow:inset 0 -6px 0 rgba(0,0,0,.2);transition:left .35s ease-in-out,transform .2s}
 .cup svg{width:58%;height:auto}
@@ -583,10 +606,11 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
 .nb-empty{font-family:var(--hand);font-size:1.2rem;line-height:1.35;color:var(--inkh)}
 .jk-item{align-items:center}
 .jk-w{filter:drop-shadow(0 6px 10px rgba(60,40,20,.2))}
-.jk-slip{max-width:300px;padding:14px 30px 16px;background-color:#fffdf8;background-image:var(--grain);transform:rotate(var(--r,-1deg));
+.jk-w{width:min(300px,100%)}
+.jk-slip{width:100%;padding:16px 28px 18px;background-color:#fffdf8;background-image:var(--grain);transform:rotate(var(--r,-1deg));
   clip-path:polygon(0 0,100% 0,95% 12%,100% 25%,95% 37%,100% 50%,95% 62%,100% 75%,95% 87%,100% 100%,0 100%,5% 87%,0 75%,5% 62%,0 50%,5% 37%,0 25%,5% 12%)}
-.jk-slip b{display:block;font-weight:700;font-size:1rem;line-height:1.35;color:#1f1c17}
-.jk-slip i{display:block;margin-top:6px;font-family:var(--hand);font-style:normal;font-size:1.35rem;line-height:1.2;color:var(--berry)}
+.jk-slip b{display:block;font-weight:700;font-size:1rem;line-height:1.35;color:#1f1c17;text-wrap:balance}
+.jk-slip i{display:block;margin-top:10px;font-family:var(--hand);font-style:normal;font-size:1.3rem;line-height:1.22;color:var(--berry);text-wrap:balance}
 
 /* sparkles and snow bursts */
 .spark,.flake{position:fixed;opacity:0}
@@ -667,7 +691,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     </article>
     <article class="sheet panel" id="panel" hidden>
       <span class="tape" id="pTape"></span>
-      <button class="back" id="backBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4M7.5 4l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to your card</button>
+      <button class="backbtn" id="backBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4M7.5 4l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to your card</button>
       <button class="x" id="pClose" type="button">Close</button>
       <div class="s-body" id="panelBody"></div>
     </article>
@@ -732,7 +756,7 @@ const DAYS = [null,
  /* 3 */ {t:'game', g:'cups',
    note:"Happy Day 3 my wife to be! Open your box and look with your eyes, the clue will lead you to a blooming surprise!",
    joke:["What do you call a bunch of chess players bragging about their games in the hotel lobby?", "Chess nuts boasting in an open foyer."]},
- /* 4 */ {t:'non', prize:"Christmas movie night", nice:"Gill's choice of film", naughty:"Luke's choice of film",
+ /* 4 */ {t:'non', emoji:'🎬🍿', prize:"Christmas movie night", nice:"Gill's choice of film", naughty:"Luke's choice of film",
    note:"That's right, your favourite game is back! Spin the wheel for the big reveal, are you NAUGHTY or NICE? You can't spin twice!",
    joke:["What do you call Will Smith walking in the snow?", "Fresh prints."]},
  /* 5 */ {t:'game', g:'memory', pairs:7, secs:75,
@@ -741,7 +765,7 @@ const DAYS = [null,
  /* 6 */ {t:'lock', code:'GRAVY', emoji:'🎻🍽️', title:"Sunday Strings Roast", detail:"A Sunday roast with a live string quartet", venue:"Diecast", time:"3.30pm",
    note:"You've had a tough weekend, I'm gonna stroke your hair and tell you you're pretty, but first it's time to find your present!",
    joke:["What do you get from eating decorations?", "Tinselitis."]},
- /* 7 */ {t:'non', prize:"Time to relax", nice:"A home spa evening", naughty:"Good back rubs",
+ /* 7 */ {t:'non', emoji:'🧖‍♀️🕯️💆‍♀️', prize:"Time to relax", nice:"A home spa evening", naughty:"Good back rubs",
    note:"Feeling lucky? Spin the wheel to reveal whether you're on Santa's naughty or nice list. One spin only!",
    joke:["What was the name of Kris Jenner's husband that transitioned into a Christmas tree?", "Spruce Jenner."]},
  /* 8 */ {t:'lock', code:'BLEAT', emoji:'🐐🎮', kick:"Ready to play", title:"Goat Simulator", detail:"A new expansion pack for the PS5, bought and ready to go", venue:"On the PS5", stub:"Play now", outcome:"Grab the controller.", label:"game on",
@@ -753,7 +777,7 @@ const DAYS = [null,
  /* 10 */ {t:'game', g:'scramble', word:'CHARCUTERIE', clue:"Meats and cheeses, fa la la la la",
    note:"Tis the season of meats and cheeses, fa la la la la, la la, la, laaaa… always pleases. There's no meat in your box just to clarify. (Yet)",
    joke:["How much did Santa pay for his sleigh?", "Nothing, it was on the house."]},
- /* 11 */ {t:'non', prize:"Takeaway night", nice:"Luke pays", naughty:"A 50/50 split",
+ /* 11 */ {t:'non', emoji:'🥡🍕🍛', prize:"Takeaway night", nice:"Luke pays", naughty:"A 50/50 split",
    note:"SPIN THAT WHEEL! You're getting more turns than Manchester United managers.",
    joke:["How does King Wenceslas like his pizza?", "Deep pan, crisp and even."]},
  /* 12 */ {t:'candy', photo:'pic3.jpg',
@@ -777,7 +801,7 @@ const DAYS = [null,
  /* 18 */ {t:'lock', code:'SMILE', emoji:'📸✨', title:"The Photo Booth", detail:"A photo booth print at Fred Aldous, and we can get it enlarged if we want", venue:"Fred Aldous", stub:"Anytime", outcome:"Practise your best pose.",
    note:"Category is Christmas Realness, go open your box queen. #SANTASBAGRACEUK",
    joke:["My dad used to work in a tiddlywink factory. But he didn't like it.", "He said it was counter productive."]},
- /* 19 */ {t:'non', prize:"A home-cooked meal by Luke", nice:"Gill picks the menu", naughty:"Luke picks the menu",
+ /* 19 */ {t:'non', emoji:'👨‍🍳🍝', prize:"A home-cooked meal by Luke", nice:"Gill picks the menu", naughty:"Luke picks the menu",
    note:"Get your grinch on, it's naughty or nice time! Ludgies!",
    joke:["What is Claudia Winkleman's favourite part of Christmas dinner?", "The taters!"]},
  /* 20 */ {t:'game', g:'drop', goal:8, presents:14, reread:true,
@@ -789,7 +813,7 @@ const DAYS = [null,
  /* 22 */ {t:'lock', code:'CHOIR', emoji:'🎶🍸🍕', title:"Christmas Cracker Carols", detail:"Happy hour on cocktails and pizza!", venue:"Matt & Phred's Jazz Club", time:"7.30pm",
    note:"Another day another treat, ohhh I spoil you. You're worth every penny my darling.",
    joke:["Why are Christmas trees not crack heads?", "They always lose their needles."]},
- /* 23 */ {t:'non', prize:"A very valuable coupon", nice:"A full Yes Day", naughty:"A Yorkshire pudding favour",
+ /* 23 */ {t:'non', emoji:'🎟️✨', prize:"A very valuable coupon", nice:"A full Yes Day", naughty:"A Yorkshire pudding favour",
    note:"Shantay you stay or Sashay away? It's the naughty or nice game time.",
    joke:["What did one Christmas tree say to the other?", "Lighten up!"]},
  /* 24 */ {t:'lock', code:'COMFY', emoji:'🌙🎄', kick:"Your present is", title:"Cosy Christmas Pyjamas", detail:"For snuggling up on Christmas Eve", venue:"Check under the tree", stub:"Tonight", outcome:"Go and have a look under the tree.", label:"cosy",
@@ -906,7 +930,7 @@ const SPARK = 'M12 0C12.9 7.6 16.4 11.1 24 12 16.4 12.9 12.9 16.4 12 24 11.1 16.
 const FLAKE = 'M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M12 5.5l-2.4-2.4M12 5.5l2.4-2.4M12 18.5l-2.4 2.4M12 18.5l2.4 2.4';
 function burstPts(n, R, r, cx, cy) { let s = ''; for (let i = 0; i < n * 2; i++) { const a = Math.PI * i / n - Math.PI / 2, k = i % 2 ? r : R; s += (i ? 'L' : 'M') + (cx + Math.cos(a) * k).toFixed(1) + ' ' + (cy + Math.sin(a) * k).toFixed(1); } return s + 'Z'; }
 const starPts = (cx, cy, R, r) => burstPts(5, R, r, cx, cy);
-const seal = t => { const s = String(t), two = s.length > 1; return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="url(#waxShine)" filter="url(#wobble)"/><circle cx="50" cy="50" r="31" fill="none" stroke="#7a1222" stroke-width="2.2" opacity=".85"/><circle cx="50" cy="50" r="31" fill="none" stroke="#e05a6e" stroke-width=".8" opacity=".5" transform="translate(.8 .8)"/><text x="50" y="${two ? 61 : 63}" text-anchor="middle" font-family="'Bodoni Moda', Georgia, serif" font-style="italic" font-weight="600" font-size="${two ? 32 : 38}" fill="#f6ecd9">${s}</text></svg>`; };
+const seal = t => { const s = String(t), two = s.length > 1; return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="url(#waxShine)" filter="url(#wobble)"/><circle cx="50" cy="50" r="31" fill="none" stroke="#7a1222" stroke-width="2.2" opacity=".85"/><circle cx="50" cy="50" r="31" fill="none" stroke="#e05a6e" stroke-width=".8" opacity=".5" transform="translate(.8 .8)"/><text x="50" y="${two ? 61 : 63}" text-anchor="middle" font-family="'Bodoni Moda', Georgia, serif" font-style="italic" font-weight="700" font-size="${two ? 32 : 38}" fill="#f6ecd9">${s}</text></svg>`; };
 const HEART = 'M0 9C-7 4-11 0-11-4.5-11-8-8.5-10.5-5.5-10.5-3.2-10.5-1.5-9.3 0-7.2 1.5-9.3 3.2-10.5 5.5-10.5 8.5-10.5 11-8 11-4.5 11 0 7 4 0 9Z';
 const SEAL_HEART = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="url(#waxShine)" filter="url(#wobble)"/><circle cx="50" cy="50" r="31" fill="none" stroke="#7a1222" stroke-width="2.2" opacity=".85"/><path d="${HEART}" transform="translate(51 52) scale(1.55)" fill="#e05a6e" opacity=".6"/><path d="${HEART}" transform="translate(50 51) scale(1.55)" fill="#f6ecd9"/></svg>`;
 const BOW = '<svg viewBox="0 0 132 78" aria-hidden="true"><path d="M66 42C46 10 12 6 14 28c2 18 30 20 52 14Z" fill="currentColor"/><path d="M66 42c20-32 54-36 52-14-2 18-30 20-52 14Z" fill="currentColor"/><path d="M66 42C50 26 26 20 26 28c1 8 22 14 40 14Z" fill="#000" opacity=".18"/><path d="M66 42c16-16 40-22 40-14-1 8-22 14-40 14Z" fill="#000" opacity=".18"/><path d="M60 46 48 76l9-4 6 6 3-30Z" fill="currentColor"/><path d="M72 46l12 30-9-4-6 6-3-30Z" fill="currentColor"/><ellipse cx="66" cy="42" rx="11" ry="9" fill="currentColor"/><ellipse cx="66" cy="42" rx="11" ry="9" fill="#000" opacity=".15"/><ellipse cx="63" cy="39" rx="4" ry="2.5" fill="#fff" opacity=".45"/></svg>';
@@ -916,6 +940,7 @@ const BANG = `<svg viewBox="0 0 124 124" aria-hidden="true"><path d="${burstPts(
 const CROWN = '<svg viewBox="0 0 64 34" aria-hidden="true"><path d="M3 31V9l10 10 9-15 10 13 10-13 9 15 10-10v22z" fill="currentColor" stroke="rgba(0,0,0,.2)" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 25h56" stroke="rgba(255,255,255,.55)" stroke-width="1.4"/><path d="M14 19v12M32 17v14M50 19v12" stroke="rgba(0,0,0,.12)" stroke-width="1"/></svg>';
 const CROWN_COLS = [P.gold, P.berry, P.fir, P.plum, P.sky];
 const TASSEL = `<svg viewBox="0 0 24 50" aria-hidden="true"><path d="M12 0v15" stroke="${P.gold}" stroke-width="3"/><circle cx="12" cy="18" r="5" fill="${P.gold}"/><path d="M7.5 22h9l3.5 26H4z" fill="${P.gold}"/><path d="M8 25v21M10.7 25v22M13.3 25v22M16 25v21" stroke="${P.goldD}" stroke-width="1"/></svg>`;
+const ROSETTE = `<svg viewBox="0 0 120 132" aria-hidden="true"><path d="M45 82 33 127l14-8 9 12 8-41Z" fill="${P.berry}"/><path d="M75 82l12 45-14-8-9 12-8-41Z" fill="${P.berryD}"/><path d="${burstPts(18, 52, 44, 60, 56)}" fill="${P.gold}" stroke="${P.goldD}" stroke-width="2" stroke-linejoin="round"/><circle cx="60" cy="56" r="35" fill="#fff6dd" stroke="${P.goldD}" stroke-width="2"/><circle cx="60" cy="56" r="29" fill="none" stroke="${P.gold}" stroke-width="1.6" stroke-dasharray="3 3"/><path d="${starPts(60, 51, 17, 7.4)}" fill="${P.berry}"/><text x="60" y="80" text-anchor="middle" font-family="'Nunito Sans', system-ui, sans-serif" font-weight="800" font-size="8.6" letter-spacing="1.7" fill="${P.goldD}">WINNER</text></svg>`;
 const PLAY_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>';
 const ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const BELL_MONO = '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="22" y="3" width="4" height="6" rx="2" fill="currentColor"/><path d="M24 8c-7.5 0-11 6-11 13v7l-4 6h30l-4-6v-7c0-7-3.5-13-11-13z" fill="currentColor"/><circle cx="24" cy="38.5" r="3.6" fill="currentColor"/></svg>';
@@ -1153,7 +1178,7 @@ function crackerHTML(d, c) {
     <div class="cstage"><button class="cracker${done ? ' popped still' : ''}" id="cracker" type="button" aria-label="Pull the cracker"${done ? ' disabled' : ''}>${l}${r}<span class="c-band">Pull me</span></button><span class="bang" id="bang">${BANG}</span><p class="meta crk-hint" id="crkHint"${done ? ' hidden' : ''}>Tap it, or grab an end and pull</p></div>
     <div class="slipbox${done ? ' open done still' : ''}" id="slipbox"><div class="slipin"><div class="slippad">
       <div class="slipw" id="slipw"><span class="crown" style="color:${CROWN_COLS[d % 5]}">${CROWN}</span>
-        <button class="slip" id="slip" type="button" aria-label="Flip the joke over"><span class="sf front"><small>Cracker joke</small><b>${c.joke[0]}</b><i>Tap for the punchline</i></span><span class="sf back off"><b>${c.joke[1]}</b><em>${quip}</em><i>Tap to flip it back</i></span></button></div>
+        <button class="slip" id="slip" type="button" aria-label="Flip the joke over"><span class="slipgrid"><span class="sf front"><small>Cracker joke</small><b>${c.joke[0]}</b><i>Tap for the punchline</i></span><span class="sf back off"><b>${c.joke[1]}</b><span class="rule"></span><em>${quip}</em><i>Tap to flip it back</i></span></span></button></div>
     </div></div></div>
   </div>`;
 }
@@ -1334,21 +1359,23 @@ function wirePolaroidAuto() {
 /* ---------- game days ---------- */
 function gamePanel(d, c, p) {
   const G = GAMES[c.g];
-  p.innerHTML = `<header class="s-head"><p class="s-day">Today's game</p><h2 class="s-date">${G.title}</h2></header>
-    <p class="how">${G.how(c)}</p>${c.hint ? `<p class="hint">${c.hint}</p>` : ''}
+  p.innerHTML = `<header class="s-head"><p class="s-day" id="gday">Today's game</p><h2 class="s-date" id="gtitle">${G.title}</h2></header>
+    <div class="rules" id="rules"><p class="how">${G.how(c)}</p>${c.hint ? `<p class="hint">${c.hint}</p>` : ''}</div>
     <div class="prize" id="prize">${padlock('padlock')}<div><b>Win this game to open Calendar Box ${d}</b><span>It's under the tree, but it stays shut until you've won!</span></div></div>
-    <div class="stage" id="stage"></div><div class="after" id="after"></div>`;
+    <div class="stage game" id="stage"></div><div class="after" id="after"></div>`;
   const stage = p.querySelector('#stage'), after = p.querySelector('#after'), prize = p.querySelector('#prize');
+  const showRules = on => { p.querySelector('#rules').hidden = !on; p.querySelector('#gday').textContent = on ? "Today's game" : G.title; p.querySelector('#gtitle').textContent = on ? G.title : 'You did it!'; };
   const start = () => {
-    stopGame(); after.innerHTML = ''; stage.innerHTML = ''; sfx.click();
+    stopGame(); after.innerHTML = ''; stage.innerHTML = ''; showRules(true); sfx.click();
     cleanup = G.run(stage, c,
       () => {
-        stopGame(); state.won[d] = true; save(); sfx.win(); shower(50); prize.hidden = true; stage.innerHTML = '';
-        after.innerHTML = `<p class="res nice">You did it!</p>` + call(d, 'You won it fair and square. Go and get it from under the tree.', 'fresh')
+        stopGame(); state.won[d] = true; save(); sfx.win(); shower(60); prize.hidden = true; stage.innerHTML = ''; showRules(false);
+        after.innerHTML = `<div class="winbadge">${ROSETTE}</div>` + call(d, "You won it fair and square. It's waiting for you under the tree.", 'fresh')
           + `<button class="btn" type="button" id="toCard">Back to your card</button><button class="btn ghost small" type="button" id="again">Play again</button>`;
         after.querySelector('#again').onclick = start; after.querySelector('#toCard').onclick = closePanel;
         dlg.scrollTo({top:0, behavior: reduced ? 'auto' : 'smooth'});
-        plater(() => sparkAt(after.querySelector('.tree'), 18), 600);
+        plater(() => sparkAt(after.querySelector('.winbadge'), 30), 350);
+        plater(() => sparkAt(after.querySelector('.tree'), 18), 900);
       },
       msg => { stopGame(); sfx.wrong(); after.innerHTML = `<div class="lost"><p>${msg}</p>${state.won[d] ? '' : `<p class="meta">Calendar Box ${d} stays shut until you win.</p>`}<button class="btn" type="button" id="again">Have another go</button></div>`; after.querySelector('#again').onclick = start; });
   };
@@ -1357,14 +1384,14 @@ function gamePanel(d, c, p) {
   stage.querySelector('#play').onclick = start;
 }
 function gameDone(d, c, act) {
-  act.innerHTML = `<p class="kick">Today's game: ${GAMES[c.g].title}</p><p class="res nice">You won!</p>` + call(d, 'You won it fair and square. Go and get it from under the tree.') + `<button class="btn ghost small" type="button" id="replay">Play again</button>`;
+  act.innerHTML = `<p class="kick">Today's game: ${GAMES[c.g].title}</p><p class="res nice">You won!</p>` + call(d, "You won it fair and square. It's waiting for you under the tree.") + `<button class="btn ghost small" type="button" id="replay">Play again</button>`;
   act.querySelector('#replay').onclick = () => openPanel(d, c, gamePanel);
 }
 
 /* ---------- Naughty or Nice days ---------- */
 function nonPanel(d, c, p) {
   const segs = [0, 1, 2, 3, 4, 5, 6, 7].map(i => `<span style="transform:rotate(${i * 45 + 22.5}deg)"><i>${i % 2 ? 'Naughty' : 'Nice'}</i></span>`).join('');
-  p.innerHTML = `<header class="s-head"><p class="s-day">Naughty or Nice</p><h2 class="s-date">${c.prize}</h2></header>
+  p.innerHTML = `<header class="s-head"><p class="s-day">Naughty or Nice</p>${c.emoji ? `<p class="h-emoji">${c.emoji}</p>` : ''}<h2 class="s-date">${c.prize}</h2></header>
     <div class="stakes"><div class="stake nice"><span>Nice</span><b>${c.nice}</b></div><div class="stake naughty"><span>Naughty</span><b>${c.naughty}</b></div></div>
     <div class="wheelbox"><div class="pointer" id="ptr">${POINTER}</div><div class="wheelclip"><div class="wheel" id="wheel">${segs}</div></div><div class="hub">${seal('?')}</div><div class="verdict" id="verdict" hidden></div></div>
     <div class="after" id="after"><button class="btn" type="button" id="spin">Spin the wheel</button><p class="meta">One spin. No do-overs.</p></div>`;
@@ -1403,7 +1430,7 @@ function nonPanel(d, c, p) {
 }
 function nonDone(d, c, act) {
   const r = state.non[d], nice = r.r === 'nice';
-  act.innerHTML = `<p class="kick">Naughty or Nice</p><span class="mini-verdict ${r.r}">${nice ? 'Nice' : 'Naughty'}</span><p class="outcome">${c.prize}: <b>${c[r.r]}</b></p>`
+  act.innerHTML = `<p class="kick">Naughty or Nice</p>${c.emoji ? `<p class="h-emoji">${c.emoji}</p>` : ''}<span class="mini-verdict ${r.r}">${nice ? 'Nice' : 'Naughty'}</span><p class="outcome">${c.prize}: <b>${c[r.r]}</b></p>`
     + saveRow(c) + call(d, "Go and claim your prize. It's waiting under the tree.") + `<button class="btn ghost small" type="button" id="seeWheel">See the wheel again</button>`;
   wireSave(act, d, c); act.querySelector('#seeWheel').onclick = () => openPanel(d, c, nonPanel);
 }
@@ -1448,7 +1475,7 @@ function foil(d, c, p) {
   x.fillStyle = g; x.fillRect(0, 0, W, H);
   for (let i = 0; i < 300; i++) { x.fillStyle = 'rgba(255,255,255,' + (Math.random() * .4).toFixed(2) + ')'; x.fillRect(Math.random() * W, Math.random() * H, 1.6, 1.6); }
   x.fillStyle = 'rgba(92,60,8,.85)'; x.textAlign = 'center'; x.textBaseline = 'middle';
-  x.font = 'italic 600 26px "Bodoni Moda", Georgia, serif'; x.fillText('Scratch here', W / 2, H / 2 - 8);
+  x.font = 'italic 700 26px "Bodoni Moda", Georgia, serif'; x.fillText('Scratch here', W / 2, H / 2 - 8);
   x.font = '700 13px "Nunito Sans", system-ui, sans-serif'; x.fillText('use your finger', W / 2, H / 2 + 20);
   x.font = '22px Georgia, serif'; x.fillText('★', W / 2 - 96, H / 2 - 6); x.fillText('★', W / 2 + 96, H / 2 - 6);
   x.globalCompositeOperation = 'destination-out'; x.lineWidth = 46; x.lineCap = 'round'; x.lineJoin = 'round';
@@ -1547,7 +1574,7 @@ async function makeCoupon(d, c) {
   const key = d + ':' + (c.t === 'non' ? state.non[d].r : 'ticket');
   if (coupons[key]) return coupons[key];
   if (document.fonts && document.fonts.load) {
-    const loads = ['italic 600 80px "Bodoni Moda"', '400 60px Kalam', '800 40px "Nunito Sans"', '700 40px "Nunito Sans"'].map(f => document.fonts.load(f).catch(() => {}));
+    const loads = ['italic 700 80px "Bodoni Moda"', '400 60px Kalam', '800 40px "Nunito Sans"', '700 40px "Nunito Sans"'].map(f => document.fonts.load(f).catch(() => {}));
     await Promise.race([Promise.all(loads), new Promise(r => setTimeout(r, 2500))]);
   }
   const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
@@ -1568,6 +1595,13 @@ function wrapLines(x, text, maxW) {
   words.forEach(w => { const t = line ? line + ' ' + w : w; if (x.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; });
   if (line) lines.push(line); return lines;
 }
+/* same number of lines, but as even as possible ("Christmas / movie night", not "Christmas movie / night") */
+function wrapBalanced(x, text, maxW) {
+  const base = wrapLines(x, text, maxW); if (base.length < 2) return base;
+  let lo = 0, hi = maxW;
+  while (hi - lo > 4) { const mid = (lo + hi) / 2; if (wrapLines(x, text, mid).length > base.length) lo = mid; else hi = mid; }
+  return wrapLines(x, text, hi);
+}
 function roundRect(x, l, t, w, h, r) { x.beginPath(); x.moveTo(l + r, t); x.arcTo(l + w, t, l + w, t + h, r); x.arcTo(l + w, t + h, l, t + h, r); x.arcTo(l, t + h, l, t, r); x.arcTo(l, t, l + w, t, r); x.closePath(); }
 function couponShape(x, l, t, w, h, r, n) {
   const step = h / n; x.beginPath(); x.moveTo(l, t); x.lineTo(l + w, t);
@@ -1584,6 +1618,11 @@ function ticketShape(x, l, t, w, h, r, cy, nr) {
   x.lineTo(l, t + r); x.arcTo(l, t, l + r, t, r); x.closePath();
 }
 function sparkleAt(x, cx, cy, s, col) { x.save(); x.translate(cx - s / 2, cy - s / 2); x.scale(s / 24, s / 24); x.fillStyle = col; x.fill(new Path2D(SPARK)); x.restore(); }
+/* Bodoni is drawn at a small design size and scaled up, so its thin strokes stay sturdy like on the page */
+const SERIF_DS = 18;
+const serifFont = x => { x.font = `italic 700 ${SERIF_DS}px ${F.serif}`; };
+const serifLines = (x, text, px, maxW) => { serifFont(x); return wrapBalanced(x, text, maxW * SERIF_DS / px); };
+function serifFill(x, text, cx, y, px) { const k = px / SERIF_DS; serifFont(x); x.save(); x.translate(cx, y); x.scale(k, k); x.fillText(text, 0, 0); x.restore(); }
 const F = {serif:'"Bodoni Moda", Georgia, serif', hand:'Kalam, "Bradley Hand", cursive', body:'"Nunito Sans", system-ui, sans-serif', emoji:'"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'};
 function drawNonCoupon(x, W, H, d, c) {
   const r = state.non[d].r, nice = r === 'nice', green = P.grinch, gold = P.gold;
@@ -1594,20 +1633,22 @@ function drawNonCoupon(x, W, H, d, c) {
   const L = 90, T = 160, CW = W - 180, CH = 1010;
   x.save(); x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = 50; x.shadowOffsetY = 20; x.fillStyle = '#f8eedc'; couponShape(x, L, T, CW, CH, 20, 9); x.fill(); x.restore();
   x.setLineDash([16, 12]); x.lineWidth = 4; x.strokeStyle = green; roundRect(x, L + 42, T + 42, CW - 84, CH - 84, 20); x.stroke(); x.setLineDash([]);
-  x.fillStyle = green; x.font = `800 30px ${F.body}`; spaced(x, 'NAUGHTY OR NICE COUPON', W / 2, T + 130, 6);
+  const em = !!c.emoji;
+  x.fillStyle = green; x.font = `800 30px ${F.body}`; spaced(x, 'NAUGHTY OR NICE COUPON', W / 2, T + (em ? 112 : 130), 6);
+  if (em) { x.font = `84px ${F.emoji}`; x.fillText(c.emoji, W / 2, T + 212); }
   const word = nice ? 'NICE' : 'NAUGHTY', col = nice ? '#a8741a' : green;
-  x.save(); x.translate(W / 2, T + 300); x.rotate(-.1);
+  x.save(); x.translate(W / 2, T + (em ? 372 : 300)); x.rotate(-.1);
   x.font = `800 118px ${F.body}`; const tw = spacedWidth(x, word, 10) + 90;
   x.strokeStyle = col; x.lineWidth = 9; roundRect(x, -tw / 2, -100, tw, 168, 26); x.stroke();
   x.lineWidth = 4; roundRect(x, -tw / 2 + 16, -84, tw - 32, 136, 16); x.stroke();
   x.fillStyle = col; spaced(x, word, 0, 26, 10); x.restore();
   /* the prize sits centred between the stamp and the small print, and shrinks if it's long */
-  const top = T + 420, bottom = T + CH - 196, maxW = CW - 180;
+  const top = T + (em ? 484 : 420), bottom = T + CH - 196, maxW = CW - 180;
   let pf = 76, rf = 68, pl, rl, total;
-  const fit = () => { x.font = `italic 600 ${pf}px ${F.serif}`; pl = wrapLines(x, c.prize, maxW); x.font = `400 ${rf}px ${F.hand}`; rl = wrapLines(x, c[r], maxW); total = pl.length * pf * 1.14 + 18 + rl.length * rf * 1.18; };
+  const fit = () => { pl = serifLines(x, c.prize, pf, maxW); x.font = `400 ${rf}px ${F.hand}`; rl = wrapBalanced(x, c[r], maxW); total = pl.length * pf * 1.14 + 18 + rl.length * rf * 1.18; };
   fit(); while (total > bottom - top && pf > 52) { pf -= 6; rf -= 5; fit(); }
   let y = top + Math.max(0, (bottom - top - total) / 2);
-  x.fillStyle = P.ink; x.font = `italic 600 ${pf}px ${F.serif}`; pl.forEach(l => { x.fillText(l, W / 2, y + pf * .86); y += pf * 1.14; });
+  x.fillStyle = P.ink; pl.forEach(l => { serifFill(x, l, W / 2, y + pf * .86, pf); y += pf * 1.14; });
   y += 18; x.fillStyle = P.berry; x.font = `400 ${rf}px ${F.hand}`; rl.forEach(l => { x.fillText(l, W / 2, y + rf * .9); y += rf * 1.18; });
   if (bottom - y > 56) [-64, 0, 64].forEach((dx, i) => sparkleAt(x, W / 2 + dx, y + 40, i === 1 ? 34 : 22, i === 1 ? gold : green));
   x.fillStyle = '#6b6254'; x.font = `700 30px ${F.body}`;
@@ -1630,19 +1671,19 @@ function drawTicketCoupon(x, W, H, d, c) {
   const top = T + 48, bottom = cut - 44, kick = (c.kick || "You're going to").toUpperCase();
   let ef = c.emoji ? 110 : 0, tf = 80, tl, dl, total;
   const fit = () => {
-    x.font = `italic 600 ${tf}px ${F.serif}`; tl = wrapLines(x, c.title, TW - 160);
-    x.font = `700 36px ${F.body}`; dl = c.detail ? wrapLines(x, c.detail, TW - 200) : [];
+    tl = serifLines(x, c.title, tf, TW - 160);
+    x.font = `700 36px ${F.body}`; dl = c.detail ? wrapBalanced(x, c.detail, TW - 200) : [];
     total = (ef ? ef * 1.2 + 18 : 0) + 44 + tl.length * tf * 1.1 + (dl.length ? 16 + dl.length * 47 : 0) + (c.venue ? 20 + 72 : 0);
   };
   fit(); while (total > bottom - top && tf > 56) { tf -= 6; if (ef) ef = Math.max(80, ef - 8); fit(); }
   let y = top + Math.max(0, (bottom - top - total) / 2);
   if (ef) { x.font = `${ef}px ${F.emoji}`; x.fillText(c.emoji, W / 2, y + ef * .92); y += ef * 1.2 + 18; }
   x.fillStyle = '#8c1a2b'; x.font = `800 30px ${F.body}`; spaced(x, kick, W / 2, y + 30, 6); y += 44;
-  x.fillStyle = P.ink; x.font = `italic 600 ${tf}px ${F.serif}`; tl.forEach(l => { x.fillText(l, W / 2, y + tf * .88); y += tf * 1.1; });
+  x.fillStyle = P.ink; tl.forEach(l => { serifFill(x, l, W / 2, y + tf * .88, tf); y += tf * 1.1; });
   if (dl.length) { y += 16; x.fillStyle = '#3a2a1c'; x.font = `700 36px ${F.body}`; dl.forEach(l => { x.fillText(l, W / 2, y + 36); y += 47; }); }
   if (c.venue) { y += 20; x.fillStyle = '#8c1a2b'; x.font = `400 62px ${F.hand}`; x.fillText(c.venue, W / 2, y + 56); }
   x.fillStyle = '#5c3c08'; x.font = `800 30px ${F.body}`; spaced(x, weekday(d).toUpperCase(), W / 2, cut + 82, 6);
-  x.fillStyle = P.ink; x.font = `italic 600 86px ${F.serif}`; x.fillText(ord(d) + ' December', W / 2, cut + 176);
+  x.fillStyle = P.ink; serifFill(x, ord(d) + ' December', W / 2, cut + 176, 86);
   x.fillStyle = '#8c1a2b'; x.font = `800 44px ${F.body}`; x.fillText(c.time || c.stub || '', W / 2, cut + 246);
   x.fillStyle = '#f2cf78'; x.font = `400 52px ${F.hand}`; x.fillText('Made for ' + TO + ' by ' + FROM + ' x', W / 2, H - 70);
 }
@@ -1800,36 +1841,49 @@ const GAMES = {
   }},
  five: { title:'Festive five', how: () => "Guess the five-letter word in six goes. Green means right letter, right place. Gold means it's in the word but somewhere else.",
   run(stage, c, win, lose) {
-    const ans = c.word; let row = 0, cur5 = '', done = false, t;
+    const ans = c.word, ts = [], STEP = 300; let row = 0, cur5 = '', done = false, busy = false;
     stage.innerHTML = `<div class="five">${'<div class="frow">' + '<span class="fc"></span>'.repeat(5) + '</div>'}</div><p class="meta" id="fm">Type a word, then press Enter.</p><div class="kb"></div>`;
     const five = stage.querySelector('.five'); five.innerHTML = five.innerHTML.repeat(6);
-    const rows = [...five.querySelectorAll('.frow')], kb = stage.querySelector('.kb'), keys = {};
+    const rows = [...five.querySelectorAll('.frow')], kb = stage.querySelector('.kb'), keys = {}, msg = t => { const m = stage.querySelector('#fm'); if (m) m.textContent = t; };
     ['QWERTYUIOP', 'ASDFGHJKL', '↵ZXCVBNM⌫'].forEach(r => { const dv = document.createElement('div'); dv.className = 'krow';
       r.split('').forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'key' + (k === '↵' || k === '⌫' ? ' big' : ''); b.textContent = k === '↵' ? 'Enter' : k;
         b.setAttribute('aria-label', k === '↵' ? 'Enter' : k === '⌫' ? 'Delete' : k); b.onclick = () => press(k); keys[k] = b; dv.append(b); });
       kb.append(dv); });
-    const paintRow = () => [...rows[row].children].forEach((cell, i) => cell.textContent = cur5[i] || '');
-    function press(k) { if (done) return;
-      if (k === '⌫') cur5 = cur5.slice(0, -1);
-      else if (k === '↵') return submit();
-      else if (cur5.length < 5) { cur5 += k; sfx.flip(); }
-      paintRow(); }
+    const restart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+    /* typed letters pop into their tile */
+    const paintRow = popAt => [...rows[row].children].forEach((cell, i) => { cell.textContent = cur5[i] || ''; cell.classList.toggle('filled', !!cur5[i]); if (i === popAt) restart(cell, 'pop'); });
+    function press(k) { if (done || busy) return;
+      if (k === '⌫') { if (cur5) { cur5 = cur5.slice(0, -1); paintRow(-1); } return; }
+      if (k === '↵') return submit();
+      if (cur5.length < 5) { cur5 += k; sfx.flip(); paintRow(cur5.length - 1); } }
     function submit() {
-      if (cur5.length < 5) { $('#fm').textContent = 'It needs five letters.'; return; }
-      const res = Array(5).fill('n'), pool = {};
-      for (let i = 0; i < 5; i++) { if (cur5[i] === ans[i]) res[i] = 'g'; else pool[ans[i]] = (pool[ans[i]] || 0) + 1; }
-      for (let i = 0; i < 5; i++) if (res[i] !== 'g' && pool[cur5[i]]) { res[i] = 'y'; pool[cur5[i]]--; }
-      [...rows[row].children].forEach((cell, i) => { cell.classList.add(res[i]); const k = keys[cur5[i]];
-        if (res[i] === 'g') k.className = 'key g'; else if (res[i] === 'y' && !k.classList.contains('g')) k.className = 'key y'; else if (res[i] === 'n' && k.className === 'key') k.className = 'key n'; });
-      if (cur5 === ans) { done = true; t = setTimeout(win, 500); return; }
-      row++; cur5 = ''; sfx.click();
-      if (row === 6) { done = true; lose('Out of guesses. Here is a hint: it starts with ' + ans[0] + '.'); }
-      else $('#fm').textContent = (6 - row) + (6 - row === 1 ? ' go left.' : ' goes left.');
+      if (cur5.length < 5) { msg('It needs five letters.'); restart(rows[row], 'shake'); sfx.wrong(); return; }
+      const guess = cur5, res = Array(5).fill('n'), pool = {}, cells = [...rows[row].children];
+      for (let i = 0; i < 5; i++) { if (guess[i] === ans[i]) res[i] = 'g'; else pool[ans[i]] = (pool[ans[i]] || 0) + 1; }
+      for (let i = 0; i < 5; i++) if (res[i] !== 'g' && pool[guess[i]]) { res[i] = 'y'; pool[guess[i]]--; }
+      /* the tiles turn over one at a time, ticking as each colour lands */
+      busy = true;
+      cells.forEach((cell, i) => {
+        ts.push(setTimeout(() => restart(cell, 'flip'), i * STEP));
+        ts.push(setTimeout(() => { cell.classList.add(res[i]); fx([res[i] === 'g' ? 84 : res[i] === 'y' ? 79 : 67], 0, {dur:.16, vol:.12, type:'triangle'}); }, i * STEP + 250));
+      });
+      ts.push(setTimeout(() => {
+        guess.split('').forEach((ch, i) => { const k = keys[ch];
+          if (res[i] === 'g') k.className = 'key g'; else if (res[i] === 'y' && !k.classList.contains('g')) k.className = 'key y'; else if (res[i] === 'n' && k.className === 'key') k.className = 'key n'; });
+        if (guess === ans) {
+          done = true; msg(['First go! Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'][row]);
+          cells.forEach((cell, i) => ts.push(setTimeout(() => restart(cell, 'hop'), i * 100)));
+          ts.push(setTimeout(win, 1300)); return;
+        }
+        row++; cur5 = ''; busy = false;
+        if (row === 6) { done = true; lose('Out of guesses. Here is a hint: it starts with ' + ans[0] + '.'); }
+        else msg((6 - row) + (6 - row === 1 ? ' go left.' : ' goes left.'));
+      }, 4 * STEP + 560));
     }
     const onKey = e => { if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.key === 'Enter') { e.preventDefault(); press('↵'); } else if (e.key === 'Backspace') press('⌫'); else if (/^[a-zA-Z]$/.test(e.key)) press(e.key.toUpperCase()); };
     document.addEventListener('keydown', onKey);
-    return () => { done = true; clearTimeout(t); document.removeEventListener('keydown', onKey); };
+    return () => { done = true; ts.forEach(clearTimeout); document.removeEventListener('keydown', onKey); };
   }},
  cups: { title:'Find the star', how: () => 'Watch which box the star goes in, keep your eye on it while they shuffle, then pick. Three rounds, each one faster.',
   run(stage, c, win, lose) {
