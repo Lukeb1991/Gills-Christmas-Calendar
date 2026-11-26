@@ -125,6 +125,38 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
   box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 42%,transparent);font-family:var(--hand);font-size:1.05rem;line-height:1.3;color:color-mix(in srgb,var(--cream) 88%,var(--gold))}
 .sleeps b{font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.22em;line-height:1;color:var(--gold)}
 .sleeps svg{flex:none;width:15px;height:15px;color:var(--gold)}
+
+/* the snow globe: a little one at the bottom of the homepage, and a big one to shake */
+.globehome{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:8px}
+.sglobe{--gd:104px;position:relative;display:flex;flex-direction:column;align-items:center;border:0;padding:0;background:none;color:inherit;font:inherit;cursor:pointer;
+  transform-origin:50% 100%;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.sglobe.big{--gd:min(300px,74vw,50vh)}
+.sglobe::after{content:"";position:absolute;z-index:-1;left:50%;bottom:calc(var(--gd) * -.05);width:calc(var(--gd) * 1.2);height:calc(var(--gd) * .12);transform:translateX(-50%);
+  border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.5),transparent)}
+.sglobe.wob{animation:gWob .7s cubic-bezier(.3,1.4,.5,1)}
+@keyframes gWob{18%{transform:rotate(-7deg)}42%{transform:rotate(6deg)}66%{transform:rotate(-3deg)}86%{transform:rotate(1deg)}}
+.g-dome{position:relative;display:block;width:var(--gd);height:var(--gd);border-radius:50%;overflow:hidden;background:#2a2230;isolation:isolate;
+  box-shadow:0 0 0 calc(var(--gd) * .014) rgba(255,255,255,.32),0 calc(var(--gd) * .04) calc(var(--gd) * .12) rgba(0,0,0,.4)}
+.g-scene,.g-drift,.g-snow{position:absolute;inset:0;display:block;width:100%;height:100%}
+.g-scene{object-fit:cover}
+.g-miss{position:absolute;inset:18% 14%;display:grid;place-items:center;font-size:.72rem;line-height:1.3;color:var(--cream);text-align:center}
+.g-glass{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 31% 22%,rgba(255,255,255,.52) 0,rgba(255,255,255,.16) 8%,transparent 21%),radial-gradient(circle at 74% 79%,rgba(255,255,255,.13),transparent 25%);
+  box-shadow:inset 0 0 calc(var(--gd) * .1) rgba(10,8,40,.6),inset calc(var(--gd) * -.04) calc(var(--gd) * -.05) calc(var(--gd) * .1) rgba(255,255,255,.1)}
+.g-glass::before{content:"";position:absolute;inset:6.5%;border-radius:50%;border:calc(var(--gd) * .013) solid transparent;border-top-color:rgba(255,255,255,.45);border-left-color:rgba(255,255,255,.16);transform:rotate(-26deg)}
+.g-base{position:relative;z-index:1;display:block;width:calc(var(--gd) * 1.04);height:calc(var(--gd) * .3);margin-top:calc(var(--gd) * -.1);
+  background:linear-gradient(90deg,rgba(0,0,0,.28),transparent 24%,rgba(255,255,255,.14) 42%,transparent 62%,rgba(0,0,0,.34)),linear-gradient(#cd3646,#8a1625);
+  -webkit-clip-path:polygon(9% 0,91% 0,100% 100%,0 100%);clip-path:polygon(9% 0,91% 0,100% 100%,0 100%)}
+.g-base::before,.g-base::after{content:"";position:absolute;left:0;right:0;background:linear-gradient(#f8dc8c,#cf9b42 55%,#9a6f28)}
+.g-base::before{top:0;height:17%}
+.g-base::after{bottom:0;height:11%}
+.g-plaque{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);padding:.12em .75em .06em;border-radius:.35em;background:linear-gradient(#fdf4e1,#ead5ac);color:#8a1625;
+  font-family:var(--hand);font-size:calc(var(--gd) * .1);line-height:1.15;white-space:nowrap;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px rgba(0,0,0,.35)}
+.g-cap{margin:0;font-family:var(--hand);font-size:1.05rem;color:color-mix(in srgb,var(--gold) 82%,var(--cream))}
+.globe-dlg .gbox{display:flex;flex-direction:column;align-items:center;gap:14px;padding-block:5vh 6px;color:var(--cream);text-align:center}
+.globe-dlg .sglobe{margin-bottom:10px}
+.g-hint{margin:8px 0 0;display:inline-flex;align-items:center;gap:8px;font-size:.95rem;line-height:1.35;color:color-mix(in srgb,var(--cream) 84%,transparent)}
+.g-hint .shakeico{color:var(--gold)}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
   background:var(--spruce);border-radius:14px;padding:10px 14px}
 .bar p{margin:0;min-width:0;flex:1 1 200px;font-weight:700}
@@ -855,6 +887,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     <button class="pill" id="elfOff" type="button">Leave elf mode</button>
   </div>
   <main class="grid" id="grid"></main>
+  <div class="globehome" id="globeHome"></div>
   <footer><button class="foot" id="foot" type="button">Made for Gill by Luke x</button></footer>
 </div>
 <div id="toast" role="status" hidden></div>
@@ -920,6 +953,16 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
       <p class="vhelp">Press and hold the picture to save it to your phone.</p>
       <button class="btn" id="vSave" type="button">Save to your phone</button>
       <button class="u-later" id="vClose" type="button">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="pd globe-dlg" id="globeDlg" tabindex="-1" aria-label="Our snow globe">
+  <div class="door-wrap">
+    <div class="gbox">
+      <div id="globeBigWrap"></div>
+      <p class="g-hint" id="gHint"></p>
+      <button class="u-later" id="gClose" type="button">Close</button>
     </div>
   </div>
 </dialog>
@@ -1041,6 +1084,10 @@ const STRIP = {
   focus:{1:[.45, .64], 9:[.52, .5], 17:[.5, .62], 21:[.5, .42]},
   shots:[[.053, .080, .421, .349], [.524, .080, .421, .349], [.053, .548, .421, .349], [.524, .548, .421, .349]]
 };
+/* From Boxing Day, the countdown under the title counts down to the wedding instead. */
+const WEDDING = {day:12, month:6, year:2027};
+/* The snow globe at the bottom of the homepage: the photo inside it and the words on its little plaque. */
+const GLOBE = {photo:'globe.jpg', plaque:'Gill & Luke', alt:'Gill and Luke in front of a Christmas tree'};
 /* ============ end of the bit to edit ============ */
 
 const $ = s => document.querySelector(s);
@@ -1197,7 +1244,7 @@ $('#gBow').innerHTML = BOW;
 $('#gTag').textContent = 'for ' + TO;
 
 /* ---------- sparkles and snow ---------- */
-const dlg = $('#door'), notesDlg = $('#notes'), jokesDlg = $('#jokes'), viewer = $('#viewer'), fxl = $('#fx');
+const dlg = $('#door'), notesDlg = $('#notes'), jokesDlg = $('#jokes'), viewer = $('#viewer'), globeDlg = $('#globeDlg'), fxl = $('#fx');
 const fxHost = () => dlg.open ? fxl : document.body;
 function sparkAt(el, n, dy) {
   if (reduced || !el || !el.isConnected) return;
@@ -1314,14 +1361,23 @@ function paintHeader() {
   const m = mode();
   $('#sub').textContent = m === 'eve' ? "Santa's on his way. One more sleep, " + TO + '.'
     : m === 'after' ? (state.fin ? "Every door's open, and every one was for you." : "Every door's open. But there's one more…") : SUB_TEXT;
-  /* the countdown, until Christmas Day (on Christmas Eve night the line above already says one more sleep) */
-  const n = sleepsLeft(), sl = $('#sleeps');
-  sl.hidden = n < 0 || m === 'after' || m === 'eve';
+  /* the countdown: to Christmas Day (on Christmas Eve night the line above already says one more sleep), then from Boxing Day to the wedding */
+  const sl = $('#sleeps');
+  if (m === 'after') {
+    const w = sleepsTo(new Date(WEDDING.year, WEDDING.month - 1, WEDDING.day));
+    sl.hidden = w < 0;
+    sl.innerHTML = RING_ICON + (w === 0 ? "It's our wedding day!" : w === 1 ? '<b>1</b> more sleep till I marry you!' : `<b>${w}</b> sleeps till I marry you`);
+    return;
+  }
+  const n = sleepsTo(new Date(YEAR, 11, 25));
+  sl.hidden = n < 0 || m === 'eve';
   sl.innerHTML = n === 0 ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${SPARK}"/></svg>No more sleeps. It's Christmas!`
     : MOON_ICON + (n === 1 ? '<b>1</b> more sleep till Christmas!' : `<b>${n}</b> sleeps till Christmas`);
 }
 const MOON_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.6 1.7A6.5 6.5 0 1 0 14.4 12 5.4 5.4 0 0 1 10.6 1.7Z"/></svg>';
-function sleepsLeft() { const t = new Date(); return Math.round((new Date(YEAR, 11, 25) - new Date(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5); }
+const RING_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="10.9" r="4.1" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="currentColor" d="M5 1.4h6l1.9 2.2L8 7.9 3.1 3.6Z"/><path fill="#fff" opacity=".55" d="M6.1 2.3h1.7L7 3.7H4.9Z"/></svg>';
+/* whole days (sleeps) from today until a date */
+function sleepsTo(day) { const t = new Date(); return Math.round((new Date(day.getFullYear(), day.getMonth(), day.getDate()) - new Date(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5); }
 
 /* ---------- iPhone: suggest adding it to the home screen, only before the first door is opened ---------- */
 const standalone = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
@@ -2745,7 +2801,7 @@ $('#moonBtn').onclick = () => {
 /* shake the phone on the homepage: blizzard. iPhones only once motion's been allowed (that happens on the first photo day) */
 let homeShake = false, shakeHits = [], blizT = 0;
 function onHomeMotion(e) {
-  if (dlg.open || document.hidden) return;
+  if (dlg.open || globeDlg.open || document.hidden) return;
   const a = e.acceleration, g = e.accelerationIncludingGravity; let mag;
   if (a && a.x != null) mag = Math.hypot(a.x || 0, a.y || 0, a.z || 0);
   else if (g && g.x != null) mag = Math.abs(Math.hypot(g.x || 0, g.y || 0, g.z || 0) - 9.81);
@@ -2768,6 +2824,172 @@ if ('DeviceMotionEvent' in window && matchMedia('(pointer: coarse)').matches) {
     document.addEventListener('click', reask, true);
   } else homeShakeListen();
 }
+
+/* ---------- the snow globe: shake it (or tap it) and the snow swirls round us, then slowly settles ---------- */
+/* the top of the snow inside the globe, in % of its height, across its width (0 to 100) */
+const driftY = u => 80 - 3.2 * Math.pow((u - 50) / 50, 2) + Math.sin(u * .12 + .4) + .6 * Math.sin(u * .29 + 2.2);
+function globeHTML(k) {
+  let top = ''; for (let u = 0; u <= 100; u += 2.5) top += (u ? 'L' : 'M') + u + ' ' + driftY(u).toFixed(2);
+  const twinkle = [[30, 1.8], [57, 3.6], [76, 2.4], [43, 6]].map(([u, dy]) => `<path d="${SPARK}" transform="translate(${u - 1.2} ${(driftY(u) + dy - 1.2).toFixed(2)}) scale(.1)" fill="#fff"/>`).join('');
+  return `<span class="g-dome"><img class="g-scene" src="${GLOBE.photo}" alt="${GLOBE.alt}" draggable="false" onerror="globeMissing()">
+      <svg class="g-drift" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="gdr${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#eef3fa"/><stop offset="1" stop-color="#c9d6e8"/></linearGradient></defs>
+        <path d="${top}L100 100L0 100Z" fill="url(#gdr${k})"/><path d="${top}" fill="none" stroke="rgba(150,172,205,.5)" stroke-width="1.6" transform="translate(0 1.5)"/><path d="${top}" fill="none" stroke="#fff" stroke-width=".8"/>${twinkle}</svg>
+      <canvas class="g-snow" aria-hidden="true"></canvas><span class="g-glass"></span></span>
+    <span class="g-base"><span class="g-plaque">${GLOBE.plaque}</span></span>`;
+}
+/* the snow: flakes that fall slowly through the water, get swirled round when it's shaken, and settle on the snow at the bottom */
+function snowGlobe(root, n, idle) {
+  const dome = root.querySelector('.g-dome'), cv = root.querySelector('.g-snow'), x = cv.getContext('2d');
+  let W = 0, R = 0, dpr = 1, raf = 0, last = 0, spin = 0, gx = 0, gy = 1, on = false, nextDrop = 0, t = 0, placed = false;
+  const fl = Array.from({length:n}, () => ({x:0, y:0, vx:0, vy:0, b:Math.random(), r:1, a:.62 + Math.random() * .38, s:true, w:.5 + Math.random() * 1.4, p:Math.random() * 7}));
+  const surf = px => driftY(px / W * 100) / 100 * W;
+  const fit = () => {
+    const w = dome.clientWidth; if (!w) return false;
+    dpr = Math.min(3, devicePixelRatio || 1);
+    if (w !== W) { const k = W ? w / W : 1; W = w; R = w / 2; cv.width = cv.height = Math.round(w * dpr); fl.forEach(f => { f.x *= k; f.y *= k; f.r = W * (.004 + f.b * .008); }); }
+    return true;
+  };
+  const rest = f => { f.s = true; f.vx = f.vy = 0; f.y = surf(f.x) - f.r * .2 + Math.random() * f.r * 1.6; };
+  const drop = () => {   /* one flake from the snow back up near the top, to drift down again */
+    const f = fl[Math.floor(Math.random() * n)]; if (!f.s) return;
+    const a = -Math.PI / 2 + (Math.random() - .5) * 1.9, d = R * (.35 + Math.random() * .5);
+    f.x = R + Math.cos(a) * d; f.y = R + Math.sin(a) * d; f.vx = f.vy = 0; f.s = false;
+  };
+  const place = () => { fl.forEach(f => { f.x = R + (Math.random() * 2 - 1) * R * .8; rest(f); }); if (idle) for (let i = 0; i < 8; i++) drop(); placed = true; };
+  const step = dt => {
+    t += dt; let moving = 0; const ease = Math.min(1, 1.3 * dt), turn = spin * dt;
+    for (const f of fl) {
+      if (f.s) continue; moving++;
+      /* the swirl carries it round the middle: an exact turn (slower near the glass), so nothing gets flung out to the edge */
+      if (turn) { const dx = f.x - R, dy = f.y - R, a = turn * (1 - .45 * Math.hypot(dx, dy) / R), c = Math.cos(a), s = Math.sin(a); f.x = R + dx * c - dy * s; f.y = R + dx * s + dy * c; }
+      /* and it falls through the water (whichever way down is), with a little meander */
+      const term = (.075 + .045 * f.b) * W;
+      const tx = gx * term + Math.sin(t * f.w + f.p) * .035 * W, ty = gy * term + Math.cos(t * f.w * .8 + f.p) * .02 * W;
+      f.vx += (tx - f.vx) * ease; f.vy += (ty - f.vy) * ease; f.x += f.vx * dt; f.y += f.vy * dt;
+      /* the glass: it bounces back in, losing most of its speed along the glass */
+      const ex = f.x - R, ey = f.y - R, d = Math.hypot(ex, ey), lim = R - f.r - 1;
+      if (d > lim) {
+        const nx = ex / d, ny = ey / d, vn = f.vx * nx + f.vy * ny; f.x = R + nx * lim; f.y = R + ny * lim;
+        if (vn > 0) {   /* a real knock bounces it back and slows it; just resting on the glass lets it slide down */
+          const sx = f.vx - vn * nx, sy2 = f.vy - vn * ny, hit = vn > W * .12;
+          f.vx = sx * (hit ? .6 : 1) - (hit ? vn * nx * .35 : 0); f.vy = sy2 * (hit ? .6 : 1) - (hit ? vn * ny * .35 : 0);
+        }
+        /* low down against the glass, where the snow can't reach: it comes to rest there */
+        if (ny > .5 && Math.hypot(f.vx, f.vy) < term * 1.5 && Math.abs(spin) < 1.2) { f.s = true; f.vx = f.vy = 0; continue; }
+      }
+      const sy = surf(f.x) - f.r * .2;
+      if (f.y >= sy) { if (f.vy >= 0 && Math.hypot(f.vx, f.vy) < term * 2.2) rest(f); else { f.y = sy; if (f.vy > 0) f.vy *= -.35; } }
+    }
+    spin *= Math.exp(-dt * .75);
+    return moving;
+  };
+  const draw = () => {
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, W); x.fillStyle = '#fff';
+    for (const f of fl) {
+      if (!f.s && f.b > .7 && W > 200) { x.globalAlpha = .16; x.beginPath(); x.arc(f.x, f.y, f.r * 2.3, 0, 6.283); x.fill(); }
+      x.globalAlpha = f.s ? f.a * .8 : f.a; x.beginPath(); x.arc(f.x, f.y, f.r, 0, 6.283); x.fill();
+    }
+    x.globalAlpha = 1;
+  };
+  const frame = now => {
+    raf = 0; if (!on) return;
+    if (idle && homeBusy()) { on = false; last = 0; return; }
+    const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+    if (idle && now > nextDrop) { nextDrop = now + 380 + Math.random() * 420; drop(); }
+    const moving = step(dt); draw();
+    if (moving || idle || Math.abs(spin) > .02) raf = requestAnimationFrame(frame); else last = 0;
+  };
+  const go = () => { if (on && !raf) raf = requestAnimationFrame(frame); };
+  return {
+    start() { if (!fit()) return; if (!placed) place(); on = true; draw(); go(); },
+    stop() { on = false; last = 0; if (raf) cancelAnimationFrame(raf); raf = 0; },
+    shake(s) {
+      if (!fit()) return; if (!placed) place();
+      s = Math.max(.25, Math.min(1, s));
+      const dir = Math.abs(spin) > .3 ? Math.sign(spin) : Math.random() < .5 ? -1 : 1;
+      spin = Math.max(-4, Math.min(4, spin + dir * (1.2 + 2.2 * s)));
+      fl.forEach(f => { if (f.s) { f.s = false; f.y -= 2 + Math.random() * 6; } f.vx += (Math.random() * 2 - 1) * W * .6 * s; f.vy -= (.25 + Math.random()) * W * s; });
+      go();
+    },
+    tilt(ax, ay) { gx = ax; gy = ay; },
+    resize() { if (on && fit()) draw(); },
+    /* for testing: how many flakes are moving, where they are on average (0 to 1 across), and whether it's animating */
+    stats: () => { const m = fl.filter(f => !f.s); return {moving:m.length, mx:fl.reduce((a, f) => a + f.x, 0) / n / (W || 1), on, busy:!!raf}; }
+  };
+}
+let gSmall = null, gBig = null, gSeen = false, gMotion = false, gConv = 0, gTx = 0, gTy = 1, gLastShake = 0, gLastSound = 0;
+const homeBusy = () => document.hidden || dlg.open || notesDlg.open || jokesDlg.open || viewer.open || globeDlg.open;
+const phoneMotion = () => 'DeviceMotionEvent' in window && matchMedia('(pointer: coarse)').matches;
+function paintSmallGlobe() { if (!gSmall) return; if (gSeen && !homeBusy()) gSmall.start(); else gSmall.stop(); }
+/* no globe photo yet: while testing say what's missing, otherwise leave the globe out */
+function globeMissing() {
+  if (!TESTING) { $('#globeHome').hidden = true; return; }
+  document.querySelectorAll('.g-scene').forEach(i => { const s = document.createElement('span'); s.className = 'g-miss'; s.textContent = `Add ${GLOBE.photo} to the repo and your photo goes in here`; i.replaceWith(s); });
+}
+function initGlobe() {
+  const home = $('#globeHome');
+  home.innerHTML = `<button class="sglobe" id="globeBtn" type="button" aria-label="Open our snow globe">${globeHTML('s')}</button><p class="g-cap">Give me a shake</p>`;
+  $('#globeBigWrap').innerHTML = `<div class="sglobe big" id="globeBig" role="button" tabindex="0" aria-label="Shake the snow globe">${globeHTML('b')}</div>`;
+  gSmall = snowGlobe($('#globeBtn'), 70, !reduced); gBig = snowGlobe($('#globeBig'), 190, false);
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { gSeen = es[es.length - 1].isIntersecting; paintSmallGlobe(); }, {threshold:.1}).observe(home);
+  else { gSeen = true; paintSmallGlobe(); }
+  $('#globeBtn').onclick = openGlobe;
+  const big = $('#globeBig');
+  big.onclick = () => shakeBig(.8, true);
+  big.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); shakeBig(.8, true); } };
+  [big, $('#globeBtn')].forEach(g => g.addEventListener('animationend', () => g.classList.remove('wob')));
+  $('#gClose').onclick = () => globeDlg.close();
+  globeDlg.addEventListener('click', e => { if (e.target === globeDlg) globeDlg.close(); });
+  globeDlg.addEventListener('close', () => { gBig.stop(); stopGlobeMotion(); });
+  [dlg, notesDlg, jokesDlg, viewer, globeDlg].forEach(d => d.addEventListener('close', () => setTimeout(paintSmallGlobe, 50)));
+  document.addEventListener('visibilitychange', paintSmallGlobe);
+  addEventListener('resize', () => { gSmall.resize(); gBig.resize(); });
+}
+function paintGlobeHint(refused) {
+  const askFirst = iosMotion && !homeShake && !refused, can = phoneMotion() && !refused;
+  const txt = !can ? 'Tap the globe to give it a shake' : askFirst ? 'Allow motion, then shake your phone' : 'Shake your phone, or tap the globe';
+  $('#gHint').innerHTML = (can ? SHAKE_PHONE : '') + `<span>${txt}</span>`;
+}
+function openGlobe() {
+  const b = $('#globeBtn'); if (!reduced) { b.classList.remove('wob'); void b.offsetWidth; b.classList.add('wob'); }
+  sfx.click();
+  /* iPhones only allow motion from a tap, and this is one */
+  if (iosMotion && !homeShake) {
+    try { DeviceMotionEvent.requestPermission().then(r => { if (r === 'granted') { motionGranted(); globeMotion(); paintGlobeHint(); } else paintGlobeHint(true); }).catch(() => paintGlobeHint(true)); } catch (e) { paintGlobeHint(true); }
+  }
+  showDlg(globeDlg); gSmall.stop(); paintGlobeHint(); gBig.start(); globeMotion();
+  setTimeout(() => { if (globeDlg.open) shakeBig(.9, false); }, reduced ? 0 : 420);
+}
+function shakeBig(s, tap) {
+  gBig.shake(s);
+  const g = $('#globeBig'); if (tap && !reduced) { g.classList.remove('wob'); void g.offsetWidth; g.classList.add('wob'); }
+  const now = performance.now();
+  if (now - gLastSound > 650) { gLastSound = now; noise(.7, .09, .45, 1400); fx([2093, 2637, 3136, 2637, 3520, 4186], .075, {raw:true, dur:.55, vol:.028}); buzz(14); }
+}
+function globeMotion() {
+  if (gMotion || !globeDlg.open || !phoneMotion() || (iosMotion && !homeShake)) return;
+  addEventListener('devicemotion', onGlobeMotion); gMotion = true;
+}
+function stopGlobeMotion() { if (gMotion) { removeEventListener('devicemotion', onGlobeMotion); gMotion = false; } }
+function onGlobeMotion(e) {
+  const g = e.accelerationIncludingGravity, a = e.acceleration; let mag = null;
+  if (a && a.x != null) mag = Math.hypot(a.x || 0, a.y || 0, a.z || 0);
+  if (g && g.x != null) {
+    if (mag == null) mag = Math.abs(Math.hypot(g.x || 0, g.y || 0, g.z || 0) - 9.81);
+    /* which way is down: learnt while the phone's held still and upright (iPhones report it the other way round to Android) */
+    if (mag < 2.5 && Math.abs(g.y) > 5) gConv = g.y > 0 ? 1 : -1;
+    const c = gConv || (isIOS() ? -1 : 1);
+    let tx = -(g.x || 0) * c / 9.81, ty = (g.y || 0) * c / 9.81;
+    const m = Math.hypot(tx, ty);
+    if (m < .4) ty += .4 - m;   /* lying flat: keep a gentle fall down the screen */
+    const k = Math.max(1, Math.hypot(tx, ty)); tx /= k; ty /= k;
+    gTx += (tx - gTx) * .2; gTy += (ty - gTy) * .2; gBig.tilt(gTx, gTy);
+  }
+  if (mag == null) return;
+  const now = performance.now();
+  if (mag > 9 && now - gLastShake > 140) { gLastShake = now; shakeBig(Math.min(1, (mag - 7) / 14), false); }
+}
+initGlobe();
 
 ['present', 'stocking'].forEach(icoImg); svgImg('sleigh', SLEIGH);
 paintToggles(); tick();
