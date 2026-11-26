@@ -68,19 +68,20 @@ button{font:inherit}
 
 /* Christmas Eve after dark: night sky, stars, the moon, and Santa crossing it */
 .sky{position:absolute;left:0;right:0;top:0;height:100vh;z-index:0;pointer-events:none;overflow:hidden}
-html.eve{background:#060b1f}
-html.eve body{background-color:#070d24;background-image:radial-gradient(ellipse at 85% -8%,rgba(120,150,230,.3),transparent 55%),linear-gradient(#060b1f,#0b1734 55%,#0f2a26 130%)}
-html.eve .bar{background:#14224a}
+html.eve,html.night{background:#060b1f}
+html.eve body,html.night body{background-color:#070d24;background-image:radial-gradient(ellipse at 85% -8%,rgba(120,150,230,.3),transparent 55%),linear-gradient(#060b1f,#0b1734 55%,#0f2a26 130%)}
+html.eve .bar,html.night .bar{background:#14224a}
 .stars span{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:.85;animation:starTwinkle var(--t) ease-in-out var(--dl) infinite alternate}
 @keyframes starTwinkle{to{opacity:.12}}
-.moon{position:absolute;right:max(14px, calc(50% - 352px));top:calc(env(safe-area-inset-top,0px) + 8px);width:78px;height:78px;border-radius:50%;
-  background:radial-gradient(circle at 64% 38%,rgba(185,165,115,.45) 0 7px,transparent 8px),radial-gradient(circle at 38% 66%,rgba(185,165,115,.38) 0 9px,transparent 10px),radial-gradient(circle at 30% 30%,rgba(185,165,115,.3) 0 5px,transparent 6px),radial-gradient(circle at 40% 35%,#fffbe9,#f3e5b5 60%,#dccb92);
-  box-shadow:0 0 30px 8px rgba(255,240,190,.32),0 0 90px 30px rgba(255,240,190,.1)}
-.flyer{position:absolute;left:0;top:env(safe-area-inset-top,0px);width:96px;opacity:0;will-change:transform;animation:fly 18s linear 1.2s infinite}
+.moon{position:absolute;right:max(14px, calc(50% - 352px));top:calc(env(safe-area-inset-top,0px) + 8px);width:78px;height:78px}
+.moon svg{display:block;width:100%;height:100%;overflow:visible}
+.moon .mglow{filter:drop-shadow(0 0 9px rgba(255,240,190,.55)) drop-shadow(0 0 26px rgba(255,240,190,.22))}
+.flyer{position:absolute;left:0;top:env(safe-area-inset-top,0px);width:96px;opacity:0;will-change:transform}
+html.eve .flyer:not(.flyby){animation:fly 24s linear 1.2s infinite}
 .flyer svg{position:relative;display:block;width:100%;height:auto;filter:brightness(0);opacity:.9}
 .flyer .trail{position:absolute;right:86%;top:44%;width:170px;height:5px;background:radial-gradient(circle,#ffe7a3 1.4px,transparent 2.1px) 0 50%/9px 5px repeat-x;
   -webkit-mask:linear-gradient(to right,transparent,#000);mask:linear-gradient(to right,transparent,#000);filter:drop-shadow(0 0 3px #ffd36b)}
-@keyframes fly{0%{transform:translate(-190px,var(--y0,70px)) rotate(-8deg);opacity:1}42%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:1}42.01%,100%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:0}}
+@keyframes fly{0%{transform:translate(-190px,var(--y0,70px)) rotate(-8deg);opacity:1}31%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:1}31.01%,100%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:0}}
 .flyer.flyby{animation:flyOnce 4.6s linear both}
 @keyframes flyOnce{0%{transform:translate(-190px,var(--y0,70px)) rotate(-8deg);opacity:1}99%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:1}100%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:0}}
 .moonbtn{position:absolute;right:max(14px, calc(50% - 352px));top:calc(env(safe-area-inset-top,0px) + 8px);z-index:3;width:78px;height:78px;border:0;border-radius:50%;padding:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -92,7 +93,6 @@ html.eve .bar{background:#14224a}
 html.after{background:#0b0a24}
 html.after body{background-color:#100d2e;background-image:radial-gradient(ellipse at 50% -10%,rgba(150,120,255,.28),transparent 58%),radial-gradient(ellipse at 12% 28%,rgba(90,140,255,.12),transparent 45%),linear-gradient(#0b0a24,#171338 55%,#0f2a26 140%)}
 html.after .bar{background:#221c52}
-html.after .flyer:not(.flyby){animation:none}
 .shoot{position:absolute;left:-12%;top:var(--y);width:130px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#fff 70%,#fff8d8);opacity:0;transform:rotate(-16deg);display:none;pointer-events:none}
 html.after .sky .shoot{display:block;animation:shoot 11s linear var(--dl) infinite}
 .shoot.now{display:block;z-index:3;animation:shootOnce 1.5s ease-in both}
@@ -1166,16 +1166,28 @@ let lightsRT; addEventListener('resize', () => { clearTimeout(lightsRT); lightsR
 /* ---------- special skies: Christmas Eve night (from 4pm on the 24th) and after Christmas (from the 26th) ---------- */
 const SUB_TEXT = $('#sub').textContent;
 /* testing: add ?eve or ?after to the address to see them early */
-const evePreview = TESTING && /[?&]eve\b/.test(location.search), afterPreview = TESTING && /[?&]after\b/.test(location.search);
+const evePreview = TESTING && /[?&]eve\b/.test(location.search), afterPreview = TESTING && /[?&]after\b/.test(location.search), nightPreview = TESTING && /[?&]night\b/.test(location.search);
 function isEve() { if (evePreview) return true; const n = new Date(); return n.getFullYear() === YEAR && n.getMonth() === 11 && n.getDate() === 24 && n.getHours() >= 16; }
 function isAfter() { return afterPreview || today() > 25; }
-const mode = () => isAfter() ? 'after' : isEve() ? 'eve' : '';
+/* any evening from 5pm until 6am: the night sky and tonight's moon (Santa only flies on Christmas Eve) */
+function isNight() { if (nightPreview) return true; const h = new Date().getHours(); return h >= 17 || h < 6; }
+const mode = () => isAfter() ? 'after' : isEve() ? 'eve' : isNight() ? 'night' : '';
+/* the moon's real phase right now: 0 new, .25 first quarter, .5 full, .75 last quarter */
+function moonPhase(t) { const syn = 29.530588853, days = (t - Date.UTC(2000, 0, 6, 18, 14)) / 864e5; return ((days % syn) + syn) % syn / syn; }
+/* lit on the right as it grows, on the left as it shrinks (as seen from the UK), with the dark side just showing */
+function moonSVG(p) {
+  const r = 39, c = Math.cos(2 * Math.PI * p), wax = p < .5, rx = (r * Math.abs(c)).toFixed(2);
+  const lit = `M0 ${-r}A${r} ${r} 0 0 ${wax ? 1 : 0} 0 ${r}A${rx} ${r} 0 0 ${wax === (c < 0) ? 1 : 0} 0 ${-r}Z`;
+  return `<svg viewBox="-42 -42 84 84" aria-hidden="true"><defs><radialGradient id="mlit" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#fffbe9"/><stop offset=".6" stop-color="#f3e5b5"/><stop offset="1" stop-color="#dccb92"/></radialGradient><clipPath id="mclip"><path d="${lit}"/></clipPath></defs>
+    <circle r="${r}" fill="#1c2546" opacity=".6"/><g class="mglow"><path d="${lit}" fill="url(#mlit)"/></g>
+    <g clip-path="url(#mclip)" fill="#b9a573" opacity=".42"><circle cx="11" cy="-9" r="7"/><circle cx="-9" cy="12" r="9"/><circle cx="-12" cy="-12" r="5"/><circle cx="16" cy="13" r="4"/><circle cx="2" cy="24" r="3.5"/></g></svg>`;
+}
 let skyBuilt = false;
 function applyMode() {
   const m = mode(), root = document.documentElement;
-  root.classList.toggle('eve', m === 'eve'); root.classList.toggle('after', m === 'after');
+  root.classList.toggle('eve', m === 'eve'); root.classList.toggle('after', m === 'after'); root.classList.toggle('night', m === 'night');
   $('#sky').hidden = !m; $('#moonBtn').hidden = !m;
-  document.querySelector('meta[name="theme-color"]').content = m === 'eve' ? '#070d24' : m === 'after' ? '#0b0a24' : '#0f2a26';
+  document.querySelector('meta[name="theme-color"]').content = m === 'after' ? '#0b0a24' : m ? '#070d24' : '#0f2a26';
   snow.setMood(moodFor());
   if (!m) return;
   if (!skyBuilt) {
@@ -1183,7 +1195,9 @@ function applyMode() {
     for (let i = 0; i < 60; i++) h += `<span style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 46).toFixed(1)}%;--s:${(1 + Math.random() * 1.8).toFixed(1)}px;--t:${(1.5 + Math.random() * 2.5).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`;
     $('#stars').innerHTML = h; $('#flyer').insertAdjacentHTML('beforeend', SLEIGH);
   }
-  aimSleigh();
+  $('#moon').innerHTML = moonSVG(moonPhase(Date.now()));
+  if (m === 'eve') { aimSleigh(); fetchClip('sleigh'); }
+  fetchClip('hohoho');
 }
 /* line the flight path up so the sleigh passes right across the moon */
 function aimSleigh() {
@@ -1281,7 +1295,7 @@ let lastDay = today(), lastMode = null, lastHour = -1;
 function tick() {
   const m = mode(), d = today(), h = new Date().getHours();
   if (m !== lastMode) { lastMode = m; lastDay = d; applyMode(); renderGrid(); }
-  else if (d !== lastDay) { lastDay = d; snow.setMood(moodFor()); renderGrid(); }
+  else if (d !== lastDay) { lastDay = d; applyMode(); renderGrid(); }
   else if (h !== lastHour) paintHeader();
   lastHour = h;
 }
@@ -2314,7 +2328,7 @@ const SNOW_MOODS = {
 };
 /* never the same two days running; Christmas Day is heavy, the special skies sparkle */
 function moodFor() {
-  const n = new Date(); if (mode()) return 'sparkly';
+  const n = new Date(), m = mode(); if (m === 'eve' || m === 'after') return 'sparkly';
   if (n.getMonth() === 11 && n.getDate() === 25) return 'heavy';
   const seq = ['steady', 'flurry', 'big', 'windy', 'heavy', 'sparkly', 'calm'], k = Math.floor(new Date(n.getFullYear(), n.getMonth(), n.getDate()) / 864e5);
   return seq[(k * 3) % seq.length];
@@ -2347,6 +2361,28 @@ const snow = (() => {
     blizzard() { gust = 1; for (let i = 0; i < 260; i++) flakes.push(make({r:[1, 3.8], v:[.05, .12]}, true)); },
     get count() { return flakes.length; }
   };
+})();
+
+/* ---------- sound files that play over the music (the music never stops) ----------
+   sleigh.mp3 when Santa flies past on Christmas Eve, hohoho.mp3 when she taps the moon.
+   They go through the same channel as the sound effects; if a file isn't there yet, a made-up version plays instead. */
+const CLIPS = {sleigh:'sleigh.mp3', hohoho:'hohoho.mp3'}, clipRaw = {}, clipBuf = {};
+const fetchClip = n => clipRaw[n] || (clipRaw[n] = fetch(CLIPS[n]).then(r => r.ok ? r.arrayBuffer() : null).catch(() => null));
+function playClip(n, fallback, auto) {
+  if (!prefs.sfx || (auto && (!A.ctx || A.ctx.state !== 'running')) || !audio()) return;
+  if (!clipBuf[n]) clipBuf[n] = fetchClip(n).then(b => b ? new Promise(res => { try { A.ctx.decodeAudioData(b, res, () => res(null)); } catch (e) { res(null); } }) : null);
+  clipBuf[n].then(buf => {
+    if (!buf) { if (fallback) fallback(); return; }
+    const src = A.ctx.createBufferSource(); src.buffer = buf; src.connect(A.sfx); src.start(); window.__clip = n;
+  });
+}
+const sleighBells = () => { for (let i = 0; i < 10; i++) setTimeout(() => { noise(.05, .09, 2.4, 9000); fx([2093 + (i % 2) * 330], 0, {raw:true, dur:.14, vol:.045}); }, i * 85); };
+const hohoSynth = () => fx([55, 52, 48], .24, {dur:.3, vol:.12, type:'triangle'});
+/* Santa's sleigh: bells every time he flies past on Christmas Eve, while she's on the homepage */
+(() => {
+  const fl = $('#flyer'), go = e => { if (e.target === fl && /^fly(Once)?$/.test(e.animationName) && mode() === 'eve' && !dlg.open && !document.hidden) playClip('sleigh', sleighBells, e.animationName === 'fly'); };
+  fl.addEventListener('animationstart', go);
+  fl.addEventListener('animationiteration', go);
 })();
 
 /* ---------- hidden secrets for her to stumble on ---------- */
@@ -2386,13 +2422,14 @@ lightsEl.addEventListener('click', e => {
   b.addEventListener('animationend', () => b.classList.remove('pop'), {once:true});
   fx([96 + (+b.style.getPropertyValue('--k') % 5) * 2], 0, {dur:.22, vol:.08, type:'triangle'}); foundEgg('tink');
 });
-/* tap the moon (Christmas Eve, or after Christmas): Ho ho ho, sleigh bells, and Santa flies past */
+/* tap the moon (any night, Christmas Eve or after Christmas): Ho ho ho! On Christmas Eve, Santa flies past too */
 $('#moonBtn').onclick = () => {
   const bub = document.createElement('span'); bub.className = 'hoho'; bub.textContent = 'Ho ho ho!'; document.body.append(bub); setTimeout(() => bub.remove(), 2700);
-  for (let i = 0; i < 8; i++) setTimeout(() => { noise(.05, .1, 2.4, 9000); fx([2093 + (i % 2) * 330], 0, {raw:true, dur:.14, vol:.05}); }, i * 75);
-  setTimeout(() => fx([55, 52, 48], .24, {dur:.3, vol:.12, type:'triangle'}), 650);
-  const fl = $('#flyer'); aimSleigh(); fl.classList.remove('flyby'); void fl.offsetWidth; fl.classList.add('flyby');
-  fl.addEventListener('animationend', e => { if (e.animationName === 'flyOnce') fl.classList.remove('flyby'); }, {once:true});
+  playClip('hohoho', hohoSynth);
+  if (mode() === 'eve') {
+    const fl = $('#flyer'); aimSleigh(); fl.classList.remove('flyby'); void fl.offsetWidth; fl.classList.add('flyby');
+    fl.addEventListener('animationend', e => { if (e.animationName === 'flyOnce') fl.classList.remove('flyby'); }, {once:true});
+  }
   foundEgg('hoho');
 };
 /* shake the phone on the homepage: blizzard. iPhones only once motion's been allowed (that happens on the first photo day) */
