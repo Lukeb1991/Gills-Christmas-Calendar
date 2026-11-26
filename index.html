@@ -157,6 +157,61 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
 .globe-dlg .sglobe{margin-bottom:10px}
 .g-hint{margin:8px 0 0;display:inline-flex;align-items:center;gap:8px;font-size:.95rem;line-height:1.35;color:color-mix(in srgb,var(--cream) 84%,transparent)}
 .g-hint .shakeico{color:var(--gold)}
+
+/* secret: mistletoe hanging from the fairy lights on some days */
+.mistle{position:absolute;z-index:3;top:calc(env(safe-area-inset-top,0px) + 21px);width:40px;height:58px;margin-left:-20px;border:0;padding:0;background:none;cursor:pointer;
+  transform-origin:50% 2px;animation:mSway 3.4s ease-in-out infinite alternate;-webkit-tap-highlight-color:transparent}
+.mistle svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
+.mistle.kiss{animation:mKiss .8s cubic-bezier(.3,1.5,.5,1)}
+@keyframes mSway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+@keyframes mKiss{20%{transform:rotate(-15deg) scale(1.14)}45%{transform:rotate(12deg) scale(1.14)}70%{transform:rotate(-5deg)}}
+
+/* Christmas Eve: leave out a mince pie and a carrot. Christmas Day: Santa's been */
+.santa{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 14px 16px;border-radius:16px;text-align:center;
+  background:color-mix(in srgb,var(--gold) 10%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 40%,transparent)}
+.santa-kick{margin:0;font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.45rem;line-height:1.1;color:var(--gold)}
+.santa-line{margin:0;font-family:var(--hand);font-size:1.1rem;line-height:1.3;color:var(--cream);text-wrap:balance}
+.santa-help{margin:0;min-height:1.3em;font-size:.88rem;line-height:1.4;color:color-mix(in srgb,var(--cream) 78%,transparent);text-wrap:balance}
+.plate-scene{position:relative;width:min(290px,100%);aspect-ratio:290/106}
+.plate-scene .plate{position:absolute;left:16%;bottom:2%;width:68%;height:auto;display:block}
+.treat{position:absolute;z-index:2;border:0;padding:0;background:none;cursor:pointer;transition:left .7s cubic-bezier(.3,1.25,.5,1),bottom .7s cubic-bezier(.3,1.25,.5,1),transform .7s ease;-webkit-tap-highlight-color:transparent}
+.treat svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 3px 3px rgba(0,0,0,.3))}
+.treat:disabled{cursor:default}
+.treat.pie{left:0;bottom:6%;width:23%}
+.treat.pie.on{left:24%;bottom:24%}
+.treat.sherry{z-index:1;left:4%;bottom:40%;width:10%}
+.treat.sherry.on{left:44%;bottom:33%}
+.treat.carrot{left:76%;bottom:5%;width:24%;transform:rotate(-24deg)}
+.treat.carrot.on{left:53%;bottom:25%;transform:rotate(10deg)}
+.treat:not(.on):not(:disabled){animation:treatNudge 2.6s ease-in-out infinite}
+.treat.sherry:not(.on):not(:disabled){animation-delay:.65s}
+.treat.carrot:not(.on):not(:disabled){animation-delay:1.3s}
+.santa-says{position:absolute;z-index:4;left:50%;bottom:92%;width:max-content;max-width:min(270px,86vw);padding:7px 13px 6px;border-radius:14px;background:#fff7e2;color:var(--berry);
+  font-family:var(--hand);font-size:1.02rem;line-height:1.25;text-wrap:balance;box-shadow:0 6px 16px rgba(0,0,0,.35);pointer-events:none;animation:saysIn 6.5s ease both}
+@keyframes saysIn{0%{transform:translateX(-50%) scale(.3) translateY(10px);opacity:0}8%{transform:translateX(-50%) scale(1.06);opacity:1}14%,86%{transform:translateX(-50%);opacity:1}100%{transform:translateX(-50%) translateY(-12px);opacity:0}}
+.snote .ps{margin:8px 0 0;font-size:.95rem;line-height:1.25;color:#7d2433}
+@keyframes treatNudge{0%,80%,100%{translate:0 0}88%{translate:0 -7px}94%{translate:0 0}}
+.snote{position:relative;width:min(290px,100%);margin-top:4px;padding:14px 16px 12px;border-radius:4px;background:#fbf3e2;color:#9a1b2e;transform:rotate(-1.6deg);
+  font-family:var(--hand);font-size:1.08rem;line-height:1.3;text-align:left;box-shadow:0 8px 18px rgba(0,0,0,.3),inset 0 0 20px rgba(160,110,50,.12)}
+.snote p{margin:0 0 6px}
+.snote .sig{margin:0;text-align:right}
+.snote::before{content:"";position:absolute;top:-9px;left:50%;width:64px;height:20px;transform:translateX(-50%) rotate(2deg);background:color-mix(in srgb,var(--gold) 80%,transparent)}
+.steps{position:absolute;left:0;top:0;width:100%;height:0;z-index:2;pointer-events:none}
+.step{position:absolute;width:14px;height:24px;margin:-12px 0 0 -7px;transform:rotate(var(--r));opacity:.88}
+.step svg{display:block;width:100%;height:100%}
+.step.l svg{transform:scaleX(-1)}
+.steps.walk .step{animation:stepIn .5s ease-out both;animation-delay:var(--d)}
+@keyframes stepIn{from{opacity:0;transform:rotate(var(--r)) scale(1.5)}}
+
+/* frosty mornings: the screen mists over, with a note written in it; wipe it clear */
+.frost{position:fixed;inset:0;z-index:9;touch-action:none;cursor:grab;transition:opacity 1s ease,filter 1s ease;animation:frostIn 1.6s ease backwards}
+@keyframes frostIn{from{opacity:0}}
+.frost canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
+.frost.melt{opacity:0;filter:blur(6px);pointer-events:none}
+.frost-ui{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.frost-hint{margin:0;padding:8px 16px 7px;border-radius:999px;background:rgba(15,42,38,.8);color:var(--cream);font-family:var(--hand);font-size:1.15rem;line-height:1.2;box-shadow:0 6px 16px rgba(0,0,0,.25);transition:opacity .4s}
+.frost.wiping .frost-hint{opacity:0}
+.frost-skip{pointer-events:auto;border:0;background:none;padding:6px 10px;font:inherit;font-size:.85rem;font-weight:700;color:rgba(25,35,45,.7);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
   background:var(--spruce);border-radius:14px;padding:10px 14px}
 .bar p{margin:0;min-width:0;flex:1 1 200px;font-weight:700}
@@ -863,6 +918,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="lights" id="lights" aria-hidden="true"></div>
 <button class="moonbtn" id="moonBtn" type="button" hidden aria-label="The moon"></button>
+<button class="mistle" id="mistle" type="button" hidden aria-label="Mistletoe"></button>
 <div class="wrap">
   <header>
     <button class="star" id="star" type="button" aria-label="Star">★</button>
@@ -886,6 +942,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     <p><strong>Elf mode.</strong> Every door is unlocked for testing and nothing is saved.</p>
     <button class="pill" id="elfOff" type="button">Leave elf mode</button>
   </div>
+  <section class="santa" id="santa" hidden></section>
   <main class="grid" id="grid"></main>
   <div class="globehome" id="globeHome"></div>
   <footer><button class="foot" id="foot" type="button">Made for Gill by Luke x</button></footer>
@@ -1088,6 +1145,23 @@ const STRIP = {
 const WEDDING = {day:12, month:6, year:2027};
 /* The snow globe at the bottom of the homepage: the photo inside it and the words on its little plaque. */
 const GLOBE = {photo:'globe.jpg', plaque:'Gill & Luke', alt:'Gill and Luke in front of a Christmas tree'};
+/* Mistletoe hangs from the fairy lights on these days (and every day after Christmas). Tapping it is secret number six. */
+const MISTLETOE = [3, 7, 10, 14, 17, 21, 24, 25];
+/* Frosty days: on these days the screen frosts over with your note written in it, every time she opens the calendar
+   (once she's wiped it clear it stays clear for half an hour). */
+const FROST = {notes:{3:"Morning, gorgeous x", 6:"I love you x", 9:"Brrr! Wrap up warm x", 13:"Gill + Luke x", 16:"You're my favourite x", 18:"L.B 4 G.H xxx IDDST", 20:"Fancy a brew, love?", 23:"Two more sleeps! x"}};
+/* Christmas Eve: the line when she leaves the sherry out. */
+const SHERRY_LINE = "Only a small one though, Santa! Remember, you shouldn't drink and sleigh.";
+/* Christmas morning: Santa's note. For each treat, [what he says if she left it out, what he says if she didn't],
+   then a PS that depends on how she did in Naughty or Nice, and a PPS. */
+const SANTA = {
+  pie:["Your mince pie was the best of the night, and I've had about 1.4 billion. Don't tell next door, theirs was dry.", "No mince pie? Bold move. The elves have made a note."],
+  sherry:["Cheers for the sherry. Only had a small one, honest. Got a lot of driving to do.", "No sherry? Probably for the best. Mrs Claus has me on Dry December."],
+  carrot:["Rudolph says thanks for the carrot. He hasn't shut up about it since.", "Rudolph's sulking because there was no carrot. He'll live."],
+  ps:{nice:"I checked my list twice: officially nice. Just about.", naughty:"I checked my list twice: officially naughty. I came anyway. You're welcome.", even:"I checked my list twice. Somehow you're on both pages."},
+  pps:"Luke's on the nice list too. Nobody's more surprised than me.",
+  sign:"Merry Christmas!\nLove, Santa x"
+};
 /* ============ end of the bit to edit ============ */
 
 const $ = s => document.querySelector(s);
@@ -1103,7 +1177,7 @@ const ord = n => n + ordSfx(n);
 const ordHTML = n => `${n}<sup class="os">${ordSfx(n)}</sup>`;
 const longDate = d => weekday(d) + ' ' + ord(d) + ' December';
 const KEY = 'gill-advent-' + YEAR + '-v2';
-const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, dev:{}, film:false, fin:false, eggs:{}, strip:false});
+const blank = () => ({opened:{}, non:{}, won:{}, ev:{}, cr:{}, dev:{}, film:false, fin:false, eggs:{}, strip:false, treats:{}, frost:{}});
 let real = blank(), prefs = {music:true, sfx:true};
 try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) { real = Object.assign(blank(), s.state); prefs = Object.assign(prefs, s.prefs); } } catch (e) {}
 let state = real, elf = false;
@@ -1177,7 +1251,8 @@ const EGGS = [
   ['hoho', 'Ho ho ho', 'Someone lives on the moon…'],
   ['wish', 'Wish upon a star', 'Star light, star bright… keep tapping'],
   ['hearts', 'Love hearts', 'Who made all this? Give him a tap'],
-  ['tink', 'Tink', 'The fairy lights like a little poke']];
+  ['tink', 'Tink', 'The fairy lights like a little poke'],
+  ['kiss', 'Mistletoe', 'Look up at the fairy lights now and then']];
 const players = {}; let track = 'bg';
 function player(n) { if (!players[n]) { const a = new Audio(TRACKS[n]); a.loop = true; a.preload = 'auto'; a.volume = n === 'bg' ? .5 : .7; if (n === 'song') a.addEventListener('error', songMissing); players[n] = a; } return players[n]; }
 function syncMusic() {
@@ -1281,6 +1356,7 @@ function drawLights() {
     html += `<span class="bulb${Math.abs(x - W / 2) < 46 ? ' nohit' : ''}" style="left:${x.toFixed(1)}px;top:${(y + 1).toFixed(1)}px;--c:${LIGHT_COLS[k % 5]};--k:${k};--r:${(ang * .6).toFixed(1)}deg;--t:${(1.2 + Math.random() * 1.8).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`;
   }
   lightsEl.innerHTML = `<svg width="${W}" height="64" viewBox="0 0 ${W} 64"><path d="${path}" fill="none" stroke="#2c4038" stroke-width="2"/></svg>` + html;
+  $('#mistle').style.left = (seg / 2).toFixed(1) + 'px';   /* the mistletoe hangs from the dip of the first swag */
   litShown = -1; paintLights();
 }
 function paintLights() {
@@ -1438,7 +1514,7 @@ function renderGrid() {
   const jn = Object.keys(state.cr).length;
   $('#notesBtn').textContent = n ? 'Love notes · ' + n : 'Love notes';
   $('#jokesBtn').textContent = jn ? 'Cracker jokes · ' + jn : 'Cracker jokes';
-  paintLights(); paintTip(); scheduleNudge(); paintHeader();
+  paintLights(); paintTip(); scheduleNudge(); paintHeader(); paintMistle(); paintSanta();
 }
 let lastDay = today(), lastMode = null, lastHour = -1;
 /* every minute: a new day re-draws the wall and changes the snow, a new hour changes the hello, and the sky changes on Christmas Eve and after Christmas */
@@ -2730,11 +2806,13 @@ function foundEgg(k) {
   if (n === EGGS.length) setTimeout(allSecrets, 1200);
   else setTimeout(() => toast(`Secret found! ${n} of ${EGGS.length}`), 900);
 }
-/* the fifth secret: a proper celebration */
+/* the last secret: a proper celebration (after any picture she's looking at is closed) */
 function allSecrets() {
   if (document.querySelector('.allsec')) return;
+  if (viewer.open) { viewer.addEventListener('close', () => setTimeout(allSecrets, 300), {once:true}); return; }
+  const N = EGGS.length, word = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'][N] || N;
   const o = document.createElement('div'); o.className = 'allsec'; o.setAttribute('role', 'alert');
-  o.innerHTML = `<div class="as-card"><div class="winbadge">${rosette('5 OF 5')}</div><p class="as-kick">Secret keeper</p><h2 class="as-title">You found every secret!</h2><p class="as-line">All five of them. ${FROM}'s very impressed&nbsp;x</p><p class="as-tap">Tap anywhere to carry on</p></div>`;
+  o.innerHTML = `<div class="as-card"><div class="winbadge">${rosette(N + ' OF ' + N)}</div><p class="as-kick">Secret keeper</p><h2 class="as-title">You found every secret!</h2><p class="as-line">All ${word} of them. ${FROM}'s very impressed&nbsp;x</p><p class="as-tap">Tap anywhere to carry on</p></div>`;
   document.body.append(o);
   lightsEl.classList.add('party'); sfx.win(); setTimeout(() => { sfx.chime(); sfx.sparkle(); }, 750); shower(120);
   setTimeout(() => sparkAt(o.querySelector('.winbadge'), 40), 500);
@@ -2769,17 +2847,18 @@ function wish() {
   setTimeout(() => { const w = document.createElement('span'); w.className = 'wish'; w.textContent = 'Make a wish, ' + TO; $('header').append(w); setTimeout(() => w.remove(), 3300); sfx.sparkle(); }, 700);
   foundEgg('wish');
 }
-/* tap the sign-off: hearts float up */
-$('#foot').onclick = () => {
-  const r = $('#foot').getBoundingClientRect(), cols = [P.berry, '#ff5a70', P.gold, '#ffd9de'];
-  for (let i = 0; i < 16; i++) {
+/* hearts that float away from something (up, or down when rise is negative) */
+function floatHearts(el, n, rise) {
+  const r = el.getBoundingClientRect(), cols = [P.berry, '#ff5a70', P.gold, '#ffd9de'];
+  for (let i = 0; i < n; i++) {
     const h = document.createElement('span'); h.className = 'lheart';
     h.innerHTML = `<svg viewBox="-12 -12 24 22"><path d="${HEART}" fill="${cols[i % 4]}"/></svg>`;
-    h.style.cssText = `left:${(r.left + r.width / 2 + (Math.random() - .5) * r.width).toFixed(0)}px;top:${(r.top + r.height / 2).toFixed(0)}px;--s:${(12 + Math.random() * 14).toFixed(0)}px;--x:${((Math.random() - .5) * 150).toFixed(0)}px;--y:${(120 + Math.random() * 170).toFixed(0)}px;--rot:${((Math.random() - .5) * 60).toFixed(0)}deg;--dur:${(1.4 + Math.random()).toFixed(2)}s;animation-delay:${(Math.random() * .25).toFixed(2)}s`;
+    h.style.cssText = `left:${(r.left + r.width / 2 + (Math.random() - .5) * r.width).toFixed(0)}px;top:${(r.top + r.height / 2).toFixed(0)}px;--s:${(12 + Math.random() * 14).toFixed(0)}px;--x:${((Math.random() - .5) * 150).toFixed(0)}px;--y:${((rise || 1) * (120 + Math.random() * 170)).toFixed(0)}px;--rot:${((Math.random() - .5) * 60).toFixed(0)}deg;--dur:${(1.4 + Math.random()).toFixed(2)}s;animation-delay:${(Math.random() * .25).toFixed(2)}s`;
     document.body.append(h); setTimeout(() => h.remove(), 3200);
   }
-  fx([76, 79, 84, 88], .08, {dur:.4, vol:.08}); foundEgg('hearts');
-};
+}
+/* tap the sign-off: hearts float up */
+$('#foot').onclick = () => { floatHearts($('#foot'), 16); fx([76, 79, 84, 88], .08, {dur:.4, vol:.08}); foundEgg('hearts'); };
 /* poke a lit fairy light: it flashes and changes colour */
 lightsEl.addEventListener('click', e => {
   const b = e.target.closest('.bulb.on'); if (!b) return;
@@ -2991,8 +3070,254 @@ function onGlobeMotion(e) {
 }
 initGlobe();
 
+/* ---------- secret number six: mistletoe on the fairy lights, tap it for a kiss ---------- */
+/* the sprig, as shapes, so the same drawing works on the page and on the coupon: [kind, data, fill, stroke, width] */
+const MISTLE = [
+  ['p', 'M20 0V11', null, '#2c4038', 1.4],
+  ['p', 'M19 20C13 19.5 6.5 23 4.5 30.5C11 31 16.8 27 19 20Z', '#6d9b47'], ['p', 'M21 20C27 19.5 33.5 23 35.5 30.5C29 31 23.2 27 21 20Z', '#6d9b47'],
+  ['p', 'M19.4 22C15.2 27 13.6 35.5 15.6 45.5C20 40 21.4 31 19.4 22Z', '#5a8a3a'], ['p', 'M20.6 22C24.8 27 26.4 35.5 24.4 45.5C20 40 18.6 31 20.6 22Z', '#5a8a3a'],
+  ['p', 'M18.5 20.6C14 22.5 9.5 26 6.5 29.5M21.5 20.6C26 22.5 30.5 26 33.5 29.5M19.6 23C18 29 17.2 36 16.2 43M20.4 23C22 29 22.8 36 23.8 43', null, 'rgba(170,215,120,.65)', .7],
+  ['p', 'M19.2 14.6L16.4 21.2l2.2-.7 1-1.9Z', '#a50d26'], ['p', 'M20.8 14.6l2.8 6.6-2.2-.7-1-1.9Z', '#a50d26'],
+  ['c', [16.4, 22.8, 3.3], '#efe8d2'], ['c', [23.6, 22.8, 3.3], '#efe8d2'], ['c', [20, 26, 3.5], '#fbf6ea'],
+  ['c', [15.4, 21.8, .9], '#fff'], ['c', [22.6, 21.8, .9], '#fff'], ['c', [19, 25, 1], '#fff'],
+  ['p', 'M20 13.5C15.5 8.5 9.5 9.8 10.6 14.2C11.6 18 16.6 16.6 20 14.5Z', '#c8102e'], ['p', 'M20 13.5C24.5 8.5 30.5 9.8 29.4 14.2C28.4 18 23.4 16.6 20 14.5Z', '#c8102e'],
+  ['c', [20, 14.3, 2.3], '#e0233f']];
+const mistleSVG = `<svg viewBox="0 0 40 58" aria-hidden="true">${MISTLE.map(([k, d, f, s, w]) => k === 'c' ? `<circle cx="${d[0]}" cy="${d[1]}" r="${d[2]}" fill="${f}"/>` : `<path d="${d}" fill="${f || 'none'}"${s ? ` stroke="${s}" stroke-width="${w}" stroke-linecap="round"` : ''}/>`).join('')}</svg>`;
+function drawMistle(x, cx, top, k) {   /* the sprig on a canvas, k times its page size, without the thread */
+  x.save(); x.translate(cx - 20 * k, top); x.scale(k, k); x.lineCap = 'round';
+  MISTLE.slice(1).forEach(([kind, d, f, s, w]) => {
+    if (kind === 'c') { x.beginPath(); x.arc(d[0], d[1], d[2], 0, 7); x.fillStyle = f; x.fill(); return; }
+    const p = new Path2D(d); if (f) { x.fillStyle = f; x.fill(p); } if (s) { x.strokeStyle = s; x.lineWidth = w; x.stroke(p); }
+  });
+  x.restore();
+}
+const mistlePreview = TESTING && /[?&]mistletoe\b/.test(location.search);
+function paintMistle() { const m = $('#mistle'); m.hidden = elf || !(mistlePreview || isAfter() || MISTLETOE.includes(today())); }
+$('#mistle').innerHTML = mistleSVG;
+$('#mistle').onclick = () => {
+  const m = $('#mistle'); m.classList.remove('kiss'); void m.offsetWidth; m.classList.add('kiss');
+  floatHearts(m, 14, -.45); fx([1046, 1568, 2093], .07, {raw:true, dur:.3, vol:.06}); buzz([20, 40, 20]);
+  const fresh = !state.eggs.kiss;
+  setTimeout(() => makeKissCoupon().then(cp => {
+    openViewer(cp);
+    if (fresh) viewer.addEventListener('close', () => foundEgg('kiss'), {once:true});   /* "secret found" once she's seen her coupon */
+  }).catch(() => { if (fresh) foundEgg('kiss'); }), 700);
+};
+$('#mistle').addEventListener('animationend', e => { if (e.animationName === 'mKiss') $('#mistle').classList.remove('kiss'); });
+/* the coupon: a saveable picture, like the Naughty or Nice prizes */
+let kissCp = null;
+async function makeKissCoupon() {
+  if (kissCp) return kissCp;
+  await canvasFonts();
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  drawKissCoupon(cv.getContext('2d'), W, H);
+  return kissCp = await canvasFile(cv, `${TO.toLowerCase()}-mistletoe-kiss.jpg`, 'A coupon for one kiss under the mistletoe');
+}
+async function canvasFile(cv, name, alt) {
+  const blob = await new Promise(r => cv.toBlob ? cv.toBlob(r, 'image/jpeg', .92) : r(null));
+  const url = blob ? await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); }) : cv.toDataURL('image/jpeg', .92);
+  const file = blob && typeof File === 'function' ? new File([blob], name, {type:'image/jpeg'}) : null;
+  return {url, file, name, alt};
+}
+function drawKissCoupon(x, W, H) {
+  const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#9e1c2f'); g.addColorStop(1, '#5b0d1b'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  const hp = new Path2D(HEART);
+  for (let i = 0; i < 70; i++) { x.save(); x.translate(Math.random() * W, Math.random() * H); x.rotate((Math.random() - .5) * .8); const s = 1 + Math.random() * 2.6; x.scale(s, s); x.globalAlpha = .07 + Math.random() * .15; x.fillStyle = '#ffc9d2'; x.fill(hp); x.restore(); }
+  x.globalAlpha = 1; x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+  x.fillStyle = P.gold; x.font = `800 30px ${F.body}`; spaced(x, `${TO.toUpperCase()}'S ADVENT CALENDAR · ${YEAR}`, W / 2, 110, 7);
+  const L = 90, T = 160, CW = W - 180, CH = 1010;
+  x.save(); x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = 50; x.shadowOffsetY = 20; x.fillStyle = '#f8eedc'; couponShape(x, L, T, CW, CH, 20, 9); x.fill(); x.restore();
+  x.setLineDash([16, 12]); x.lineWidth = 4; x.strokeStyle = P.berry; roundRect(x, L + 42, T + 42, CW - 84, CH - 84, 20); x.stroke(); x.setLineDash([]);
+  x.fillStyle = P.berry; x.font = `800 30px ${F.body}`; spaced(x, 'MISTLETOE COUPON', W / 2, T + 128, 6);
+  drawMistle(x, W / 2, T + 104, 6.6);
+  x.fillStyle = P.berry; serifFill(x, 'One kiss', W / 2, T + 600, 150);
+  x.fillStyle = '#3a2a1c'; x.font = `400 50px ${F.hand}`;
+  wrapBalanced(x, 'Redeemable under the mistletoe, or anywhere you like', CW - 200).forEach((l, i) => x.fillText(l, W / 2, T + 690 + i * 62));
+  x.fillStyle = '#7a6a58'; x.font = `800 24px ${F.body}`; spaced(x, 'NO EXPIRY DATE · TOP-UPS ON REQUEST', W / 2, T + CH - 150, 4);
+  x.fillStyle = P.berry; x.font = `400 52px ${F.hand}`; x.fillText(`From ${FROM} x`, W / 2, T + CH - 82);
+}
+
+/* ---------- Christmas Eve: leave out a mince pie and a carrot. Christmas morning: Santa's been ---------- */
+const xmasPreview = TESTING && /[?&]xmas\b/.test(location.search);
+const plateSVG = crumbs => `<svg class="plate" viewBox="0 0 200 50" aria-hidden="true"><ellipse cx="100" cy="31" rx="95" ry="16" fill="rgba(0,0,0,.28)"/><ellipse cx="100" cy="26" rx="96" ry="18" fill="#fbf6ea" stroke="#d9b25e" stroke-width="2.4"/><ellipse cx="100" cy="26" rx="70" ry="11.5" fill="#f1e9d6" stroke="#e3d3ad" stroke-width="1"/><ellipse cx="96" cy="22" rx="52" ry="5.5" fill="#fff" opacity=".45"/>${crumbs ? [[66, 24, 1.7], [76, 30, 1.2], [84, 21, 1], [128, 28, 1.6], [122, 21, 1.1], [136, 23, 1.2], [92, 32, 1.1], [114, 32, 1.4]].map(([cx, cy, r]) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#b47436"/>`).join('') : ''}</svg>`;
+function pieSVG(bitten) {
+  const star = `<g transform="translate(30 15.2) scale(1 .45) translate(-30 -15.2)"><path d="${starPts(30, 15.2, 15, 6.6)}" fill="#efc27f" stroke="#d39a50" stroke-width=".8"/></g>`;
+  const sugar = [[22, 13, .9], [33, 12.5, .8], [38, 16.5, .9], [27, 17.6, .8], [30, 14.6, 1], [44, 13.6, .7], [16, 15.8, .7]].map(([cx, cy, r]) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" opacity=".9"/>`).join('');
+  const pie = `<path d="M5 15L9.5 33Q30 38.5 50.5 33L55 15Z" fill="#c98443"/><path d="M8.6 29Q30 34.5 51.4 29L50.5 33Q30 38.5 9.5 33Z" fill="#a8652a"/>
+    <path d="M12 18.5l2.4 14M18 19.8l1.4 15.4M24 20.4l.7 16M30 20.6v16.2M36 20.4l-.7 16M42 19.8l-1.4 15.4M48 18.5l-2.4 14" stroke="#8a4f1c" stroke-opacity=".35" stroke-width="1.2"/>
+    <ellipse cx="30" cy="15" rx="25" ry="8.6" fill="#e7b26b"/><ellipse cx="30" cy="15.4" rx="20" ry="6.4" fill="#6e2f19"/>${star}${sugar}`;
+  return `<svg viewBox="0 0 60 40">${bitten ? `<defs><mask id="pieBite"><rect width="60" height="40" fill="#fff"/><circle cx="55" cy="12" r="7.5" fill="#000"/><circle cx="49" cy="6.5" r="5.5" fill="#000"/><circle cx="58" cy="21" r="5.5" fill="#000"/></mask></defs><g mask="url(#pieBite)">${pie}</g>` : pie}</svg>`;
+}
+function carrotSVG(bitten) {
+  const leaves = '<path d="M14 15C7 9 2.5 7 0 8.5C4 10.5 8.5 13 14 15ZM14 15C7 15.5 2.5 18.5 1 22.5C5.5 20.5 9.5 18 14 15ZM14 15C8.5 11 5.5 4.5 7.5 2C9.5 6 11 10 14 15Z" fill="#4f9a3a"/>';
+  const body = bitten ? 'M13 9.5Q24 8.2 33 9L30.5 11.5L33.5 13.5L30.5 16L33 18.5L30 20.8Q21 21.5 13 20.5Q9 15 13 9.5Z' : 'M13 9.5Q40 6.5 66 14.5Q40 22.5 13 20.5Q9 15 13 9.5Z';
+  return `<svg viewBox="0 0 70 30">${leaves}<path d="${body}" fill="#ef7f24"/><path d="M13 15.5Q${bitten ? '24 16.5 31 15.8L30 20.8Q21 21.5' : '40 17 66 14.5Q40 22.5'} 13 20.5Z" fill="#d9661a" opacity=".7"/>
+    <path d="M22 9.6l1.4 2.8M27 19.8l1-2.6${bitten ? '' : 'M36 9.4l1 3.6M45 10.8l.8 3M38 19.4l.8-3.1M52 12.6l.6 2'}" stroke="#c75a12" stroke-width="1.1" stroke-linecap="round"/></svg>`;
+}
+/* a little glass of sherry (drained on Christmas morning, bar a drop) */
+const sherrySVG = drunk => `<svg viewBox="0 0 28 60"><path d="M5 4C5 18 7.5 27 14 29C20.5 27 23 18 23 4Z" fill="rgba(255,255,255,.16)"/>${drunk
+  ? '<path d="M10.6 26.3C12.4 27.9 15.6 27.9 17.4 26.3C16.2 28.4 11.8 28.4 10.6 26.3Z" fill="#b5661c"/>'
+  : '<path d="M6 13C6.4 21 8.8 26.6 14 28C19.2 26.6 21.6 21 22 13Z" fill="#b8661c"/><ellipse cx="14" cy="13" rx="8" ry="1.7" fill="#e09a45"/>'}
+  <path d="M5 4C5 18 7.5 27 14 29C20.5 27 23 18 23 4" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.3" stroke-linejoin="round"/><ellipse cx="14" cy="4" rx="9" ry="1.6" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="1"/>
+  <path d="M14 29V50" stroke="rgba(255,255,255,.9)" stroke-width="1.8"/><ellipse cx="14" cy="51.4" rx="8.5" ry="2.3" fill="rgba(255,255,255,.25)" stroke="rgba(255,255,255,.9)" stroke-width="1.2"/>
+  <path d="M8.2 7.5C8.2 15 9.6 21 12 24" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round" opacity=".6"/></svg>`;
+const TREATS = [['sherry', 'the sherry', sherrySVG], ['pie', 'the mince pie', pieSVG], ['carrot', 'the carrot', carrotSVG]];
+const santaHelp = () => {
+  const t = state.treats, left = ['pie', 'sherry', 'carrot'].filter(k => !t[k]).map(k => TREATS.find(r => r[0] === k)[1]);
+  return !left.length ? `Lovely. Now off to bed, ${TO}. He only comes when you're asleep!` : left.length === 3 ? 'Tap the mince pie, the sherry and the carrot to put them out' : 'Now ' + left.join(' and ');
+};
+/* Santa's note: a line for each treat, then a PS from how she did in Naughty or Nice */
+function santaNote() {
+  const t = state.treats, line = k => SANTA[k][t[k] ? 0 : 1];
+  let nice = 0, naughty = 0; for (let d = 1; d <= 25; d++) if (DAYS[d].t === 'non' && state.non[d]) state.non[d].r === 'nice' ? nice++ : naughty++;
+  const ps = SANTA.ps[nice > naughty ? 'nice' : naughty > nice ? 'naughty' : 'even'];
+  return `<p>Dear ${TO},</p><p>${line('pie')}</p><p>${line('sherry')}</p><p>${line('carrot')}</p><p class="sig">${SANTA.sign.replace(/\n/g, '<br>')}</p><p class="ps">PS. ${ps}</p>${SANTA.pps ? `<p class="ps">PPS. ${SANTA.pps}</p>` : ''}`;
+}
+let stepsWalked = false;
+function paintSanta() {
+  const el = $('#santa'), t = today(), eve = !elf && (evePreview || t === 24), xmas = !elf && !eve && (xmasPreview || t === 25), tr = state.treats || (state.treats = {});
+  clearSteps();
+  if (!eve && !xmas) { el.hidden = true; el.innerHTML = ''; return; }
+  el.hidden = false;
+  if (eve) {
+    el.innerHTML = `<p class="santa-kick">It's Christmas Eve!</p><p class="santa-line">Leave something out for Santa and Rudolph</p>
+      <div class="plate-scene">${plateSVG(false)}${TREATS.map(([k, name, svg]) => `<button class="treat ${k}${tr[k] ? ' on' : ''}" type="button" data-t="${k}" aria-label="Put ${name} on the plate"${tr[k] ? ' disabled' : ''}>${svg()}</button>`).join('')}</div>
+      <p class="santa-help" id="santaHelp">${santaHelp()}</p>`;
+    el.querySelectorAll('.treat').forEach(b => b.onclick = () => placeTreat(b));
+    return;
+  }
+  el.innerHTML = `<p class="santa-kick">Santa's been!</p>
+    <div class="plate-scene">${plateSVG(tr.pie)}${TREATS.filter(([k]) => tr[k]).map(([k, , svg]) => `<span class="treat ${k} on">${svg(true)}</span>`).join('')}</div>
+    <div class="snote">${santaNote()}</div>
+    <p class="santa-help">Follow his footprints…</p>`;
+  const walk = !stepsWalked; stepsWalked = true;
+  fontsReady.then(() => santaSteps(walk));
+}
+function placeTreat(b) {
+  const t = b.dataset.t; if (state.treats[t]) return;
+  state.treats[t] = true; save();
+  b.classList.add('on'); b.disabled = true; fx(t === 'sherry' ? [79, 84, 91] : [72, 79], .09, {dur:.25, vol:.08});
+  $('#santaHelp').textContent = santaHelp();
+  if (t === 'sherry') {   /* a word to the wise */
+    const sc = b.closest('.plate-scene'), old = sc.querySelector('.santa-says'); if (old) old.remove();
+    const s = document.createElement('p'); s.className = 'santa-says'; s.textContent = SHERRY_LINE; sc.append(s); setTimeout(() => s.remove(), 6600);
+  }
+  if (['pie', 'sherry', 'carrot'].every(k => state.treats[k])) setTimeout(() => { sfx.chime(); sparkAt($('#santa .plate'), 16); }, 700);
+}
+/* Santa's snowy boot prints, from the plate down to door 25 */
+const BOOT = '<svg viewBox="0 0 20 34" aria-hidden="true"><path d="M10 .8C15.6.8 18.6 5.4 18.6 11.2c0 5.6-2.8 10.2-8.6 10.2S1.4 16.8 1.4 11.2C1.4 5.4 4.4.8 10 .8Z" fill="#f4f8fc" stroke="#9fb4ca" stroke-width=".9"/><rect x="3.6" y="23.6" width="12.8" height="9.6" rx="4.4" fill="#f4f8fc" stroke="#9fb4ca" stroke-width=".9"/><path d="M5.2 7.5h9.6M4.4 11.5h11.2M5 15.5h10M6.4 27h7.2M6.4 30h7.2" stroke="#c4d3e3" stroke-width="1.3" stroke-linecap="round"/></svg>';
+function clearSteps() { const s = document.querySelector('.steps'); if (s) s.remove(); }
+function santaSteps(walk) {
+  clearSteps();
+  const wrap = $('.wrap'), card = $('#santa'), d25 = document.querySelector('#grid .box[data-d="25"]');
+  if (!card || card.hidden || !d25 || !card.querySelector('.snote')) return;
+  const wr = wrap.getBoundingClientRect(), cr = card.getBoundingClientRect(), dr = d25.getBoundingClientRect();
+  const p0 = [cr.left + cr.width / 2 - wr.left, cr.bottom - wr.top + 16], p3 = [dr.left + dr.width / 2 - wr.left, dr.top - wr.top + 8];
+  const dy = p3[1] - p0[1], sw = wr.width * .3, p1 = [p0[0] + sw, p0[1] + dy * .33], p2 = [p3[0] - sw, p0[1] + dy * .66];
+  const bez = t => { const u = 1 - t; return [u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0], u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1]]; };
+  const pts = []; let prev = bez(0), acc = 0;
+  for (let i = 1; i <= 600; i++) { const q = bez(i / 600); acc += Math.hypot(q[0] - prev[0], q[1] - prev[1]); if (acc >= 34) { acc -= 34; pts.push([q[0], q[1], Math.atan2(q[1] - prev[1], q[0] - prev[0])]); } prev = q; }
+  const layer = document.createElement('div'); layer.className = 'steps' + (walk && !reduced ? ' walk' : ''); layer.setAttribute('aria-hidden', 'true');
+  layer.innerHTML = pts.map(([x, y, a], i) => { const side = i % 2 ? 1 : -1, nx = -Math.sin(a) * 6 * side, ny = Math.cos(a) * 6 * side;
+    return `<span class="step ${side < 0 ? 'l' : 'r'}" style="left:${(x + nx).toFixed(1)}px;top:${(y + ny).toFixed(1)}px;--r:${(a * 180 / Math.PI + 90).toFixed(1)}deg;--d:${(i * .24).toFixed(2)}s">${BOOT}</span>`; }).join('');
+  wrap.append(layer);
+  if (walk && !reduced) pts.forEach((_, i) => setTimeout(() => { if (layer.isConnected && !document.hidden) noise(.1, .09, 1.3, 2600); }, i * 240));
+}
+let stepsRT; addEventListener('resize', () => { clearTimeout(stepsRT); stepsRT = setTimeout(() => { if (document.querySelector('.steps')) santaSteps(false); }, 200); });
+
+/* ---------- frosty mornings: the screen mists over with a note written in it, and she wipes it clear ---------- */
+const frostPreview = TESTING && /[?&]frost\b/.test(location.search);
+let frostOn = false, frostPreviewed = false;
+function frostNote() {
+  if (frostPreview) { const k = Object.keys(FROST.notes)[0]; return frostPreviewed || !k ? null : {d:0, note:FROST.notes[k]}; }
+  const n = new Date(), d = n.getDate(), wiped = state.frost && state.frost[d];
+  if (elf || n.getFullYear() !== YEAR || n.getMonth() !== 11 || !FROST.notes[d]) return null;
+  if (typeof wiped === 'number' && Date.now() - wiped < 30 * 60e3) return null;   /* just wiped: stays clear for half an hour */
+  return {d, note:FROST.notes[d]};
+}
+function maybeFrost() {
+  if (frostOn || document.hidden || dlg.open || globeDlg.open || notesDlg.open || jokesDlg.open || viewer.open) return;
+  const f = frostNote(); if (!f) return;
+  frostOn = true; canvasFonts().then(() => showFrost(f));
+}
+function drawFrost(x, W, H, note) {
+  x.clearRect(0, 0, W, H);
+  x.fillStyle = 'rgba(226,236,245,.95)'; x.fillRect(0, 0, W, H);
+  const vg = x.createRadialGradient(W / 2, H * .42, Math.min(W, H) * .15, W / 2, H * .42, Math.hypot(W, H) * .62);
+  vg.addColorStop(0, 'rgba(255,255,255,0)'); vg.addColorStop(1, 'rgba(250,252,255,.75)'); x.fillStyle = vg; x.fillRect(0, 0, W, H);
+  for (let i = 0, n = W * H / 60; i < n; i++) { x.globalAlpha = .15 + Math.random() * .35; x.fillStyle = Math.random() < .7 ? '#fff' : '#b6c8da'; const s = .5 + Math.random() * 1.3; x.fillRect(Math.random() * W, Math.random() * H, s, s); }
+  x.globalAlpha = 1;
+  /* frost feathers growing in from the edges: short, curling, branching strokes */
+  x.lineCap = 'round';
+  const fern = (px, py, a, len, w, depth) => {
+    let cx = px, cy = py, ang = a;
+    const segs = 3 + Math.floor(Math.random() * 2), bend = (Math.random() - .5) * .5;
+    for (let s = 0; s < segs; s++) {
+      const nx = cx + Math.cos(ang) * len / segs, ny = cy + Math.sin(ang) * len / segs;
+      x.strokeStyle = `rgba(255,255,255,${(.32 + depth * .1).toFixed(2)})`; x.lineWidth = w; x.beginPath(); x.moveTo(cx, cy); x.lineTo(nx, ny); x.stroke();
+      if (depth > 0) [-1, 1].forEach(side => { if (Math.random() < .85) fern(nx, ny, ang + side * (.55 + Math.random() * .35), len * (.32 + Math.random() * .18), w * .72, depth - 1); });
+      cx = nx; cy = ny; ang += bend;
+    }
+  };
+  for (let i = 0, seeds = Math.round((W + H) * 2 / 30); i < seeds; i++) {
+    const e = Math.floor(Math.random() * 4), u = Math.random();
+    const [px, py, a] = e === 0 ? [u * W, 0, Math.PI / 2] : e === 1 ? [W, u * H, Math.PI] : e === 2 ? [u * W, H, -Math.PI / 2] : [0, u * H, 0];
+    fern(px, py, a + (Math.random() - .5) * 1.3, 34 + Math.random() * 62, 1.5 + Math.random(), 2);
+  }
+  /* the note, traced in the frost with a finger (a little haze left in the strokes), with a few drips running down from it */
+  x.save(); x.globalCompositeOperation = 'destination-out'; x.globalAlpha = .82; x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+  let fs = Math.min(68, W * .15), lines;
+  const fit = () => { x.font = `400 ${fs}px ${F.hand}`; lines = wrapBalanced(x, note, W * .84); };
+  fit(); while (fs > 24 && lines.some(l => x.measureText(l).width > W * .9)) { fs -= 2; fit(); }
+  const lh = fs * 1.12, y0 = H * .36 - (lines.length - 1) * lh / 2;
+  const lw = x.measureText(lines[lines.length - 1]).width, by = y0 + (lines.length - 1) * lh + fs * .1;
+  const drips = Array.from({length:4}, () => ({x:W / 2 - lw / 2 + lw * (.12 + Math.random() * .76), len:24 + Math.random() * 70, w:2.5 + Math.random() * 2, lean:(Math.random() - .5) * 3}));
+  const trace = () => {
+    x.lineWidth = fs * .09; x.lineJoin = x.lineCap = 'round';
+    lines.forEach((l, i) => { x.fillText(l, W / 2, y0 + i * lh); x.strokeText(l, W / 2, y0 + i * lh); });
+    drips.forEach(d => { x.lineWidth = d.w; x.beginPath(); x.moveTo(d.x, by); x.lineTo(d.x + d.lean, by + d.len); x.stroke(); x.beginPath(); x.arc(d.x + d.lean, by + d.len, d.w * .9, 0, 7); x.fill(); });
+  };
+  x.strokeStyle = x.fillStyle = '#000'; trace();
+  /* then a dark tint in the strokes, like clear glass with the dark morning behind it, so the note stays crisp */
+  x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1; x.strokeStyle = x.fillStyle = 'rgba(12,38,34,.5)'; trace();
+  x.restore();
+}
+function showFrost(f) {
+  const el = document.createElement('div'); el.className = 'frost'; el.id = 'frost'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'The screen has frosted over. Written in the frost: ' + f.note);
+  el.innerHTML = `<canvas aria-hidden="true"></canvas><div class="frost-ui"><p class="frost-hint">It's frosted over! Wipe the screen</p><button class="frost-skip" type="button">Let it melt</button></div>`;
+  document.body.append(el);
+  const cv = el.querySelector('canvas'), x = cv.getContext('2d'), CELL = 22;
+  let W, H, cells, cleared, last = null, done = false, lastSq = 0;
+  const paint = () => { W = innerWidth; H = innerHeight; const dpr = Math.min(2, devicePixelRatio || 1); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); x.setTransform(dpr, 0, 0, dpr, 0, 0); drawFrost(x, W, H, f.note); cells = new Uint8Array(Math.ceil(W / CELL) * Math.ceil(H / CELL)); cleared = 0; };
+  paint();
+  const mark = (px, py) => { const cols = Math.ceil(W / CELL), rows = Math.ceil(H / CELL), r = 26;
+    for (let cy = Math.max(0, Math.floor((py - r) / CELL)); cy <= Math.min(rows - 1, Math.floor((py + r) / CELL)); cy++)
+      for (let cx = Math.max(0, Math.floor((px - r) / CELL)); cx <= Math.min(cols - 1, Math.floor((px + r) / CELL)); cx++) {
+        const i = cy * cols + cx; if (!cells[i] && Math.hypot((cx + .5) * CELL - px, (cy + .5) * CELL - py) < r) { cells[i] = 1; cleared++; } } };
+  const wipe = (a, b) => {
+    x.save(); x.globalCompositeOperation = 'destination-out'; x.lineCap = x.lineJoin = 'round'; x.lineWidth = 44; x.strokeStyle = '#000'; x.shadowColor = '#000'; x.shadowBlur = 14;
+    x.beginPath(); x.moveTo(a.x, a.y); x.lineTo(b.x + .01, b.y); x.stroke(); x.restore();
+    const len = Math.hypot(b.x - a.x, b.y - a.y); for (let s = 0; s <= len; s += 9) mark(a.x + (b.x - a.x) * s / (len || 1), a.y + (b.y - a.y) * s / (len || 1));
+    const now = performance.now(); if (now - lastSq > 140) { lastSq = now; noise(.09, .045, 2.2, 5200); }
+  };
+  const melt = () => {
+    if (done) return; done = true; el.classList.add('melt'); sfx.chime(); setTimeout(sfx.sparkle, 300);
+    if (frostPreview) frostPreviewed = true; else { state.frost[f.d] = Date.now(); save(); }
+    setTimeout(() => { el.remove(); frostOn = false; removeEventListener('resize', onResize); document.removeEventListener('keydown', onKey); }, 1100);
+  };
+  const onResize = () => { if (!done) paint(); }, onKey = e => { if (e.key === 'Escape') melt(); };
+  addEventListener('resize', onResize); document.addEventListener('keydown', onKey);
+  el.addEventListener('pointerdown', e => { if (done || e.target.closest('.frost-skip')) return; try { el.setPointerCapture(e.pointerId); } catch (er) {} last = {x:e.clientX, y:e.clientY}; el.classList.add('wiping'); wipe(last, last); });
+  el.addEventListener('pointermove', e => { if (!last || done) return; const p = {x:e.clientX, y:e.clientY}; wipe(last, p); last = p; if (cleared / cells.length >= .4) melt(); });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => el.addEventListener(t, () => { last = null; }));
+  el.querySelector('.frost-skip').onclick = melt;
+  el._frost = {melt, progress:() => cleared / cells.length};   /* for testing */
+}
+/* it frosts over when she opens the calendar or comes back to it (never while she's in the middle of using it) */
+document.addEventListener('visibilitychange', () => { if (!document.hidden) maybeFrost(); });
+
 ['present', 'stocking'].forEach(icoImg); svgImg('sleigh', SLEIGH);
-paintToggles(); tick();
+paintToggles(); tick(); maybeFrost();
 </script>
 </body>
 </html>
