@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f2a26">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Advent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <meta name="robots" content="noindex">
 <title>Gill's Advent Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,15 +47,42 @@ button{font:inherit}
 #snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .os{font-size:.5em;line-height:0;vertical-align:.9em;margin-left:.04em}
 
-/* fairy lights strung across the top */
-.lights{position:absolute;left:0;right:0;top:0;height:64px;z-index:0;pointer-events:none;overflow:hidden}
+/* fairy lights strung across the top: 25 bulbs, one switched on for every door opened */
+.lights{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);height:64px;z-index:0;pointer-events:none;overflow:hidden}
 .lights svg{position:absolute;left:0;top:0}
-.bulb{position:absolute;width:9px;height:14px;margin-left:-4.5px;border-radius:50% 50% 46% 46%;background:var(--c);
-  box-shadow:0 0 10px 2px var(--c);transform:rotate(var(--r));transform-origin:50% 0;animation:twinkle var(--t) ease-in-out var(--dl) infinite alternate}
+.bulb{position:absolute;width:9px;height:14px;margin-left:-4.5px;border-radius:50% 50% 46% 46%;transform:rotate(var(--r));transform-origin:50% 0;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.32),transparent 45%),#34443e;box-shadow:inset 0 -2px 3px rgba(0,0,0,.35)}
 .bulb::before{content:"";position:absolute;left:2px;top:-3px;width:5px;height:4px;border-radius:1px;background:#1d2a25}
+.bulb.on{background:var(--c);box-shadow:0 0 10px 2px var(--c);animation:twinkle var(--t) ease-in-out var(--dl) infinite alternate}
+.bulb.flick{animation:flickOn 1.4s ease-out both}
 @keyframes twinkle{from{opacity:1}to{opacity:.35;box-shadow:0 0 3px 0 var(--c)}}
+@keyframes flickOn{0%,22%,38%{background:#34443e;box-shadow:none}12%,30%{background:var(--c);box-shadow:0 0 12px 3px var(--c)}55%{background:var(--c);box-shadow:0 0 24px 9px var(--c);transform:rotate(var(--r)) scale(1.6)}100%{background:var(--c);box-shadow:0 0 10px 2px var(--c);transform:rotate(var(--r))}}
+.lights.all .bulb.on{animation:chase 1.4s ease-in-out calc(var(--k) * -.11s) infinite}
+@keyframes chase{0%,100%{opacity:1;box-shadow:0 0 14px 4px var(--c)}50%{opacity:.3;box-shadow:0 0 2px 0 var(--c)}}
 
-.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding-block:34px 40px;
+/* Christmas Eve after dark: night sky, stars, the moon, and Santa crossing it */
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+html.eve{background:#060b1f}
+html.eve body{background-color:#070d24;background-image:radial-gradient(ellipse at 85% -8%,rgba(120,150,230,.3),transparent 55%),linear-gradient(#060b1f,#0b1734 55%,#0f2a26 130%)}
+html.eve .bar{background:#14224a}
+.stars span{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:.85;animation:starTwinkle var(--t) ease-in-out var(--dl) infinite alternate}
+@keyframes starTwinkle{to{opacity:.12}}
+.moon{position:absolute;right:max(14px, calc(50% - 352px));top:calc(env(safe-area-inset-top,0px) + 8px);width:78px;height:78px;border-radius:50%;
+  background:radial-gradient(circle at 64% 38%,rgba(185,165,115,.45) 0 7px,transparent 8px),radial-gradient(circle at 38% 66%,rgba(185,165,115,.38) 0 9px,transparent 10px),radial-gradient(circle at 30% 30%,rgba(185,165,115,.3) 0 5px,transparent 6px),radial-gradient(circle at 40% 35%,#fffbe9,#f3e5b5 60%,#dccb92);
+  box-shadow:0 0 30px 8px rgba(255,240,190,.32),0 0 90px 30px rgba(255,240,190,.1)}
+.flyer{position:absolute;left:0;top:env(safe-area-inset-top,0px);width:96px;opacity:0;will-change:transform;animation:fly 18s linear 1.2s infinite}
+.flyer svg{position:relative;display:block;width:100%;height:auto;filter:brightness(0);opacity:.9}
+.flyer .trail{position:absolute;right:86%;top:44%;width:170px;height:5px;background:radial-gradient(circle,#ffe7a3 1.4px,transparent 2.1px) 0 50%/9px 5px repeat-x;
+  -webkit-mask:linear-gradient(to right,transparent,#000);mask:linear-gradient(to right,transparent,#000);filter:drop-shadow(0 0 3px #ffd36b)}
+@keyframes fly{0%{transform:translate(-190px,var(--y0,70px)) rotate(-8deg);opacity:1}42%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:1}42.01%,100%{transform:translate(calc(100vw + 30px),var(--y1,10px)) rotate(-8deg);opacity:0}}
+
+/* iPhone tip: add it to the home screen (only shown before the first door) */
+.tip{display:flex;align-items:center;gap:10px;padding:10px 8px 10px 14px;border-radius:14px;background:color-mix(in srgb,var(--gold) 14%,var(--spruce));border:1px dashed color-mix(in srgb,var(--gold) 55%,transparent)}
+.tip p{margin:0;flex:1;min-width:0;font-size:.88rem;line-height:1.4}
+.tip svg{display:inline-block;width:15px;height:15px;vertical-align:-2px;margin:0 1px;color:var(--gold)}
+.tip button{flex:none;border:0;background:none;color:var(--cream);font-size:1.35rem;line-height:1;padding:6px 8px;cursor:pointer}
+
+.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding-block:calc(34px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   display:flex;flex-direction:column;gap:18px}
 header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
@@ -99,6 +133,8 @@ h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2rem,9vw,
 .box.ready{outline:3px solid var(--gold);outline-offset:2px;animation:glow 1.8s ease-in-out infinite}
 @keyframes glow{50%{outline-color:transparent;transform:scale(1.03)}}
 .box.wiggle{animation:wiggle .4s}
+.box.nudge{animation:nudgeBox 1.1s ease}
+@keyframes nudgeBox{12%{transform:scale(1.09) rotate(-7deg)}26%{transform:scale(1.09) rotate(7deg)}40%{transform:scale(1.07) rotate(-5deg)}54%{transform:scale(1.05) rotate(3deg)}75%{transform:none}}
 @keyframes wiggle{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
 .box.open{background-color:color-mix(in srgb,var(--kraft) 58%,var(--ink));background-image:var(--grain);background-size:auto;
   box-shadow:inset 0 14px 18px rgba(0,0,0,.38),inset 0 0 0 2px rgba(0,0,0,.2),0 4px 10px rgba(0,0,0,.35)}
@@ -127,7 +163,8 @@ dialog:focus,dialog:focus-visible{outline:none}
 
 /* ---------- dialogs ---------- */
 .pd{border:0;padding:0;outline:none;background:transparent;color:var(--ink);color-scheme:light;
-  width:min(440px,calc(100% - 20px));max-width:none;max-height:calc(100dvh - 12px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+  top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);
+  width:min(440px,calc(100% - 20px));max-width:none;max-height:calc(100dvh - 12px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
 .pd::-webkit-scrollbar{display:none}
 .pd::backdrop{background:rgba(8,24,21,.95)}
 .door-wrap{padding:22px 4px 18px}
@@ -379,7 +416,7 @@ dialog:focus,dialog:focus-visible{outline:none}
 /* polaroids: tap to shake them until they develop */
 .polaroid{position:relative;align-self:center;width:min(250px,80%);margin:14px 0 4px;padding:10px 10px 0;background-color:#fff;background-image:var(--grain);
   box-shadow:0 12px 26px rgba(40,25,10,.28),0 1px 3px rgba(40,25,10,.2);transform:rotate(-2.5deg)}
-.polaroid img{display:block;width:100%;height:auto;background:var(--goldwash);transition:filter .9s ease}
+.polaroid img,.polaroid video{display:block;width:100%;height:auto;background:var(--goldwash);transition:filter .9s ease}
 .polaroid figcaption{min-height:44px;padding:10px 4px 12px;font-family:var(--hand);font-size:1.05rem;line-height:1.25;color:var(--inkh)}
 .polaroid .tape{width:90px;height:24px;top:-12px}
 .polaroid.undev{cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -389,9 +426,9 @@ dialog:focus,dialog:focus-visible{outline:none}
 .polaroid.shake{animation:shake .5s ease}
 @keyframes shake{15%{transform:rotate(-9deg) translateX(-6px)}35%{transform:rotate(5deg) translateX(6px)}55%{transform:rotate(-6deg) translateX(-4px)}75%{transform:rotate(1deg) translateX(2px)}}
 .polaroid.develop{cursor:pointer}
-.polaroid.develop img{filter:brightness(.12) sepia(1) saturate(.3) contrast(.6) blur(3px)}
-.polaroid.develop.go img{animation:develop 6s ease-out .3s both}
-.polaroid.develop.go.fast img{animation-duration:1.4s}
+.polaroid.develop :is(img,video){filter:brightness(.12) sepia(1) saturate(.3) contrast(.6) blur(3px)}
+.polaroid.develop.go :is(img,video){animation:develop 6s ease-out .3s both}
+.polaroid.develop.go.fast :is(img,video){animation-duration:1.4s}
 @keyframes develop{0%{filter:brightness(.12) sepia(1) saturate(.3) contrast(.6) blur(3px)}35%{filter:brightness(.55) sepia(.8) saturate(.5) contrast(.8) blur(1.5px)}100%{filter:brightness(1) sepia(0) saturate(1) contrast(1) blur(0)}}
 .ph{display:grid;place-items:center;aspect-ratio:4/5;padding:16px;background:var(--goldwash);font-family:var(--hand);font-size:1.05rem;line-height:1.3;color:var(--inkh);text-align:center}
 .devhint{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.85rem;color:var(--sh-muted)}
@@ -638,6 +675,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     </radialGradient>
   </defs>
 </svg>
+<div class="sky" id="sky" hidden aria-hidden="true"><div class="stars" id="stars"></div><span class="moon" id="moon"></span><div class="flyer" id="flyer"><span class="trail"></span></div></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="lights" id="lights" aria-hidden="true"></div>
 <div class="wrap">
@@ -645,7 +683,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
     <button class="star" id="star" type="button" aria-label="Star">★</button>
     <p class="eyebrow">December 2026</p>
     <h1>Gill's Advent Calendar</h1>
-    <p class="sub">25 boxes, 25 doors. Tap today's door first, then go and find the box.</p>
+    <p class="sub" id="sub">25 boxes, 25 doors. Tap today's door first, then go and find the box.</p>
   </header>
   <div class="bar">
     <p id="status"></p>
@@ -657,6 +695,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
       <button class="pill" id="resetBtn" type="button" hidden>Reset doors</button>
     </div>
   </div>
+  <div class="tip" id="a2hs" hidden><p>Tip: tap <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5v8M5 4.5l3-3 3 3" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 7H4a1 1 0 0 0-1 1v5.5a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><b>Share</b>, then <b>Add to Home Screen</b>, and your calendar opens like an app.</p><button type="button" id="a2hsX" aria-label="Hide this tip">×</button></div>
   <div id="elf" hidden>
     <p><strong>Elf mode.</strong> Every door is unlocked for testing and nothing is saved.</p>
     <button class="pill" id="elfOff" type="button">Leave elf mode</button>
@@ -743,7 +782,7 @@ canvas.catch{display:block;width:100%;height:300px;border-radius:12px;background
      t:'non'    = Naughty or Nice wheel, then a savable coupon (prize, nice, naughty)
      t:'lock'   = clue in the box leads to a password, then a scratchcard ticket she can save
                   (code, emoji, title, detail, venue, time or stub, outcome, label)
-     t:'reveal' = Christmas Day premiere                       (photo, caption, video, credit)
+     t:'reveal' = Christmas Day premiere                       (clip + poster, or photo; caption, video, credit)
 */
 const TO = "Gill", FROM = "Luke", YEAR = 2026;
 const DAYS = [null,
@@ -819,7 +858,7 @@ const DAYS = [null,
  /* 24 */ {t:'lock', code:'COMFY', emoji:'🌙🎄', kick:"Your present is", title:"Cosy Christmas Pyjamas", detail:"For snuggling up on Christmas Eve", venue:"Check under the tree", stub:"Tonight", outcome:"Go and have a look under the tree.", label:"cosy",
    note:"It was chriiiiistmas eveeee babe. Did you know Kirsty MacColl died in a speed boat accident! ANYWAYYYY 1 more sleep till Xmas.",
    joke:["Why did the weird elf call in sick?", "'Cause he had mental elf problems."]},
- /* 25 */ {t:'reveal', photo:'photobot.gif', caption:"Courts Club, Manchester · 20.12.25", video:"https://www.youtube.com/watch?v=ZeyHl1tQeaQ", credit:"A Luke Bennett production",
+ /* 25 */ {t:'reveal', clip:'photobot.mp4', poster:'photobot.jpg', photo:'photobot.gif', caption:"Courts Club, Manchester · 20.12.25", video:"https://www.youtube.com/watch?v=ZeyHl1tQeaQ", credit:"A Luke Bennett production",
    note:"To my gorgeous fiancée,\n\nMerry Christmas! I hope you've enjoyed this year's calendar as much as I've enjoyed working on it for weeeeeks!\n\nI'll forever go above and beyond to show you how special you are and just how much you mean to me. The bar will forever be set high because it's the minimum you deserve. You make me so happy and you're the only present I need. I can't wait to marry you my love.",
    signOff:"Lots of love,\nLuke xxxxxxx", ps:"PS. If there was a Golden Retriever, I mean I'll take it, I don't wanna be rude!",
    joke:["Why did George Michael have chocolate on his trousers?", "Because he was careless with his Wispa."]}
@@ -828,9 +867,17 @@ const DAYS = [null,
 const QUIPS = ["Terrible, I know.", "Oof, that one was bad.", "Too much of a dad joke?", "Quite funny, if I say so myself.", "I'll get my coat.",
   "Go on, you smiled.", "Sorry. Not sorry.", "That one's a cracker. Literally.", "Peak dad joke.", "Groan all you like.",
   "Ten out of ten, no notes.", "Don't roll your eyes at me.", "Comedy gold, that.", "I'll be here all December."];
+/* The doors are mixed up like a real advent calendar, with 25 along the bottom.
+   Set MIXED to false to put 1 to 24 back in order. ORDER is the wall, left to right, top to bottom. */
+const MIXED = true;
+const ORDER = [22, 9, 4, 7, 2, 14, 17, 12, 19, 23, 20, 6, 8, 5, 16, 10, 15, 11, 21, 13, 1, 24, 3, 18];
 /* ============ end of the bit to edit ============ */
 
 const $ = s => document.querySelector(s);
+const okOrder = ORDER.length === 24 && new Set(ORDER).size === 24 && ORDER.every(n => n >= 1 && n <= 24);
+const WALL = (MIXED && okOrder ? ORDER : Array.from({length:24}, (_, i) => i + 1)).concat(25);
+/* each door's wrapping paper follows its place on the wall, so neighbours never match */
+const pap = d => (WALL.indexOf(d) + 1) % 5;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const weekday = (d, style) => new Date(YEAR, 11, d).toLocaleDateString('en-GB', {weekday: style || 'long'});
@@ -993,27 +1040,80 @@ function shower(n) {
   }
 }
 
-/* ---------- fairy lights ---------- */
-(function lights() {
-  const el = $('#lights'); if (!el) return;
-  const cols = ['#e2b659', '#ff5a70', '#5fd39d', '#fff1d6', '#6ab8ff'];
-  const draw = () => {
-    const W = el.clientWidth || innerWidth, swags = Math.max(2, Math.round(W / 240)), seg = W / swags, top = 3, sag = 22;
-    let path = '', html = '', k = 0;
-    for (let s = 0; s < swags; s++) {
-      const x0 = s * seg, x1 = x0 + seg, cx = x0 + seg / 2, cy = top + sag * 2;
-      path += `M${x0.toFixed(1)} ${top} Q${cx.toFixed(1)} ${cy} ${x1.toFixed(1)} ${top} `;
-      const n = Math.max(3, Math.round(seg / 46));
-      for (let i = 0; i < n; i++) {
-        const t = (i + .5) / n, x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cx + t * t * x1, y = (1 - t) * (1 - t) * top + 2 * (1 - t) * t * cy + t * t * top;
-        const ang = Math.atan2(2 * (1 - t) * (cy - top) + 2 * t * (top - cy), seg) * 180 / Math.PI;
-        html += `<span class="bulb" style="left:${x.toFixed(1)}px;top:${(y + 1).toFixed(1)}px;--c:${cols[k % cols.length]};--r:${(ang * .6).toFixed(1)}deg;--t:${(1.2 + Math.random() * 1.8).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`; k++;
-      }
-    }
-    el.innerHTML = `<svg width="${W}" height="64" viewBox="0 0 ${W} 64"><path d="${path}" fill="none" stroke="#2c4038" stroke-width="2"/></svg>` + html;
+/* ---------- fairy lights: 25 bulbs, one switched on for every door opened, all chasing on Christmas Day ---------- */
+const lightsEl = $('#lights'), LIGHT_COLS = ['#e2b659', '#ff5a70', '#5fd39d', '#fff1d6', '#6ab8ff'];
+let litShown = -1;
+function drawLights() {
+  const W = lightsEl.clientWidth || innerWidth, swags = W < 560 ? 2 : W < 1000 ? 3 : 4, seg = W / swags, top = 3, sag = 22, N = 25;
+  let path = '', html = '';
+  for (let i = 0; i < swags; i++) { const x0 = i * seg; path += `M${x0.toFixed(1)} ${top} Q${(x0 + seg / 2).toFixed(1)} ${top + sag * 2} ${(x0 + seg).toFixed(1)} ${top} `; }
+  for (let k = 0; k < N; k++) {
+    const u = (k + .5) / N * swags, i = Math.min(swags - 1, Math.floor(u)), t = u - i, x0 = i * seg, x1 = x0 + seg, cx = x0 + seg / 2, cy = top + sag * 2;
+    const x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cx + t * t * x1, y = (1 - t) * (1 - t) * top + 2 * (1 - t) * t * cy + t * t * top;
+    const ang = Math.atan2(2 * (1 - t) * (cy - top) + 2 * t * (top - cy), seg) * 180 / Math.PI;
+    html += `<span class="bulb" style="left:${x.toFixed(1)}px;top:${(y + 1).toFixed(1)}px;--c:${LIGHT_COLS[k % 5]};--k:${k};--r:${(ang * .6).toFixed(1)}deg;--t:${(1.2 + Math.random() * 1.8).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`;
+  }
+  lightsEl.innerHTML = `<svg width="${W}" height="64" viewBox="0 0 ${W} 64"><path d="${path}" fill="none" stroke="#2c4038" stroke-width="2"/></svg>` + html;
+  litShown = -1; paintLights();
+}
+function paintLights() {
+  const n = Math.min(25, Object.keys(state.opened).length), bulbs = [...lightsEl.querySelectorAll('.bulb')], fresh = litShown >= 0 && n > litShown;
+  bulbs.forEach((b, k) => {
+    if (fresh && k >= litShown && k < n) { b.classList.remove('flick'); void b.offsetWidth; b.classList.add('flick'); b.addEventListener('animationend', () => b.classList.remove('flick'), {once:true}); }
+    b.classList.toggle('on', k < n);
+  });
+  lightsEl.classList.toggle('all', n >= 25);
+  if (fresh) setTimeout(() => { fx([88, 93, 100], .09, {dur:.45, vol:.06}); if (bulbs[n - 1]) sparkAt(bulbs[n - 1], 10); }, 380);
+  litShown = n;
+}
+drawLights();
+let lightsRT; addEventListener('resize', () => { clearTimeout(lightsRT); lightsRT = setTimeout(drawLights, 150); });
+
+/* ---------- Christmas Eve after dark: the homepage turns to night and Santa crosses the moon ---------- */
+const SUB_TEXT = $('#sub').textContent;
+const evePreview = TESTING && /[?&]eve\b/.test(location.search);   /* testing: add ?eve to the address to see it early */
+function isEve() { if (evePreview) return true; const n = new Date(); return n.getFullYear() === YEAR && n.getMonth() === 11 && n.getDate() === 24 && n.getHours() >= 16; }
+let skyBuilt = false;
+function applyEve() {
+  const on = isEve(), sky = $('#sky');
+  document.documentElement.classList.toggle('eve', on); sky.hidden = !on;
+  document.querySelector('meta[name="theme-color"]').content = on ? '#070d24' : '#0f2a26';
+  $('#sub').textContent = on ? "Santa's on his way. One more sleep, " + TO + '.' : SUB_TEXT;
+  if (!on) return;
+  if (!skyBuilt) {
+    skyBuilt = true; let h = '';
+    for (let i = 0; i < 60; i++) h += `<span style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 46).toFixed(1)}%;--s:${(1 + Math.random() * 1.8).toFixed(1)}px;--t:${(1.5 + Math.random() * 2.5).toFixed(2)}s;--dl:${(-Math.random() * 3).toFixed(2)}s"></span>`;
+    $('#stars').innerHTML = h; $('#flyer').insertAdjacentHTML('beforeend', SLEIGH);
+  }
+  aimSleigh();
+}
+/* line the flight path up so the sleigh passes right across the moon */
+function aimSleigh() {
+  const moon = $('#moon'), fl = $('#flyer'); if (!moon || !fl || $('#sky').hidden) return;
+  const m = moon.getBoundingClientRect(), W = innerWidth, fw = fl.offsetWidth || 96, fh = fl.offsetHeight || 40, top0 = parseFloat(getComputedStyle(fl).top) || 0;
+  const p = Math.min(.92, Math.max(.2, (m.left + m.width / 2 - fw / 2 + 190) / (W + 220)));
+  const yAt = m.top + m.height / 2 - top0 - fh / 2, y0 = yAt + 44, y1 = y0 + (yAt - y0) / p;
+  fl.style.setProperty('--y0', y0.toFixed(1) + 'px'); fl.style.setProperty('--y1', y1.toFixed(1) + 'px');
+}
+addEventListener('resize', aimSleigh);
+
+/* ---------- iPhone: suggest adding it to the home screen, only before the first door is opened ---------- */
+const standalone = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+function paintTip() { $('#a2hs').hidden = !(isIOS() && !standalone && !elf && !prefs.tipOff && !Object.keys(real.opened).length); }
+$('#a2hsX').onclick = () => { prefs.tipOff = true; save(); paintTip(); };
+
+/* ---------- mixed-up doors: no glow giving it away, just a little nudge if she's been looking a while ---------- */
+let nudgeT;
+function scheduleNudge() {
+  clearTimeout(nudgeT);
+  const t = today(); if (!MIXED || !t || t > 25 || state.opened[t]) return;
+  const go = () => {
+    if (state.opened[t]) return;
+    if (!dlg.open && !document.hidden) { const b = document.querySelector(`#grid .box[data-d="${t}"]`); if (b) { b.classList.remove('nudge'); void b.offsetWidth; b.classList.add('nudge'); } }
+    nudgeT = setTimeout(go, 9000);
   };
-  draw(); let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(draw, 150); });
-})();
+  nudgeT = setTimeout(go, 7000);
+}
 
 /* ---------- grid ---------- */
 let toastT;
@@ -1029,10 +1129,10 @@ function label(d) {
 const TILT = [-7, 5, -3, 8, -5, 3];
 function renderGrid() {
   const g = $('#grid'); g.innerHTML = '';
-  for (let d = 1; d <= 25; d++) {
-    const b = document.createElement('button'); b.type = 'button';
+  WALL.forEach(d => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.d = d;
     const open = state.opened[d], un = unlocked(d);
-    b.className = 'box paper p' + (d % 5) + (d === 25 ? ' wide' : '') + (open ? ' open' : un ? ' ready' : '');
+    b.className = 'box paper p' + pap(d) + (d === 25 ? ' wide' : '') + (open ? ' open' : un && !MIXED ? ' ready' : '');
     b.innerHTML = open ? `<span class="rem paper"></span><span class="otagw" style="--rot:${TILT[d % 6]}deg"><span class="otag"><b>${d}</b><i>${label(d)}</i></span></span>` : `<span class="tag">${d}</span>`;
     b.setAttribute('aria-label', 'Door ' + d + (open ? ', opened: ' + label(d) : un ? ', ready to open' : ', locked until ' + ord(d) + ' December'));
     b.onclick = () => {
@@ -1040,21 +1140,26 @@ function renderGrid() {
       openDoor(d);
     };
     g.append(b);
-  }
+  });
   const t = today(), n = Object.keys(state.opened).length, s = $('#status'); let msg;
+  let waiting = 0; if (t > 1 && t <= 25) for (let d = 1; d < t; d++) if (!state.opened[d]) waiting++;
   if (t === 0) { const now = new Date(); const sl = Math.round((new Date(YEAR, 11, 1) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 864e5); msg = sl + (sl === 1 ? ' sleep' : ' sleeps') + ' until door 1'; }
   else if (t > 25) msg = 'Every door is open. Merry Christmas.';
-  else if (!state.opened[t]) msg = 'Door ' + t + ' is ready';
+  else if (isEve() && state.opened[24]) msg = "Santa's on his way. Door 25 opens at midnight.";
+  else if (!state.opened[t]) msg = 'Door ' + t + ' is ready' + (MIXED ? '. Can you spot it?' : '');
   else msg = t === 25 ? 'Merry Christmas, ' + TO : 'Door ' + t + ' done. Back tomorrow for door ' + (t + 1) + '.';
   let nice = 0, naughty = 0;
   for (let d = 1; d <= 25; d++) if (DAYS[d].t === 'non' && state.non[d]) state.non[d].r === 'nice' ? nice++ : naughty++;
-  s.innerHTML = msg + `<small>${n} of 25 opened${nice + naughty ? ` · Santa's list: ${nice} nice, ${naughty} naughty` : ''}</small>`;
+  s.innerHTML = msg + `<small>${n} of 25 opened${waiting ? ` · ${waiting} earlier door${waiting > 1 ? 's' : ''} still to open` : ''}${nice + naughty ? ` · Santa's list: ${nice} nice, ${naughty} naughty` : ''}</small>`;
   const jn = Object.keys(state.cr).length;
   $('#notesBtn').textContent = n ? 'Love notes · ' + n : 'Love notes';
   $('#jokesBtn').textContent = jn ? 'Cracker jokes · ' + jn : 'Cracker jokes';
+  paintLights(); paintTip(); scheduleNudge();
 }
-let lastDay = today();
-setInterval(() => { if (today() !== lastDay) { lastDay = today(); renderGrid(); } }, 60000);
+let lastDay = today(), lastEve = null;
+/* every minute: a new day re-draws the wall, and 4pm on Christmas Eve turns the sky to night */
+function tick() { const e = isEve(); if (e !== lastEve) { lastEve = e; applyEve(); renderGrid(); } else if (today() !== lastDay) { lastDay = today(); renderGrid(); } }
+setInterval(tick, 60000);
 
 /* ---------- elf mode: tap the star 5 times ---------- */
 let taps = 0, tapT;
@@ -1104,7 +1209,7 @@ function openDoor(d) {
 /* step one: the present, wrapped in that day's paper */
 function showGift(d, c) {
   const g = $('#gift');
-  g.className = 'gift p' + (d % 5); g.disabled = false;
+  g.className = 'gift p' + pap(d); g.disabled = false;
   $('#gNum').innerHTML = ordHTML(d);
   $('#uDate').innerHTML = `<span>${weekday(d)}</span>${ordHTML(d)} December`;
   unwrap.hidden = false; unwrap.classList.remove('in'); void unwrap.offsetWidth; unwrap.classList.add('in');
@@ -1165,7 +1270,7 @@ function closePanel() {
   later(() => { const a = $('#act'); if (a && a.firstElementChild) a.scrollIntoView({block:'nearest', behavior: reduced ? 'auto' : 'smooth'}); }, 60);
   sfx.click();
 }
-const call = (d, line, cls) => `<div class="call p${d % 5}${cls ? ' ' + cls : ''}"><span class="tree">${treeArt(d)}</span><div><b>Open your Calendar Box ${d}</b><span class="line">${line || "It's waiting for you under the tree."}</span></div></div>`;
+const call = (d, line, cls) => `<div class="call p${pap(d)}${cls ? ' ' + cls : ''}"><span class="tree">${treeArt(d)}</span><div><b>Open your Calendar Box ${d}</b><span class="line">${line || "It's waiting for you under the tree."}</span></div></div>`;
 function stampWhenSeen(root) { const cl = root.querySelector('.call.pending'); whenSeen(cl, () => { cl.classList.remove('pending'); cl.classList.add('fresh'); }, .6); }
 
 /* the cracker: tap it, or grab an end and pull */
@@ -1173,7 +1278,7 @@ function crackerHTML(d, c) {
   const done = !!state.cr[d], quip = QUIPS[(d * 5 + 3) % QUIPS.length];
   const l = '<span class="half l"><span class="c-end paper"></span><span class="c-neck paper"></span><span class="c-body paper"></span></span>';
   const r = '<span class="half r"><span class="c-body paper"></span><span class="c-neck paper"></span><span class="c-end paper"></span></span>';
-  return `<div class="crk p${d % 5}${done ? ' done' : ''}" id="crk">
+  return `<div class="crk p${pap(d)}${done ? ' done' : ''}" id="crk">
     <p class="kick" id="crkKick">${done ? 'Your cracker joke' : 'Pull your cracker'}</p>
     <div class="cstage"><button class="cracker${done ? ' popped still' : ''}" id="cracker" type="button" aria-label="Pull the cracker"${done ? ' disabled' : ''}>${l}${r}<span class="c-band">Pull me</span></button><span class="bang" id="bang">${BANG}</span><p class="meta crk-hint" id="crkHint"${done ? ' hidden' : ''}>Tap it, or grab an end and pull</p></div>
     <div class="slipbox${done ? ' open done still' : ''}" id="slipbox"><div class="slipin"><div class="slippad">
@@ -1347,10 +1452,21 @@ function photoMissing(img) {
   img.replaceWith(ph); f.classList.remove('develop');
 }
 /* Christmas Day's photo strip develops on its own once it scrolls into view */
-const polaroidAuto = (c, fresh) => `<figure class="polaroid${fresh ? ' drop develop' : ''}" id="pol"><span class="tape t1"></span><img src="${c.photo}" alt="${c.caption || 'A photo of us'}" onerror="photoMissing(this)"><figcaption>${c.caption || ''}</figcaption></figure>${fresh ? '<p class="devhint" id="devhint">Developing… tap it to give it a shake</p>' : ''}`;
+const stripMedia = c => c.clip
+  ? `<video src="${c.clip}"${c.poster ? ` poster="${c.poster}"` : ''} data-fallback="${c.photo || ''}" autoplay muted loop playsinline preload="auto" aria-label="${c.caption || 'Our photo booth strip'}" onerror="clipMissing(this)"></video>`
+  : `<img src="${c.photo}" alt="${c.caption || 'A photo of us'}" onerror="photoMissing(this)">`;
+/* if the video can't play, show the original GIF instead */
+function clipMissing(v) {
+  const src = v.dataset.fallback; if (!src) return photoMissing(v);
+  const i = document.createElement('img'); i.src = src; i.alt = v.getAttribute('aria-label') || ''; i.onerror = () => photoMissing(i); v.replaceWith(i);
+}
+const polaroidAuto = (c, fresh) => `<figure class="polaroid${fresh ? ' drop develop' : ''}" id="pol"><span class="tape t1"></span>${stripMedia(c)}<figcaption>${c.caption || ''}</figcaption></figure>${fresh ? '<p class="devhint" id="devhint">Developing… tap it to give it a shake</p>' : ''}`;
 function wirePolaroidAuto() {
-  const f = $('#pol'); if (!f || !f.classList.contains('develop')) return;
-  const img = f.querySelector('img');
+  const f = $('#pol'); if (!f) return;
+  /* phones in Low Power Mode won't autoplay video: a tap starts it */
+  f.addEventListener('click', () => { const v = f.querySelector('video'); if (v && v.paused) { const pr = v.play(); if (pr) pr.catch(() => {}); } });
+  if (!f.classList.contains('develop')) return;
+  const img = f.querySelector('img,video');
   whenSeen(f, () => f.classList.add('go'), .3);
   f.onclick = () => { if (!f.classList.contains('develop')) return; f.classList.add('go', 'fast'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); sfx.shake(); };
   if (img) img.addEventListener('animationend', e => { if (e.animationName !== 'develop') return; f.classList.remove('develop', 'go', 'fast'); f.onclick = null; const h = $('#devhint'); if (h) h.hidden = true; });
@@ -1980,7 +2096,7 @@ const GAMES = {
 })();
 
 ['present', 'stocking'].forEach(icoImg); svgImg('sleigh', SLEIGH);
-paintToggles(); renderGrid();
+paintToggles(); tick();
 </script>
 </body>
 </html>
